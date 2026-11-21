@@ -42,6 +42,14 @@ python tools/build_story.py
 python tools/build_sounds.py
 ```
 
+**Vocea naratorului** (după `build_story.py`; cere `pip install edge-tts`, ffmpeg și internet doar pentru textele noi):
+
+```powershell
+python tools/build_voice.py
+```
+
+Vocile neurale românești (Emil, Alina) se generează o singură dată și se pun în arhivele poveștilor. Jocul nu are nevoie de internet.
+
 ## Documentație
 
 | Document | Despre |

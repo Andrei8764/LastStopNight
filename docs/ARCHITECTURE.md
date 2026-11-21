@@ -27,6 +27,7 @@ LastStopNight.slnx
 │  ├─ art/                    grafica procedurală (Python + Pillow)
 │  ├─ sound/                  sunetele procedurale (Python, doar biblioteca standard)
 │  ├─ build_sounds.py         sunetele → LastStopNight/Assets/sounds/*.wav
+│  ├─ build_voice.py          vocea naratorului (edge-tts + ffmpeg) → voice/ din arhivele poveștilor
 │  ├─ stories/                poveștile scrise în Python (generează story.json)
 │  └─ build_story.py          imagini → story.json → arhivele ZIP din LastStopNight/Assets/stories
 ├─ stories/                   ieșirea lui build_story.py: _art/images (toate imaginile) și <poveste>/story.json
@@ -101,6 +102,7 @@ interfața ── RequestChoose / RequestExamine ──> IGameSession
 | `PlayerForm.DevTools.cs` | Rulări automate cu capturi (`--snapshots`, `--mp-test`). |
 | `PlayerForm.Map.cs` | Harta turei (tasta H): drumurile pentru `RouteMapView`, în single player și în multiplayer. |
 | `PlayerForm.Audio.cs` | Sunetul: efectele cerute de scenă, ambianța locației, muzica meniului, temele finalurilor, volumele din Setări. |
+| `PlayerForm.Voice.cs` | Naratorul (vocea fiecărui bloc, din `voice/` al poveștii) și replicile din text puse în bule (`Game/DialogueLines`), sincronizate cu vocea. |
 | `PlayerForm.Routes.cs` | Multiplayer: „Mergi după...” (tasta F), trecerea pe alt drum, privitul după final și ecranul de concluzii (`ConclusionView`). |
 | `Game/` | `Scene` (scena 2D a unui bloc: actori, decor, lumini, marcaje, prim-plan). `StoryCatalog` (de unde vin poveștile). `SaveGame`, `GameSettings`, `AppData`, `EndingsTracker` (fișierele din %AppData%). |
 | `Actors/` | `Actor` → `PlayerActor` (tastatură / click), `NpcActor`, `FollowerActor` (însoțitorul), `RemoteActor` (celălalt jucător). |

@@ -224,9 +224,15 @@ Jocul nu mai e mut. Toate sunetele sunt generate procedural (`tools/sound/`, doa
 - **Ambianța locației** vine din story.json (`"sounds"` pe locație): ploaie și vânt în parcare, neon și frigider în sală, ceasul din birou, greieri la benzinărie, păsări în zori. În scenele întunecate sau roșii se adaugă o dronă de tensiune. Între locații, ambianța trece lin.
 - **Efecte:** pași (și ai însoțitorului / celuilalt jucător, mai încet), telefonul care sună, neonul care pâlpâie, tremurul, lovitura, cardul de capitol, decizii, decizii blocate, examinări, prim-planuri, modul VHS.
 - **Meniuri:** muzică proprie, sunete la navigare, confirmare și înapoi; în multiplayer, vot și intrarea / ieșirea unui jucător.
-- **Volumul** se reglează din Setări (efecte, ambianță, muzică); tasta M nu mai există.
 - **Finaluri:** o temă scurtă după tipul finalului (bun, rău, secret, alternativ).
-- **Setări:** volum separat pentru efecte, ambianță și muzică; tasta **M** oprește tot sunetul.
+- **Setări:** volum separat pentru narator, efecte, ambianță și muzică (tasta M nu mai există).
+
+### Naratorul, replicile și hârtiile
+
+- **Naratorul citește fiecare scenă**, ca să nu trebuiască să citești tot textul. Vocea e neurală, în română: Emil când protagonistul e bărbat (Night Shift, Black Pine), Alina pentru Mara (KM 13). Citește și paragrafele însoțitorului, iar cât vorbește, ambianța și muzica se aud mai încet.
+- Vocile sunt generate o singură dată de `tools/build_voice.py` (edge-tts, apoi ffmpeg în WAV IMA ADPCM, ~11 KB/s) și stau în arhiva poveștii, în `voice/<bloc>.wav` și `voice/<bloc>@<însoțitor>.wav`. Cele trei povești au ~29 de minute de voce (~19 MB). Jocul le citește fără internet.
+- **Replicile apar în bule** deasupra celui care vorbește, cam când le rostește naratorul. Cine vorbește se deduce din text: „...”, zic → protagonistul; „...”, zice Ioana → Ioana. Ghilimelele fără verb de vorbire (un bilet, radioul) rămân doar în text.
+- **Hârtiile** (regulile din registru, biletul de pe tejghea) apar mari peste scenă, scrise de mână, nu în caseta de jos. În story.json: `"paper": { "title": "...", "text": "...", "note": false }` pe bloc. Tasta C le ascunde sau le arată, ca prim-planurile.
 
 ## 6. Cum rulezi
 
