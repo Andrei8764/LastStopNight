@@ -1,0 +1,308 @@
+{
+  "title": "Ultimul apel",
+  "order": 4,
+  "author": "Last Stop",
+  "description": "În ultima noapte la benzinăria de la kilometrul 13, Mara găsește un bon care pare să fi fost tipărit mâine.",
+  "version": 1,
+  "startBlockId": "call.start",
+  "playerCharacterId": "mara",
+  "maxPlayers": 1,
+  "playable": [
+    {
+      "characterId": "mara",
+      "role": "Casieră, tura de noapte",
+      "blurb": "Mara mai are o singură tură până pleacă de la benzinărie."
+    }
+  ],
+  "properties": [
+    {
+      "key": "story.clues",
+      "min": 0,
+      "max": 3,
+      "initial": 0,
+      "hudLabel": "Indicii",
+      "display": "value",
+      "icon": "images/ui/clue.png"
+    }
+  ],
+  "redirects": [],
+  "locations": [
+    {
+      "id": "store",
+      "name": "Magazinul",
+      "image": "images/gas_store.png",
+      "floorY": 172,
+      "minX": 14,
+      "maxX": 300,
+      "windows": [{ "x": 11, "y": 31, "w": 118, "h": 64 }],
+      "ambient": [],
+      "sounds": ["hum", "room"],
+      "points": {},
+      "decor": [],
+      "lights": [],
+      "examine": [],
+      "actorTint": "#E6EEE6"
+    },
+    {
+      "id": "gas",
+      "name": "Pompele",
+      "image": "images/gas_exterior.png",
+      "floorY": 160,
+      "minX": 12,
+      "maxX": 300,
+      "windows": [],
+      "ambient": ["fog"],
+      "sounds": ["night", "wind", "rain"],
+      "points": {},
+      "decor": [],
+      "lights": [],
+      "examine": [],
+      "actorTint": "#8C98C0"
+    }
+  ],
+  "characters": [
+    {
+      "id": "mara",
+      "name": "Mara",
+      "sprite": "images/sprites/mara.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [0, 1],
+      "walkFrames": [2, 3, 4, 5],
+      "hasReflection": true,
+      "description": "Casieră în tura de noapte."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "call.start",
+      "title": "Ultima tură",
+      "text": "Mai am o tură până plec de la benzinăria asta. La 23:40, imprimanta scoate singură un bon. Pe el scrie ora 06:13 și numele meu.",
+      "time": "23:40",
+      "chapter": "Ultimul apel",
+      "location": "store",
+      "mood": "normal",
+      "fx": [],
+      "playerX": 250,
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": false,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        { "text": "Citește bonul", "target": "call.receipt", "effects": [] },
+        { "text": "Du-te la pompe să vezi dacă e cineva afară", "target": "call.pumps", "effects": [] }
+      ]
+    },
+    {
+      "id": "call.receipt",
+      "title": "Bonul de la 06:13",
+      "text": "Bonul e cald. La produse scrie: cafea, cheia magaziei, un apel nepreluat. Jos, cu litere mici: NU RĂSPUNDE CÂND SUNĂ A DOUA OARĂ.",
+      "time": "23:42",
+      "location": "store",
+      "mood": "dim",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": false,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        { "text": "Păstrează bonul și ieși la pompe", "target": "call.pumps", "effects": [{ "key": "story.clues", "op": "add", "value": 1 }] }
+      ]
+    },
+    {
+      "id": "call.pumps",
+      "title": "Ploaia de afară",
+      "text": "Ploaia bate în copertină. Pompa unu arată 13,13 litri, deși furtunul e la locul lui. În băltoacă se văd două siluete. Când mă întorc, sunt singură.",
+      "time": "23:50",
+      "location": "gas",
+      "mood": "dim",
+      "fx": ["rain"],
+      "characters": [],
+      "examine": [
+        {
+          "id": "call.puddle",
+          "x": 150,
+          "y": 135,
+          "label": "Băltoaca de sub pompă",
+          "text": "În apă se reflectă magazinul. Pe ușă stă lipit un bilet: CHEIA E SUB TELEFON.",
+          "effects": [{ "key": "story.clues", "op": "add", "value": 1 }],
+          "once": true,
+          "hidden": false,
+          "textBy": {}
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": false,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        { "text": "Întoarce-te în magazin", "target": "call.phone", "effects": [] }
+      ]
+    },
+    {
+      "id": "call.phone",
+      "title": "Primul apel",
+      "text": "Telefonul de pe perete sună o dată. Apoi încă o dată. Pe perete, sub aparat, văd o cheie pe care n-am mai observat-o.",
+      "time": "00:13",
+      "location": "store",
+      "mood": "dim",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": false,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        { "text": "Răspunde", "target": "call.voice", "effects": [] },
+        { "text": "Caută sub telefon, apoi închide ușa magaziei", "target": "call.backroom", "effects": [{ "key": "story.clues", "op": "add", "value": 1 }] }
+      ]
+    },
+    {
+      "id": "call.voice",
+      "title": "Vocea mea",
+      "text": "La telefon se aude respirația mea, dar mai obosită. „Mara, cheia e sub telefon. Nu deschide ușa din spate până nu se luminează.” Apoi aud trei bătăi din magazie.",
+      "time": "00:14",
+      "location": "store",
+      "mood": "red",
+      "fx": ["shake"],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": false,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        { "text": "Ia cheia și du-te în magazie", "target": "call.backroom", "effects": [] }
+      ]
+    },
+    {
+      "id": "call.backroom",
+      "title": "Ușa din spate",
+      "text": "Încuietoarea se rotește singură. Dincolo de ușă, cineva bate în același ritm cu ploaia. Pe masă găsesc o casetă cu eticheta „06:13”.",
+      "time": "00:20",
+      "location": "store",
+      "mood": "dark",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": true,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        {
+          "text": "Redă caseta ca să afli cine e la ușă",
+          "target": "call.good",
+          "effects": [],
+          "condition": { "type": "COMPARISON", "key": "story.clues", "operator": ">=", "value": 2 }
+        },
+        {
+          "text": "Ascultă mesajul ascuns de la capătul casetei",
+          "target": "call.secret",
+          "effects": [],
+          "condition": { "type": "COMPARISON", "key": "story.clues", "operator": ">=", "value": 3 }
+        },
+        {
+          "text": "Așteaptă până se luminează",
+          "target": "call.wait",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "call.wait",
+      "title": "Până la răsărit",
+      "text": "Țin clanța cu ambele mâini. Bătăile se opresc, apoi se aud pași care se îndepărtează. Pe ecranul casei de marcat, ceasul sare de la 00:20 la 06:12.",
+      "time": "06:12",
+      "location": "store",
+      "mood": "dawn",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": true,
+      "isEnding": false,
+      "endingType": "none",
+      "decisions": [
+        { "text": "Deschide ușa magaziei", "target": "call.bad", "effects": [] },
+        { "text": "Așteaptă încă un minut", "target": "call.good", "effects": [] }
+      ]
+    },
+    {
+      "id": "call.good",
+      "title": "Tura s-a terminat",
+      "text": "La șase, magazia e goală. Las cheia pe tejghea și plec înainte să bată iar cineva. Pentru prima dată, drumul spre casă apare pe hartă.",
+      "time": "06:00",
+      "location": "store",
+      "mood": "dawn",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": true,
+      "isEnding": true,
+      "endingType": "good",
+      "endingTitle": "Plecarea",
+      "decisions": []
+    },
+    {
+      "id": "call.bad",
+      "title": "Schimbul următor",
+      "text": "Deschid ușa. Dincolo e magazinul, exact cum l-am lăsat, dar pe tejghea stă bonul cald: 06:13, cafea, cheia magaziei, un apel nepreluat. Ușa se închide în urma mea.",
+      "time": "06:13",
+      "location": "store",
+      "mood": "red",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": true,
+      "isEnding": true,
+      "endingType": "bad",
+      "endingTitle": "Încă o tură",
+      "decisions": []
+    },
+    {
+      "id": "call.secret",
+      "title": "Înregistrarea",
+      "text": "Apăs play. Pe bandă se aude prima mea tură aici, cu ani în urmă. O voce spune: „Mara a plecat la șase.” Nu e vocea mea. Caseta se oprește, iar ușa magaziei se deschide spre dimineață.",
+      "time": "06:13",
+      "location": "store",
+      "mood": "dawn",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "props": [],
+      "lights": [],
+      "companionText": {},
+      "solo": true,
+      "isEnding": true,
+      "endingType": "secret",
+      "endingTitle": "Vocea de pe bandă",
+      "decisions": []
+    }
+  ]
+}
