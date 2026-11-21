@@ -386,7 +386,7 @@ for loc in LOCATIONS:
     add_remarks(loc["examine"], "ioana", {
         "din.jukebox": "Ioana: \"Melodia asta o fredona bunica mea. Și nu cred că a ascultat-o vreodată la radio.\"",
         "din.menu": "Ioana: \"Am lucrat la trei restaurante. Nicio plăcintă cu afine n-a fost vreodată de afine.\"",
-        "din.phone": "Ioana: \"Fără 0 și fără 3. Deci nici la 112 nu poți suna. Super loc de muncă.\"",
+        "din.phone": "Ioana: \"Fără 0 și fără 3. Măcar la 112 poți suna. Super loc de muncă, nu?\"",
         "ext.sign": "Ioana: \"NU OPRI. Am oprit. Acum ce facem cu informația asta?\"",
         "ext.car": "Ioana: \"Geaca aia e a mea, de fapt. Ți-am zis că mi-o dai înapoi.\"",
         "kit.fridge": "Ioana: \"NU PENTRU OAMENI. Bine că sunt vegetariană.\"",

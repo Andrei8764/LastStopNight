@@ -362,7 +362,7 @@
           "once": true,
           "hidden": false,
           "textBy": {
-            "ioana": "Ioana: \"Fără 0 și fără 3. Deci nici la 112 nu poți suna. Super loc de muncă.\""
+            "ioana": "Ioana: \"Fără 0 și fără 3. Măcar la 112 poți suna. Super loc de muncă, nu?\""
           },
           "y": 67
         },
@@ -455,7 +455,7 @@
           "id": "kit.pans",
           "x": 70,
           "label": "Tigăile",
-          "text": "Toate tigăile sunt spălate lună. Toate, în afară de una. N-o să întreb.",
+          "text": "Toate tigăile lucesc de curate, în afară de una. N-o să întreb.",
           "effects": [],
           "once": true,
           "hidden": true,
@@ -515,7 +515,7 @@
           "id": "off.board",
           "x": 58,
           "label": "Avizierul",
-          "text": "Poze cu foști angajați, legate cu ață roșie. La câțiva fața e zgâriată cu pixul. Nu vreau să știu de ce.",
+          "text": "Poze cu foști angajați, legate cu ață roșie. Pe câteva dintre ele, fețele sunt zgâriate cu pixul. Nu vreau să știu de ce.",
           "effects": [],
           "once": true,
           "hidden": false,
@@ -528,7 +528,7 @@
           "id": "off.frame",
           "x": 162,
           "label": "Angajatul lunii",
-          "text": "Rama zice Angajatul lunii. Poza din ea e atât de ștearsă încât poate fi oricine. Poate fi și eu.",
+          "text": "Pe ramă scrie Angajatul lunii. Poza din ea e atât de ștearsă încât ar putea fi oricine. Poate fi chiar poza mea.",
           "effects": [],
           "once": true,
           "hidden": false,
