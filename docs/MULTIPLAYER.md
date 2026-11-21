@@ -36,25 +36,28 @@
 ## 4. În joc
 
 - **Fiecare se mișcă liber** și îl vede pe celălalt în scenă. Fiecare poate examina obiecte, iar ce găsește unul (indicii, frică) contează pentru amândoi.
-- **Deciziile se votează.** Pe butoane apare portretul celui care a votat, iar sus scrie pe cine se mai așteaptă.
-  - Dacă votați la fel, mergeți împreună mai departe.
-  - **Dacă votați diferit, vă despărțiți** (cu „Drumuri separate: Da”, opțiunea implicită): fiecare merge pe drumul ales și joacă de acolo singur, până la finalul lui. Așa explorați două rute deodată.
-  - Cu „Drumuri separate: Nu”, rămâneți mereu împreună: câștigă majoritatea, iar la egalitate cine a votat primul.
-  - Dacă cineva nu votează, după 20 de secunde se ia votul existent (fără despărțire).
-- **Drumuri separate:**
-  - opțiunea e în lobby, sub jucători, și o alege gazda;
-  - după despărțire, celălalt nu mai e în scena ta, iar în dreapta sus scrie unde a ajuns pe drumul lui;
-  - pe drumul tău decizi singur, fără să aștepți votul celuilalt;
-  - echipa rămâne doar cu personajul tău: replicile și deciziile celuilalt dispar;
+- **Deciziile: „Fiecare alege”** (opțiunea implicită din lobby, o alege gazda):
+  - **cine alege pleacă imediat**, fără vot și fără așteptare;
+  - ceilalți rămân unde erau și văd sus „Andrei a ales: Mergi în birou. F: mergi după el”;
+  - **F** (sau butonul „Mergi după...”): ajungi unde a ajuns el, cu tot ce a găsit, și personajul tău intră înapoi în echipa lui;
+  - sau alegi altceva și mergi pe drumul tău, până la finalul tău. Așa explorați mai multe rute deodată;
+  - decizia unui însoțitor (ex. „Lasă-l pe Vlad să se uite la motor”) îl ia și pe el cu tine;
+  - oricând, din pauză (Esc): **„Treci pe drumul lui...”** te mută la celălalt, oriunde ar fi ajuns.
+- **Pe drumuri separate:**
+  - celălalt nu mai e în scena ta, iar în dreapta sus scrie unde a ajuns;
+  - echipa rămâne doar cu personajul tău: replicile și deciziile celuilalt dispar până vă reuniți;
   - textul poveștii rămâne scris de protagonist, chiar și pe drumul însoțitorului;
-  - nu vă mai puteți reuni în aceeași tură: fiecare ajunge la finalul lui, apoi gazda vă duce înapoi în lobby.
+  - **indiciile se pun la comun**: ce găsește unul apare și la celălalt („+1 Indicii (de la Andrei)”), deci împreună puteți debloca un final mai bun. Același indiciu găsit de amândoi se numără o singură dată.
+- **Dacă termini primul**, te poți uita la ceilalți („Uită-te la...”): vezi exact ce văd ei, dar nu alegi nimic și nu apari în scena lor.
+- **Concluziile:** când ajunge și ultimul la un final, toți văd un ecran cu finalul fiecăruia, unul lângă altul, ce ați găsit împreună și câte finaluri mai sunt de descoperit.
+- **„Vot comun”** (cealaltă opțiune din lobby): rămâneți mereu împreună. Pe butoane apare portretul celui care a votat; câștigă majoritatea, la egalitate cine a votat primul, iar după 20 de secunde se ia votul existent.
 - **Harta (tasta H** sau „Hartă” din pauză):
   - arată blocurile prin care ați trecut, ca un arbore care se ramifică unde v-ați despărțit;
   - fiecare drum are culoarea lui, iar portretele arată unde e fiecare acum;
   - lângă fiecare bloc, „+2” înseamnă câte alegeri n-a încercat încă nimeni;
   - în dreapta, câte un cartonaș pe drum: cine e acolo, locul, ora, barele (frică, integritate...) și indiciile.
 - **Esc** deschide meniul, dar jocul nu se oprește pentru celălalt.
-- **La final,** gazda vă duce înapoi în lobby, unde puteți schimba personajele și juca din nou.
+- **La final,** gazda vă duce înapoi în lobby (de pe ecranul de concluzii sau oricând), unde puteți schimba personajele și juca din nou.
 
 ![Votul, văzut de prieten](screenshots/26_mp_vot_client.png)
 
@@ -74,7 +77,7 @@
 
 - **Fiecare calculator rulează povestea singur.** Gazda doar stabilește ordinea acțiunilor (voturi, examinări) și le trimite tuturor, numerotate. Motorul dă mereu același rezultat pentru aceleași acțiuni, deci ajungeți în aceeași stare.
 - **După fiecare acțiune, clientul trimite o amprentă a stării.** Dacă nu se potrivește cu a gazdei, gazda îi retrimite tot jurnalul și starea se repară singură.
-- **Drumurile separate** sunt motoare separate, câte unul pe drum. Fiecare calculator le ține pe toate (nu doar pe al lui), așa că gazda poate verifica amprenta oricărui drum, iar tu vezi unde e celălalt. La despărțire, drumul nou pornește ca o copie exactă a celui vechi.
+- **Drumurile separate** sunt motoare separate, câte unul pe drum. Fiecare calculator le ține pe toate (nu doar pe al lui), așa că gazda poate verifica amprenta oricărui drum, iar tu vezi unde e celălalt. La despărțire, drumul nou pornește ca o copie exactă a celui vechi. Când mergi după cineva, motorul tău reface drumul lui din jurnal (`JoinMsg`), iar indiciile puse la comun ajung pe celelalte drumuri ca acțiuni obișnuite (`ShareAction`), deci totul rămâne determinist.
 - **Pozițiile personajelor** se trimit separat, de ~15 ori pe secundă. Sunt doar vizuale și nu schimbă povestea.
 - **Semnal de viață:** fiecare parte trimite la 2 secunde un semnal. După 20 de secunde de liniște, conexiunea e considerată pierdută, cu mesaj clar, în loc să aștepte la nesfârșit.
 - **Rețeaua:**

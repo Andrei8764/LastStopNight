@@ -68,11 +68,12 @@ interfața ── RequestChoose / RequestExamine ──> IGameSession
   - Citirea și scrierea merg pe fire separate.
   - Mesajele primite așteaptă într-o coadă.
   - La fiecare 2 secunde pleacă un semnal de viață.
-- **`NetSession`:** sesiunea, împărțită în patru fișiere:
+- **`NetSession`:** sesiunea, împărțită în cinci fișiere:
   - `NetSession.cs`: starea comună, bucla `Pump()` și acțiunile jucătorului local;
   - `NetSession.Host.cs`: lobby, voturi, ordonarea acțiunilor, resincronizare;
   - `NetSession.Client.cs`: aplicarea acțiunilor, amprenta după fiecare;
-  - `NetSession.Timelines.cs`: drumurile separate. Fiecare drum are motorul lui. La voturi diferite, grupurile se despart (`ForkMsg` + `PartyAction`, care reduce echipa la personajele grupului). Motorul local rămâne mereu același obiect.
+  - `NetSession.Timelines.cs`: drumurile separate. Fiecare drum are motorul lui. Când cineva alege și pleacă, ceilalți rămân pe un drum nou (`ForkMsg` + `PartyAction`, care schimbă echipa). Trecerea pe drumul altcuiva sau privitul după final: `JoinMsg`. Motorul local rămâne mereu același obiect;
+  - `NetSession.Free.cs`: modul „fiecare alege” (plecarea imediată, `Follow`, `RequestJoin`) și indiciile puse la comun (`ShareAction` pentru proprietățile cu `shared: true`).
 - **`JoinCode`, `NetInfo`, `LanDiscovery`, `PortMapping`:** codul de intrare, adresele locale și virtuale, anunțul în rețeaua locală și UPnP pe router.
 
 **Regula de aur:** logica de rețea rulează doar în `NetSession.Pump()`, chemat de joc pe firul interfeței, deci nu există cod de joc care rulează în paralel. Firele de rețea doar pun mesaje în cozi.
@@ -99,13 +100,14 @@ interfața ── RequestChoose / RequestExamine ──> IGameSession
 | `PlayerForm.Multiplayer.cs` | Găzduire, intrare, lobby, sincronizarea în joc. |
 | `PlayerForm.DevTools.cs` | Rulări automate cu capturi (`--snapshots`, `--mp-test`). |
 | `PlayerForm.Map.cs` | Harta turei (tasta H): drumurile pentru `RouteMapView`, în single player și în multiplayer. |
-| `PlayerForm.Audio.cs` | Sunetul: efectele cerute de scenă, ambianța locației, muzica meniului, temele finalurilor, tasta M, volumele din Setări. |
+| `PlayerForm.Audio.cs` | Sunetul: efectele cerute de scenă, ambianța locației, muzica meniului, temele finalurilor, volumele din Setări. |
+| `PlayerForm.Routes.cs` | Multiplayer: „Mergi după...” (tasta F), trecerea pe alt drum, privitul după final și ecranul de concluzii (`ConclusionView`). |
 | `Game/` | `Scene` (scena 2D a unui bloc: actori, decor, lumini, marcaje, prim-plan). `StoryCatalog` (de unde vin poveștile). `SaveGame`, `GameSettings`, `AppData`, `EndingsTracker` (fișierele din %AppData%). |
 | `Actors/` | `Actor` → `PlayerActor` (tastatură / click), `NpcActor`, `FollowerActor` (însoțitorul), `RemoteActor` (celălalt jucător). |
 | `Effects/` | `SceneEffect` → atmosferă (ploaie, praf, ceață, pâlpâit), feedback (tremur, flash, text plutitor, telefon), prezentare (fade, bule, carduri de capitol). |
 | `Rendering/` | `GameCanvas` (lumea 320x180 scalată), `HudRenderer`, `ImageCache`, `SpriteSheet`, `FontCache`, `Gfx` (pensule refolosite), `Portraits`, `Screen2D`. |
 | `Ui/` | Meniurile desenate în scenă (`MenuScreen`, `MenuStyle`), controalele panoului de jos (`StoryTextPanel`, `ChoiceButton`), `Overlays` (banda de final, de vot, filtrul VHS). |
-| `Ui/Views/` | Ecranele cu cartonașe: poveștile, însoțitorul, galeria de finaluri, lobby-ul, harta turei (`RouteMapView`). Sunt funcții de desenare pure, care primesc datele ca parametri. |
+| `Ui/Views/` | Ecranele cu cartonașe: poveștile, însoțitorul, galeria de finaluri, lobby-ul, harta turei (`RouteMapView`), concluziile turei (`ConclusionView`). Sunt funcții de desenare pure, care primesc datele ca parametri. |
 
 **De ce `PlayerForm` e `partial`:** fereastra coordonează totul (o singură stare: modul, scena, sesiunea), dar fiecare fișier are o singură temă. Desenarea ecranelor e scoasă în `Ui/Views`, ca să poată fi citită fără restul.
 
@@ -143,7 +145,7 @@ interfața ── RequestChoose / RequestExamine ──> IGameSession
 | `LASTSTOP_NOUPNP=1` | Gazda nu încearcă să deschidă portul pe router. |
 | `LASTSTOP_MUTE=1` | Sunetul nu ajunge la difuzoare (modurile `--snapshots` și `--mp-test` îl pun singure). |
 | `LASTSTOP_JOIN_CODE`, `LASTSTOP_JOIN_LAN=1` | Doar pentru `--mp-test join`: cu ce cod intră sau dacă alege jocul din rețeaua locală. |
-| `LASTSTOP_MP_SPLIT=1` | Pentru `--mp-test` (ambele ferestre): la prima decizie votează diferit, apoi fiecare își joacă drumul până la un final. |
+| `LASTSTOP_MP_SPLIT=1` | Pentru `--mp-test` (ambele ferestre): „fiecare alege”; la prima decizie aleg diferit, fiecare își joacă drumul, cine termină primul se uită la celălalt, apoi amândoi văd concluziile. Fără ea, testul folosește votul comun. |
 | Porturi | TCP 27013 (sau următorul liber) pentru joc, UDP 27014 pentru anunțul în rețeaua locală. |
 
 ## 9. Verificare

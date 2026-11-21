@@ -224,6 +224,7 @@ Jocul nu mai e mut. Toate sunetele sunt generate procedural (`tools/sound/`, doa
 - **Ambianța locației** vine din story.json (`"sounds"` pe locație): ploaie și vânt în parcare, neon și frigider în sală, ceasul din birou, greieri la benzinărie, păsări în zori. În scenele întunecate sau roșii se adaugă o dronă de tensiune. Între locații, ambianța trece lin.
 - **Efecte:** pași (și ai însoțitorului / celuilalt jucător, mai încet), telefonul care sună, neonul care pâlpâie, tremurul, lovitura, cardul de capitol, decizii, decizii blocate, examinări, prim-planuri, modul VHS.
 - **Meniuri:** muzică proprie, sunete la navigare, confirmare și înapoi; în multiplayer, vot și intrarea / ieșirea unui jucător.
+- **Volumul** se reglează din Setări (efecte, ambianță, muzică); tasta M nu mai există.
 - **Finaluri:** o temă scurtă după tipul finalului (bun, rău, secret, alternativ).
 - **Setări:** volum separat pentru efecte, ambianță și muzică; tasta **M** oprește tot sunetul.
 
@@ -273,7 +274,7 @@ Moduri de dezvoltare:
 | C | ascunzi / arăți imaginea mare |
 | Esc | te oprești din mers; dacă stai pe loc, deschide pauza |
 | H | harta turei: pe unde ați trecut, unde e fiecare și cum îi merge |
-| M | sunet oprit / pornit |
+| F | multiplayer: mergi după cine a ales și a plecat |
 | F1 / F11 | controale / ecran complet |
 | Săgeți, Enter, Esc, mouse | navighezi prin meniuri |
 
@@ -286,7 +287,9 @@ Moduri de dezvoltare:
   "properties": [
     { "key": "player.life", "min": 0, "max": 100, "initial": 100, "hudLabel": "Integritate",
       "display": "bar", "icon": "images/ui/heart.png", "color": "#D8333F" },
-    { "key": "story.cat", "min": 0, "max": 3, "initial": 0, "hudLabel": "Pisica", "display": "hidden" }
+    { "key": "story.cat", "min": 0, "max": 3, "initial": 0, "hudLabel": "Pisica", "display": "hidden" },
+    { "key": "story.evidence", "min": 0, "max": 3, "initial": 0, "hudLabel": "Dovezi", "format": "{0}/3",
+      "shared": true }   // multiplayer, drumuri separate: ce găsește un drum se adună și la ceilalți
   ],
   "redirects": [
     { "condition": { "type": "COMPARISON", "key": "player.life", "operator": "<=", "value": 0 },
