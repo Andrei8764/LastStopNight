@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyTitle>Last Stop</AssemblyTitle>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LastStopNight.Core\LastStopNight.Core.csproj" />
+    <ProjectReference Include="..\LastStopNight.Net\LastStopNight.Net.csproj" />
+    <ProjectReference Include="..\LastStopNight.Audio\LastStopNight.Audio.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- in build-ul normal povestile stau langa exe (usor de inlocuit din Editor);
+         la publicare nu se copiaza: sunt incorporate in exe, ca sa fie un singur fisier de trimis -->
+    <None Include="Assets\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+    <EmbeddedResource Include="Assets\stories\*.zip" LogicalName="stories/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\sounds\*.wav" LogicalName="sounds/%(Filename)%(Extension)" />
+    <!-- fisierele .resx goale pe care le creeaza designerul Visual Studio (jocul nu foloseste resurse de formular);
+         doua dintre ele ar primi acelasi nume (LastStopNight.PlayerForm.resources) si ar strica build-ul -->
+    <EmbeddedResource Remove="*.resx" />
+  </ItemGroup>
+
+</Project>
