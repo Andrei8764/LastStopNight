@@ -131,6 +131,7 @@ public sealed partial class PlayerForm
                 log.Add("client intrat: " + await Until(() => _net!.Lobby.Players.Count == 2));
                 log.Add("client gata: " + await Until(() => _net!.StartBlocker() is null));
                 await Capture("lobby_gata");
+                _net!.SetAllowSplit(splitTest); // fara drumuri separate: vot comun, ca sa ramana impreuna
                 _net!.StartGame();
             }
             else
@@ -179,6 +180,12 @@ public sealed partial class PlayerForm
                     : _engine.GetDecisions().First(o => o.IsAvailable).Index;
                 var opt = _engine.GetDecisions().FirstOrDefault(o => o.Index == idx && o.IsAvailable);
                 if (opt is null) { log.Add($"lipsă decizia {idx} în {block}"); break; }
+                if (splitTest && role == "host" && block == "km.start")
+                {
+                    // clientul a ales primul si a plecat: gazda vede „Prieten a ales... F: mergi dupa el”
+                    log.Add("celălalt a ales și a plecat: " + await Until(() => _net!.Follow is not null, 8000));
+                    await Capture("mergi_dupa", 300);
+                }
                 _session!.RequestChoose(opt);
                 if (role == "join" && block is "km.hitch" or "km.start") await Capture("vot_" + block, 400);
                 if (role == "host" && block == "km.hitch") await Capture("vot_" + block, 300);
@@ -195,14 +202,27 @@ public sealed partial class PlayerForm
                     await Capture(_engine.CurrentBlock.Id, 1600);
             }
             log.Add($"final: {_engine!.CurrentBlock!.Id}, amprentă {_engine.StateHash()}");
-            if (role == "host" && splitTest)
+            if (splitTest && role == "join" && _net!.JoinTargets.FirstOrDefault() is { } still)
             {
-                log.Add("și celălalt a ajuns la un final: " + await Until(() => _net!.OtherRoutes.All(r => r.Block.IsEnding), 60000));
-                foreach (var r in _net!.OtherRoutes) log.Add($"  {r.Name} ({r.CharacterId}): {r.Block.Title}");
-                await Capture("ambele_finaluri", 800);
-                _showMap = true;
-                await Capture("harta_finaluri", 300);
-                _showMap = false;
+                // clientul a terminat primul: se uita la gazda pana termina si ea
+                await Task.Delay(1500);
+                _net.RequestJoin(still.Id);
+                log.Add("mă uit la gazdă: " + await Until(() => _net.Watching));
+                await Capture("privitor", 1500);
+            }
+            if (splitTest)
+            {
+                log.Add("toți au ajuns la un final: " + await Until(() => _net!.AllFinished, 60000));
+                foreach (var p in _net!.Lobby.Players) log.Add($"  {p.Name}: {_net.EndingOf(p.Id)?.CurrentBlock?.Title}");
+                log.Add("concluziile apar: " + await Until(() => _menu?.Title == "Concluzii", 15000));
+                await Capture("concluzii", 600);
+                if (role == "host")
+                {
+                    ResumeGame();
+                    _showMap = true;
+                    await Capture("harta_finaluri", 300);
+                    _showMap = false;
+                }
             }
             if (role == "host")
             {

@@ -41,6 +41,12 @@ public static class Overlays
         var waiting = net.RoutePlayers.Where(p => !net.Votes.ContainsKey(p.Id)).Select(p => p.Name).ToList();
         string text = waiting.Count == 0 ? "Se decide..."
             : $"Au votat: {string.Join(", ", names)}.  Așteptăm: {string.Join(", ", waiting)}  ({net.VoteSecondsLeft:0}s)";
+        DrawBanner(g, view, s, text);
+    }
+
+    /// <summary>Banda de sus, centrata (vot, „mergi dupa el”, „te uiti la...”).</summary>
+    public static void DrawBanner(Graphics g, RectangleF view, float s, string text)
+    {
         var font = MenuStyle.Body(s, 5.6f);
         var size = g.MeasureString(text, font);
         var box = new RectangleF(view.X + (view.Width - size.Width) / 2 - 6 * s, view.Y + 4 * s, size.Width + 12 * s, size.Height + 3 * s);

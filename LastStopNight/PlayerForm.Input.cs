@@ -70,7 +70,7 @@ public sealed partial class PlayerForm
             e.SuppressKeyPress = e.KeyCode is Keys.Space;
             return;
         }
-        if (e.KeyCode == Keys.M) { ToggleMute(); return; }
+        if (e.KeyCode == Keys.F && _mode == Mode.Playing && !_paused && _net?.Follow is not null) { _net.FollowNow(); return; }
         if (e.KeyCode == Keys.H && _mode is Mode.Playing or Mode.Ending) { ToggleMap(); return; }
         if (e.KeyCode == Keys.Escape && _showMap) { ToggleMap(); return; }
         if (_mode == Mode.Ending && _net is null && e.KeyCode == Keys.Enter && _modeTime > 1f) { StartGame(); e.Handled = true; return; }
@@ -130,7 +130,7 @@ public sealed partial class PlayerForm
         "C                         ascunzi / arăți imaginea mare\n" +
         "Esc                       pauză (sau te oprești din mers)\n" +
         "H                         harta turei (unde e fiecare)\n" +
-        "M                         sunet oprit / pornit\n" +
+        "F                         multiplayer: mergi după cine a ales\n" +
         "F11                       ecran complet\n\n" +
         "Licăririle calde din scenă sunt decizii: mergi acolo și apeși E.\n" +
         "Sclipirile reci sunt lucruri la care te poți uita. Unele ascund mai mult decât par.\n" +

@@ -14,8 +14,6 @@ public sealed class GameSettings
     public int SfxVolume { get; set; } = 8;
     public int AmbientVolume { get; set; } = 7;
     public int MusicVolume { get; set; } = 6;
-    /// <summary>Tot sunetul oprit (tasta M).</summary>
-    public bool Muted { get; set; }
     public string PlayerName { get; set; } = Environment.UserName.Length is > 0 and <= 16 ? Environment.UserName : "Jucător";
 
     public const int MaxVolume = 10;

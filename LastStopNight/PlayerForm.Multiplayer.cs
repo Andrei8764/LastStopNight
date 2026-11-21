@@ -221,7 +221,9 @@ public sealed partial class PlayerForm
             players = now;
             if (_menu?.Title == "Lobby") ShowLobby();
         };
-        net.Started += () => { _remotePos.Clear(); _flashes.Clear(); _pendingChanges.Clear(); };
+        net.Started += () => { _remotePos.Clear(); _flashes.Clear(); _pendingChanges.Clear(); _conclusionsShown = false; _routesKey = ""; };
+        net.Moved += OnMoved;
+        net.Shared += OnShared;
         net.Resynced += () => { if (_engine?.CurrentBlock is { } b) { _scene = null; EnterBlock(b, null); } };
         net.VotesChanged += () => { if (_mode == Mode.Playing) BuildDecisionButtons(); };
         net.ReturnedToLobby += ShowLobby;
@@ -255,6 +257,8 @@ public sealed partial class PlayerForm
                 UseNetStory();
                 if (_menu?.Title == "Lobby") ShowLobby();
             }
+            RefreshRouteButtons();
+            CheckConclusions();
         }
         // lista de jocuri din retea se reimprospateaza o data pe secunda
         if (_menu?.Title == "Intră într-o tură" && (_lanRefresh += dt) > 1f)
@@ -264,6 +268,23 @@ public sealed partial class PlayerForm
             var now = (_discovery?.Games ?? []).Select(g => $"{g.Host}: {g.Story} ({g.Players}/{g.Max})").ToList();
             if (!titles.Skip(2).Take(titles.Count - 3).SequenceEqual(now)) BuildJoinMenu(_menu.Selected);
         }
+    }
+
+    private string _routesKey = "";
+
+    /// <summary>
+    /// Butoanele care depind de ceilalti (mergi dupa el, uita-te la el, concluzii) se refac cand se schimba
+    /// ceva pe drumurile lor, nu doar cand se schimba blocul tau.
+    /// </summary>
+    private void RefreshRouteButtons()
+    {
+        if (_net is not { InGame: true } net || _mode is not (Mode.Playing or Mode.Ending) || _scene is null) return;
+        string key = $"{_mode}|{net.Watching}|{string.Join(",", net.JoinTargets.Select(p => p.Id))}|{net.AllFinished}|{net.Follow?.Timeline}";
+        if (key == _routesKey) return;
+        bool first = _routesKey.Length == 0;
+        _routesKey = key;
+        if (first) return;
+        if (_mode == Mode.Ending) BuildEndingButtons(); else BuildDecisionButtons();
     }
 
     private Dictionary<string, (float X, bool FacingLeft, string BlockId)> RemotePositions() =>
@@ -295,6 +316,8 @@ public sealed partial class PlayerForm
             .Select(p => $"{p.Name} ({_engine.Story.FindCharacter(net.CharacterOf(p.Id))?.Name.Split(' ')[0] ?? "?"})").ToList();
         _splitNotice = others.Count == 0 ? null : $"V-ați despărțit: {string.Join(", ", others)} merge pe alt drum.";
         _hudKey = default;
+        // cine a plecat nu mai sta in scena ta (cand ramai in acelasi bloc, scena nu se reface)
+        _scene?.Remotes.RemoveAll(r => !net.RemoteCharacters.Contains(r.Definition.Id));
     }
 
     private string HudName(CharacterDefinition c) =>
@@ -351,14 +374,14 @@ public sealed partial class PlayerForm
                         : "Însoțitor: are replici, decizii și paragrafe doar ale lui.",
                 });
             }
-            m.Items.Add(new MenuItem("Drumuri separate")
+            m.Items.Add(new MenuItem("Decizii")
             {
-                Value = () => net.Lobby.AllowSplit ? "Da" : "Nu",
+                Value = () => net.Lobby.AllowSplit ? "Fiecare alege" : "Vot comun",
                 Adjust = _ => net.SetAllowSplit(!net.Lobby.AllowSplit),
                 Enabled = net.IsHost,
-                Hint = net.Lobby.AllowSplit
-                    ? "Da: dacă votați diferit, fiecare merge pe drumul lui (și ajunge la finalul lui)." + (net.IsHost ? "" : " Alege gazda.")
-                    : "Nu: rămâneți mereu împreună; la voturi diferite câștigă majoritatea." + (net.IsHost ? "" : " Alege gazda."),
+                Hint = (net.Lobby.AllowSplit
+                    ? "Cine alege pleacă imediat; ceilalți merg după el (F) sau aleg altceva. Indiciile se pun la comun."
+                    : "Votați și așteptați; câștigă majoritatea și rămâneți mereu împreună.") + (net.IsHost ? "" : " Alege gazda."),
             });
             if (net.IsHost)
             {

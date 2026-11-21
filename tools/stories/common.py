@@ -111,9 +111,12 @@ def add_remarks(examines, companion, remarks):
 
 # ---------------------------------------------------------------- poveste, personaje, scena
 
-def prop(key, lo, hi, init, label, display="value", icon=None, color=None, fmt=None):
-    """Proprietate de stare afisata in HUD (display: bar / value / flag / hidden)."""
+def prop(key, lo, hi, init, label, display="value", icon=None, color=None, fmt=None, shared=False):
+    """Proprietate de stare afisata in HUD (display: bar / value / flag / hidden).
+    shared: in multiplayer, pe drumuri separate, ce gaseste un drum se aduna si la ceilalti (ex. indiciile)."""
     p = {"key": key, "min": lo, "max": hi, "initial": init, "hudLabel": label, "display": display}
+    if shared:
+        p["shared"] = True
     if icon:
         p["icon"] = "images/ui/%s.png" % icon
     if color:

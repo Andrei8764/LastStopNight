@@ -7,7 +7,7 @@ ID = "diner1987"
 PROPERTIES = [
     prop("player.nerve", 0, 100, 70, "Sânge rece", "bar", "bolt", "#E8C440"),
     prop("inventory.money", 0, 500, 0, "Bacșiș", "value", "coin", fmt="${0}"),
-    prop("story.clues", 0, 4, 0, "Ce știi", "value", "clue", fmt="{0}/4"),
+    prop("story.clues", 0, 4, 0, "Ce știi", "value", "clue", fmt="{0}/4", shared=True),
     prop("story.signed", 0, 1, 0, "Contract", "flag", "book"),
     prop("story.fakeName", 0, 1, 0, "Nume fals", "hidden"),
     prop("story.page", 0, 1, 0, "Pagina", "hidden"),

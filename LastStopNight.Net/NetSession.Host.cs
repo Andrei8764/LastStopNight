@@ -81,7 +81,10 @@ public sealed partial class NetSession
             case VoteMsg v when player is not null && Lobby.InGame:
                 CastVote(player.Id, v.BlockId, v.Index);
                 break;
-            case ExamineReqMsg x when player is not null && Lobby.InGame:
+            case JoinReqMsg j when player is not null && Lobby.InGame:
+                HostJoin(player.Id, j.TargetPlayer);
+                break;
+            case ExamineReqMsg x when player is not null && Lobby.InGame && !IsWatching(player.Id):
                 if (Assignments.TryGetValue(player.Id, out var who))
                     ApplyAndBroadcast(TimelineOf(player.Id), new ExamineAction(x.BlockId, x.ExamineId, who));
                 break;
@@ -91,7 +94,7 @@ public sealed partial class NetSession
                 if (hm.LogCount < 0 || (known && mine != hm.Hash))
                 {
                     Resyncs++;
-                    c.Send(new ResyncMsg(_startCompanions, SnapshotTimelines(), _seq));
+                    c.Send(Snapshot());
                 }
                 break;
             case ByeMsg:
@@ -118,6 +121,7 @@ public sealed partial class NetSession
         Lobby.Players.RemoveAll(p => p.Id == c.PlayerId);
         _votes.Remove(c.PlayerId);
         _voteOrder.Remove(c.PlayerId);
+        _watchers.Remove(c.PlayerId);
         BroadcastLobby();
         PlayerLeft?.Invoke(c.PlayerId);
         if (Lobby.InGame) ResolveVotes(TimelineOf(c.PlayerId), force: false);
@@ -164,7 +168,7 @@ public sealed partial class NetSession
         Started?.Invoke();
     }
 
-    /// <summary>Gazda alege, in lobby, daca jucatorii se pot desparti cand voteaza diferit.</summary>
+    /// <summary>Gazda alege, in lobby: fiecare alege liber (Da) sau vot comun (Nu).</summary>
     public void SetAllowSplit(bool allow)
     {
         if (!IsHost || Lobby.AllowSplit == allow) return;
@@ -188,7 +192,12 @@ public sealed partial class NetSession
     {
         int timeline = TimelineOf(playerId);
         if (_timelines.GetValueOrDefault(timeline)?.CurrentBlock is not { } b || b.Id != blockId || index < 0 || index >= b.Decisions.Count) return;
-        if (!b.Decisions[index].IsAvailable(_timelines[timeline].State)) return;
+        if (!b.Decisions[index].IsAvailable(_timelines[timeline].State) || IsWatching(playerId)) return;
+        if (Lobby.AllowSplit)
+        {
+            FreeChoose(playerId, timeline, b, index);
+            return;
+        }
         _voteOrder.Remove(playerId);
         _voteOrder.Add(playerId);
         _votes[playerId] = index;
@@ -221,11 +230,9 @@ public sealed partial class NetSession
     }
 
     /// <summary>
-    /// Decide cand au votat toti cei de pe drum (sau a expirat timpul).
-    /// - Daca toti au votat la fel, sau despartirea e oprita: castiga majoritatea; la egalitate, varianta celui care a votat primul.
-    /// - Daca toti au votat, dar diferit, si despartirea e permisa: fiecare grup merge pe drumul lui. Grupul cel mai mare
-    ///   (la egalitate, al primului vot) ramane pe drumul de acum, celelalte primesc drumuri noi.
-    /// - La expirarea timpului, cei care n-au votat merg cu majoritatea, fara despartire.
+    /// Votul comun (modul cu „Fiecare alege liber: Nu”): decide cand au votat toti cei de pe drum (sau a expirat timpul).
+    /// Castiga majoritatea; la egalitate, varianta celui care a votat primul.
+    /// (Ramura cu despartirea pe grupuri ramane pentru voturile date cand gazda schimba modul in timpul turei.)
     /// </summary>
     private bool ResolveVotes(int timeline, bool force)
     {
@@ -278,6 +285,7 @@ public sealed partial class NetSession
     private void ApplyAndBroadcast(int timeline, GameAction action)
     {
         if (_timelines.GetValueOrDefault(timeline) is not { } engine || engine.CurrentBlock?.Id != action.BlockId) return;
+        var before = SharedValues(engine);
         string? text;
         try { text = engine.Apply(action); }
         catch (Exception ex) when (ex is InvalidOperationException or ArgumentException) { return; } // cerere depasita
@@ -285,6 +293,8 @@ public sealed partial class NetSession
         _hashes[(timeline, engine.Log.Count)] = engine.StateHash();
         Broadcast(new ActionMsg(_seq, timeline, action));
         if (action is ExamineAction x && text is not null && timeline == TimelineOf(LocalId)) RaiseExamined(x, text);
+        if (action is ShareAction sh && timeline == TimelineOf(LocalId)) Shared?.Invoke(sh);
         if (engine.CurrentBlock?.Id != action.BlockId) ClearVotes(timeline);
+        ShareFinds(timeline, action, before);
     }
 }

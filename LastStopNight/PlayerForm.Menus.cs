@@ -186,6 +186,7 @@ public sealed partial class PlayerForm
         m.Items.Add(new MenuItem("Controale", ShowHelp));
         if (_net is not null)
         {
+            AddRouteItems(m, _net);
             if (_net.IsHost) m.Items.Add(new MenuItem("Înapoi în lobby", _net.ReturnToLobby) { Hint = "Pentru toți jucătorii. Tura de acum se pierde." });
             m.Items.Add(new MenuItem("Părăsește jocul", () => LeaveNet(null)) { Hint = "În multiplayer jocul nu se oprește cât stai în meniu." });
         }

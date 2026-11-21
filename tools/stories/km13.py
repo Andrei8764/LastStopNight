@@ -7,7 +7,7 @@ ID = "km13"
 PROPERTIES = [
     prop("player.fear", 0, 100, 10, "Frică", "bar", "eye", "#9A4FD0"),
     prop("player.life", 0, 100, 100, "Integritate", "bar", "heart", "#D8333F"),
-    prop("story.clues", 0, 7, 0, "Indicii", "value", "clue"),
+    prop("story.clues", 0, 7, 0, "Indicii", "value", "clue", shared=True),
     prop("story.promise", 0, 1, 0, "Promisiune", "hidden"),
     prop("story.radio", 0, 2, 0, "Radio", "hidden"),
 ]

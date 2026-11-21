@@ -24,6 +24,8 @@ namespace LastStopNight.Net;
 [JsonDerivedType(typeof(ExamineReqMsg), "examine")]
 [JsonDerivedType(typeof(ActionMsg), "action")]
 [JsonDerivedType(typeof(ForkMsg), "fork")]
+[JsonDerivedType(typeof(JoinReqMsg), "joinreq")]
+[JsonDerivedType(typeof(JoinMsg), "join")]
 [JsonDerivedType(typeof(HashMsg), "hash")]
 [JsonDerivedType(typeof(ResyncMsg), "resync")]
 [JsonDerivedType(typeof(ReturnToLobbyMsg), "tolobby")]
@@ -71,14 +73,30 @@ public sealed record ActionMsg(int Seq, int Timeline, GameAction Action) : NetMe
 /// </summary>
 public sealed record ForkMsg(int Seq, int From, int NewTimeline, List<int> Players) : NetMessage;
 
+/// <summary>Clientul vrea sa treaca pe drumul altui jucator (sau sa se uite la el, daca a terminat).</summary>
+public sealed record JoinReqMsg(int TargetPlayer) : NetMessage;
+
+/// <summary>
+/// Un jucator trece pe drumul <paramref name="To"/> (merge dupa cineva); <paramref name="Watch"/> = a terminat
+/// si doar se uita. Are numar de ordine, ca actiunile.
+/// </summary>
+public sealed record JoinMsg(int Seq, int Player, int To, bool Watch) : NetMessage;
+
+/// <summary>De unde s-a desprins un drum: drumul, blocul si cate actiuni avea atunci (pentru „mergi dupa el”).</summary>
+public sealed record ForkOrigin(int From, string BlockId, int LogCount);
+
 /// <summary>Amprenta starii unui drum dupa un numar de actiuni (verificarea sincronizarii).</summary>
 public sealed record HashMsg(int Timeline, int LogCount, string Hash) : NetMessage;
 
-/// <summary>Un drum complet: cine e pe el si toate actiunile lui, de la inceputul turei.</summary>
-public sealed record TimelineData(int Id, List<int> Players, List<GameAction> Actions);
+/// <summary>Un drum complet: cine e pe el, toate actiunile lui de la inceputul turei si de unde s-a desprins.</summary>
+public sealed record TimelineData(int Id, List<int> Players, List<GameAction> Actions, ForkOrigin? Origin = null);
 
-/// <summary>Toate drumurile, de la inceput: clientul desincronizat le reface. Seq = ultimul numar de ordine.</summary>
-public sealed record ResyncMsg(List<string> Companions, List<TimelineData> Timelines, int Seq) : NetMessage;
+/// <summary>
+/// Toate drumurile, de la inceput: clientul desincronizat le reface. Seq = ultimul numar de ordine;
+/// Watchers = cine doar se uita; FinishedOn = pe ce drum a terminat fiecare care a plecat de acolo.
+/// </summary>
+public sealed record ResyncMsg(List<string> Companions, List<TimelineData> Timelines, int Seq, List<int> Watchers,
+                               Dictionary<int, int> FinishedOn) : NetMessage;
 
 public sealed record ReturnToLobbyMsg : NetMessage;
 
@@ -98,7 +116,10 @@ public sealed class LobbyState
     public string StoryTitle { get; set; } = "";
     public string Fingerprint { get; set; } = "";
     public bool InGame { get; set; }
-    /// <summary>Daca jucatorii voteaza diferit, fiecare merge pe drumul lui (altfel castiga majoritatea).</summary>
+    /// <summary>
+    /// Da: fiecare alege liber (cine alege pleaca, ceilalti pot merge dupa el sau pot alege altceva).
+    /// Nu: vot comun, castiga majoritatea si ramaneti impreuna.
+    /// </summary>
     public bool AllowSplit { get; set; } = true;
     public List<LobbyPlayer> Players { get; set; } = new();
 }
@@ -106,7 +127,7 @@ public sealed class LobbyState
 public static class NetJson
 {
     /// <summary>Versiunea protocolului: doua exe-uri diferite primesc un mesaj clar, nu o desincronizare.</summary>
-    public const int ProtocolVersion = 2;
+    public const int ProtocolVersion = 3;
     public const int DefaultPort = 27013;
     public const int DiscoveryPort = 27014;
 

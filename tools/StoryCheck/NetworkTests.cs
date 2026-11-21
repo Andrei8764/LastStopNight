@@ -8,7 +8,8 @@ namespace StoryCheck;
 
 /// <summary>
 /// Multiplayer pe localhost, cu TCP real: o gazda si un client joaca KM 13 de la lobby pana la final,
-/// plus cazurile grele (egalitate la vot, drumuri separate, stare stricata, lobby plin, iesire, conexiune inactiva).
+/// plus cazurile grele (egalitate la vot, fiecare alege liber, mers dupa altul, indicii la comun, privit, concluzii,
+/// stare stricata, lobby plin, iesire, conexiune inactiva).
 /// Gazda asculta doar pe loopback: fara firewall, fara router.
 /// </summary>
 public static class NetworkTests
@@ -52,6 +53,9 @@ public static class NetworkTests
         report.Check(Pump(() => client.HasEngine && client.Lobby.Players.Count == 2, host, client), "clientul intră și primește povestea de la gazdă");
         report.Check(client.HasEngine && StoryArchive.Fingerprint(client.Package!) == StoryArchive.Fingerprint(story), "povestea primită e identică (amprentă)");
         report.Check(client.Lobby.Players.FirstOrDefault(p => p.Id == client.LocalId)?.CharacterId == "vlad", "clientul primește automat personajul liber (Vlad)");
+        report.Check(client.Lobby.AllowSplit, "implicit, fiecare alege liber");
+        host.SetAllowSplit(false); // primele teste: vot comun
+        Pump(() => !client.Lobby.AllowSplit, host, client);
         client.Pick("mara");
         Pump(() => false, host, client);
         report.Check(client.Lobby.Players.First(p => p.Id == client.LocalId).CharacterId == "vlad", "nu poți lua personajul altcuiva");
@@ -116,8 +120,6 @@ public static class NetworkTests
 
     private static void TieGoesToFirstVote(Report report, NetSession host, NetSession client)
     {
-        host.SetAllowSplit(false); // cu drumuri separate, doua voturi diferite ar desparti jucatorii
-        Pump(() => !client.Lobby.AllowSplit, host, client);
         var finalBlock = host.Engine.CurrentBlock!;
         int first = host.Engine.GetDecisions().First(o => o.IsAvailable).Index;
         int second = host.Engine.GetDecisions().Last(o => o.IsAvailable).Index;
@@ -146,8 +148,9 @@ public static class NetworkTests
     }
 
     /// <summary>
-    /// Drumuri separate: la km.start gazda alege radioul, clientul pompele. Fiecare continua singur, cu echipa
-    /// redusa la personajul lui; fiecare calculator tine ambele drumuri, identice cu ale celuilalt.
+    /// Fiecare alege liber: la km.start gazda alege radioul si pleaca imediat; clientul ramane, apoi merge dupa ea (F).
+    /// La radio se despart (fiecare alta decizie, fiecare cu un indiciu): indiciile se aduna pe ambele drumuri.
+    /// Clientul termina primul si se uita la gazda; cand termina si ea, amandoi vad concluziile.
     /// </summary>
     private static void SplitRoutes(Report report, NetSession host, NetSession client)
     {
@@ -161,31 +164,76 @@ public static class NetworkTests
         int hostId = host.LocalId, clientId = client.LocalId;
 
         host.RequestChoose(host.Engine.GetDecisions().First(o => o.Index == 0));
-        Pump(() => client.Votes.Count == 1, host, client);
-        report.Check(host.Engine.CurrentBlock!.Id == "km.start", "cu un singur vot, drumul așteaptă votul celuilalt");
-        client.RequestChoose(client.Engine.GetDecisions().First(o => o.Index == 1));
-        bool split = Pump(() => client.IsSplit && client.Engine.CurrentBlock?.Id == "km.pumps" && host.Engine.CurrentBlock?.Id == "km.radio1", host, client);
-        report.Check(split && host.IsSplit, "voturi diferite: fiecare merge pe drumul lui (gazda la radio, clientul la pompe)");
-        report.Check(host.Engine.Party.SequenceEqual(["mara"]) && client.Engine.Party.SequenceEqual(["vlad"]),
-            "după despărțire, fiecare drum are doar personajul lui");
-        report.Check(SameRoutes(host, client, hostId, clientId) && !host.RemoteCharacters.Any() && !client.RemoteCharacters.Any(),
-            "ambele calculatoare țin ambele drumuri, identice (iar celălalt nu mai apare în scena ta)");
-        report.Check(client.Routes.Count == 2 && client.Routes.All(r => r.Engine.Path.SequenceEqual(host.Routes.First(h => h.Timeline == r.Timeline).Engine.Path))
-                     && host.Engine.Path.SequenceEqual(["km.start", "km.radio1"]) && client.Engine.Path.SequenceEqual(["km.start", "km.pumps"]),
-            "harta: fiecare drum își știe blocurile, la fel pe ambele calculatoare");
+        bool left = Pump(() => client.IsSplit && client.Follow is not null && client.EngineOf(hostId)?.CurrentBlock?.Id == "km.radio1", host, client);
+        report.Check(left && host.Engine.CurrentBlock!.Id == "km.radio1" && client.Engine.CurrentBlock!.Id == "km.start",
+            "cine alege pleacă imediat (gazda la radio), fără vot; celălalt rămâne unde era");
+        report.Check(client.Follow is { DecisionText: "Dă mai tare la radio" } f && f.Players.SequenceEqual([hostId]) && host.Follow is null,
+            "celălalt primește „Mara a ales: Dă mai tare la radio”, cu varianta să meargă după ea");
+        report.Check(host.Engine.Party.SequenceEqual(["mara"]) && client.Engine.Party.SequenceEqual(["vlad"]) && !host.RemoteCharacters.Any(),
+            "până merge după ea, fiecare drum are doar personajul lui");
 
-        int before = client.Engine.Log.Count;
-        client.RequestChoose(client.Engine.GetDecisions().First(o => o.IsAvailable));
-        report.Check(Pump(() => client.Engine.Log.Count > before && SameRoutes(host, client, hostId, clientId), host, client)
-                     && host.Engine.CurrentBlock!.Id == "km.radio1",
-            "pe drumul lui, clientul decide singur, fără să aștepte gazda");
+        client.FollowNow();
+        bool joined = Pump(() => !client.IsSplit || client.OnMyRoute(hostId), host, client)
+                      && Pump(() => host.Engine.Party.Count == 2 && client.Engine.StateHash() == host.Engine.StateHash(), host, client);
+        report.Check(joined && client.Engine.CurrentBlock!.Id == "km.radio1" && client.Engine.Party.OrderBy(x => x).SequenceEqual(["mara", "vlad"])
+                     && client.RemoteCharacters.SequenceEqual(["mara"]) && host.RemoteCharacters.SequenceEqual(["vlad"]) && client.Follow is null,
+            "F: clientul merge după gazdă (aceeași stare, Vlad intră înapoi în echipă, se văd în scenă)");
+        report.Check(client.Routes.Count == 1 && client.Routes[0].Players.Count == 2 && SameMaps(host, client),
+            "pe hartă sunteți din nou pe același drum (cel lăsat gol nu mai apare), la fel pe ambele calculatoare");
+
+        int clues = host.Engine.State.Get("story.clues");
+        client.RequestChoose(client.Engine.GetDecisions().First(o => o.Index == 0)); // Schimba postul: +1 indiciu
+        Pump(() => client.Engine.CurrentBlock?.Id == "km.trucker" && host.Follow is not null, host, client);
+        host.RequestChoose(host.Engine.GetDecisions().First(o => o.Index == 1));     // Asculta pana la capat: +1 indiciu
+        bool apart = Pump(() => host.Engine.CurrentBlock?.Id == "km.radio2" && SameRoutes(host, client, hostId, clientId)
+                                && client.Engine.State.Get("story.clues") == clues + 2, host, client);
+        report.Check(apart && host.Engine.State.Get("story.clues") == clues + 2,
+            $"pe drumuri diferite, indiciile se pun la comun ({clues} + 1 al tău + 1 al celuilalt = {clues + 2} pe ambele drumuri)");
 
         client.Engine.State.Set("player.fear", 99); // stricam drumul clientului
         int resyncs = host.Resyncs;
         client.RequestChoose(client.Engine.GetDecisions().First(o => o.IsAvailable));
         report.Check(Pump(() => host.Resyncs > resyncs && client.IsSplit && SameRoutes(host, client, hostId, clientId), host, client),
             "o stare stricată pe un drum separat e reparată (se retrimit toate drumurile)");
+
+        bool clientDone = PlayToEnd(client, host, client);
+        string clientEnding = client.Engine.CurrentBlock!.Id;
+        report.Check(clientDone && !client.AllFinished && client.JoinTargets.Any(p => p.Id == hostId), $"clientul ajunge la un final ({clientEnding}), gazda încă joacă");
+        client.RequestJoin(hostId);
+        bool watching = Pump(() => client.Watching && client.Engine.StateHash() == host.Engine.StateHash() && host.IsWatching(clientId), host, client);
+        int before = host.Engine.Log.Count;
+        client.RequestChoose(client.Engine.GetDecisions().First(o => o.IsAvailable));
+        Pump(() => false, host, client);
+        report.Check(watching && host.Engine.Log.Count == before && !host.RemoteCharacters.Any() && client.RemoteCharacters.SequenceEqual(["mara"])
+                     && client.EndingOf(clientId)?.CurrentBlock?.Id == clientEnding,
+            "după final, clientul se uită la gazdă: vede ce vede ea, dar nu poate alege și nu apare în scena ei");
+
+        bool hostDone = PlayToEnd(host, host, client);
+        report.Check(hostDone && Pump(() => client.AllFinished && host.AllFinished, host, client)
+                     && client.EndingOf(hostId)?.CurrentBlock?.Id == host.Engine.CurrentBlock!.Id
+                     && host.EndingOf(clientId)?.CurrentBlock?.Id == clientEnding && SameMaps(host, client),
+            $"când termină și gazda ({host.Engine.CurrentBlock!.Id}), amândoi văd aceleași concluzii (finalul fiecăruia)");
     }
+
+    /// <summary>Alege prima decizie disponibila pana la un final.</summary>
+    private static bool PlayToEnd(NetSession player, params NetSession[] all)
+    {
+        for (int i = 0; i < 40 && !player.Engine.IsFinished; i++)
+        {
+            int count = player.Engine.Log.Count;
+            var option = player.Engine.GetDecisions().FirstOrDefault(o => o.IsAvailable);
+            if (option is null) return false;
+            player.RequestChoose(option);
+            if (!Pump(() => player.Engine.Log.Count > count && all.All(x => x.Routes.Count == all[0].Routes.Count), all)) return false;
+        }
+        Pump(() => false, all);
+        return player.Engine.IsFinished;
+    }
+
+    private static bool SameMaps(NetSession host, NetSession client) =>
+        host.Routes.Count == client.Routes.Count
+        && host.Routes.Zip(client.Routes).All(p => p.First.Timeline == p.Second.Timeline && p.First.Players.SequenceEqual(p.Second.Players)
+                                                   && p.First.Engine.StateHash() == p.Second.Engine.StateHash());
 
     private static bool SameRoutes(NetSession host, NetSession client, int hostId, int clientId) =>
         host.EngineOf(clientId)?.StateHash() == client.Engine.StateHash()
@@ -244,8 +292,12 @@ public static class NetworkTests
             new ForkMsg(4, 0, 1, [2]),
             new ActionMsg(5, 1, new PartyAction("km.start", "vlad", ["vlad"])),
             new HashMsg(1, 4, "00ff"),
+            new JoinReqMsg(1),
+            new JoinMsg(6, 2, 0, true),
+            new ActionMsg(7, 1, new ShareAction("km.radio1", "mara", "story.clues", 3)),
             new ResyncMsg(["vlad"], [new TimelineData(0, [1], [new ExamineAction("km.start", "st.poster", "mara")]),
-                                     new TimelineData(1, [2], [new PartyAction("km.start", "vlad", ["vlad"])])], 7),
+                                     new TimelineData(1, [2], [new PartyAction("km.start", "vlad", ["vlad"])], new ForkOrigin(0, "km.start", 1))], 7,
+                [2], new() { [2] = 1 }),
             new ReturnToLobbyMsg(),
             new ByeMsg("gata"),
         ];

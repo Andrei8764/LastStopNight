@@ -67,6 +67,7 @@ public sealed partial class NetSession
                     break;
                 }
                 if (a.Action is ExamineAction x && text is not null && a.Timeline == TimelineOf(LocalId)) RaiseExamined(x, text);
+                if (a.Action is ShareAction sh && a.Timeline == TimelineOf(LocalId)) Shared?.Invoke(sh);
                 host?.Send(new HashMsg(a.Timeline, engine.Log.Count, engine.StateHash()));
                 break;
             case ForkMsg f when HasEngine:
@@ -78,8 +79,17 @@ public sealed partial class NetSession
                 _seq = f.Seq;
                 Fork(f.From, f.NewTimeline, f.Players);
                 break;
+            case JoinMsg j when HasEngine:
+                if (j.Seq != _seq + 1 || !_timelines.ContainsKey(j.To))
+                {
+                    host?.Send(new HashMsg(j.To, -1, ""));
+                    break;
+                }
+                _seq = j.Seq;
+                MovePlayer(j.Player, j.To, j.Watch);
+                break;
             case ResyncMsg rs when HasEngine:
-                RestoreTimelines(rs.Companions, rs.Timelines);
+                RestoreTimelines(rs);
                 _seq = rs.Seq;
                 Resynced?.Invoke();
                 break;

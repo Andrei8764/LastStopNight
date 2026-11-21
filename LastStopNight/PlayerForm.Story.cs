@@ -104,7 +104,7 @@ public sealed partial class PlayerForm
         _images = new ImageCache(pkg);
         _engine = engine;
         _engine.BlockChanged += OnBlockChanged;
-        _engine.StateChanged += (_, e) => { if (!_replaying) _pendingChanges.AddRange(e.Changes); };
+        _engine.StateChanged += (_, e) => { if (!_replaying && _net?.Replaying != true) _pendingChanges.AddRange(e.Changes); };
         _session = session;
         _hudKey = default;
         Text = pkg.Story.Title;
@@ -184,7 +184,7 @@ public sealed partial class PlayerForm
 
     private void OnBlockChanged(object? sender, BlockChangedEventArgs e)
     {
-        if (_replaying) return;
+        if (_replaying || _net?.Replaying == true) return; // motorul se reface: conteaza doar blocul de la sfarsit
         EnterBlock(e.Current, e.Redirect);
     }
 
@@ -197,7 +197,7 @@ public sealed partial class PlayerForm
         // in multiplayer decizia se aude cand se aplica (dupa vot), nu cand votezi
         if (_net is not null && _scene is { Player: not null } && !block.IsEnding) PlaySfx("choose");
         if (_net is not null)
-            _scene = new Scene(_engine.Story, block, _images, _scene, includePlayer: !block.IsEnding,
+            _scene = new Scene(_engine.Story, block, _images, _scene, includePlayer: !block.IsEnding && !_net.Watching,
                 playerCharacter: _net.LocalPlayer, remotes: RemotePositions())
             { SeenExamines = seen };
         else
@@ -220,11 +220,7 @@ public sealed partial class PlayerForm
         if (block.IsEnding)
         {
             _endings.Add(_engine.Story.Title, block.Id);
-            if (_net is { IsHost: true } host)
-                SetButtons((host.OtherRoutes.Any(r => !r.Block.IsEnding) ? "Înapoi în lobby (ceilalți încă joacă)" : "Înapoi în lobby (pentru toți)",
-                        host.ReturnToLobby, true, null, null, 1), ("Părăsește jocul", () => LeaveNet(null), true, null, null, 2));
-            else if (_net is not null)
-                SetButtons(("Așteptăm gazda să aleagă...", () => { }, false, null, null, null), ("Părăsește jocul", () => LeaveNet(null), true, null, null, 2));
+            if (_net is not null) BuildEndingButtons();
             else
                 SetButtons(("Joacă din nou", () => StartGame(), true, null, null, 1), ("Meniul principal", ShowMainMenu, true, null, null, 2));
         }
@@ -283,9 +279,15 @@ public sealed partial class PlayerForm
     private void BuildDecisionButtons()
     {
         if (_engine is null || _scene is null || _images is null) return;
+        if (_net is { Watching: true } watching)
+        {
+            _scene.Interactables.Clear();
+            BuildWatchButtons(watching);
+            return;
+        }
         RefreshInteractables();
         int n = 0;
-        SetButtons(_engine.GetDecisions().Select(o =>
+        var buttons = _engine.GetDecisions().Select(o =>
         {
             n++;
             string label = o.IsAvailable
@@ -300,15 +302,23 @@ public sealed partial class PlayerForm
                 : o.Decision.HotspotX is not null ? ButtonIcons.Walk : null;
             var opt = o;
             return (label, (Action)(() => Activate(opt)), o.IsAvailable, tip, icon, (int?)n);
-        }).ToArray());
+        }).ToList();
+        // multiplayer: cineva a ales si a plecat; butonul de mers dupa el sta la urma (cifrele raman ale deciziilor)
+        if (_net?.Follow is { } follow)
+        {
+            var net = _net;
+            buttons.Add(($"Mergi după {NamesOf(follow.Players)}: „{follow.DecisionText}”  (F)", () => net.FollowNow(), true,
+                "Ajungi unde a ajuns el, cu ce a găsit. Sau alege tu altceva și mergi pe drumul tău.", ButtonIcons.Walk, null));
+        }
+        SetButtons(buttons.ToArray());
         if (_net is null) return;
         var story = _engine.Story;
-        var buttons = _choices.Controls.OfType<ChoiceButton>().ToList();
+        var choiceButtons = _choices.Controls.OfType<ChoiceButton>().ToList();
         var options = _engine.GetDecisions();
-        for (int i = 0; i < buttons.Count && i < options.Count; i++)
+        for (int i = 0; i < choiceButtons.Count && i < options.Count; i++)
             foreach (var voter in _net.VotersFor(options[i].Index))
                 if (story.FindCharacter(_net.CharacterOf(voter)) is { } vc && Portraits.Badge(_images, vc) is { } badge)
-                    buttons[i].Voters.Add(badge);
+                    choiceButtons[i].Voters.Add(badge);
     }
 
     private void SetButtons(params (string Text, Action Action, bool Enabled, string? Tip, Bitmap? Icon, int? Number)[] buttons)
@@ -351,7 +361,7 @@ public sealed partial class PlayerForm
     private void Execute(Scene origin, DecisionOption option)
     {
         if (_engine is null || _session is null || _scene != origin || _engine.CurrentBlock != origin.Block) return;
-        PlaySfx(_net is null ? "choose" : "vote");
+        PlaySfx(_net is null || _net.Lobby.AllowSplit ? "choose" : "vote");
         try { _session.RequestChoose(option); }
         catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
         {

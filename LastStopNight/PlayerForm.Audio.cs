@@ -1,6 +1,5 @@
 using LastStopNight.Audio;
 using LastStopNight.Core.Model;
-using LastStopNight.Effects;
 using LastStopNight.Game;
 using MenuItem = LastStopNight.Ui.MenuItem;
 
@@ -28,7 +27,7 @@ public sealed partial class PlayerForm
     {
         float max = GameSettings.MaxVolume;
         _audio.SetVolumes(_settings.SfxVolume / max, _settings.AmbientVolume / max, _settings.MusicVolume / max);
-        _audio.Muted = _settings.Muted;
+        _audio.Muted = false; // tasta M nu mai exista: cine a oprit sunetul cu ea il primeste inapoi (volumele sunt in Setari)
     }
 
     private void PlaySfx(string name, float volume = 1, float rate = 1) => _audio.Play(name, volume, rate);
@@ -60,15 +59,6 @@ public sealed partial class PlayerForm
             return;
         }
         _audio.SetAmbient(Soundscape.Loops(block, _engine?.Story.FindLocation(block.Location)));
-    }
-
-    private void ToggleMute()
-    {
-        _settings.Muted = !_settings.Muted;
-        _settings.Save();
-        ApplyAudioSettings();
-        _scene?.Effects.Add(new FloatingTextEffect(_settings.Muted ? "Sunet: oprit (M)" : "Sunet: pornit (M)",
-            Color.FromArgb(230, 220, 200), new PointF(160, 30), 0));
     }
 
     /// <summary>O optiune de volum pentru Setari (stanga / dreapta, 0..10).</summary>

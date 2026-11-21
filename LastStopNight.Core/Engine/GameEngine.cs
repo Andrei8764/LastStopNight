@@ -95,11 +95,18 @@ public sealed class GameEngine
                          ?? throw new InvalidOperationException($"Obiectul „{x.ExamineId}” nu poate fi examinat aici.");
                 return ExamineInternal(ex, x);
             case PartyAction p:
-                if (p.Members.Count == 0 || p.Members.Any(m => !State.Party.Contains(m)))
-                    throw new ArgumentException("Noua echipă trebuie să fie o parte din echipa de acum.", nameof(action));
+                if (p.Members.Count == 0 || p.Members.Any(m => Story.FindPlayable(m) is null))
+                    throw new ArgumentException("Echipa poate avea doar personaje jucabile.", nameof(action));
                 _log.Add(p);
                 State.SetParty(p.Members.Distinct());
                 StateChanged?.Invoke(this, new StateChangedEventArgs([]));
+                return null;
+            case ShareAction sh:
+                if (Story.FindProperty(sh.Key) is not { Shared: true })
+                    throw new ArgumentException($"Proprietatea „{sh.Key}” nu e pusă la comun.", nameof(action));
+                _log.Add(sh);
+                var change = State.Set(sh.Key, sh.Value);
+                StateChanged?.Invoke(this, new StateChangedEventArgs(change.Delta != 0 ? [change] : []));
                 return null;
             default:
                 throw new NotSupportedException(action.GetType().Name);

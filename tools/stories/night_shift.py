@@ -11,7 +11,7 @@ PROPERTIES = [
     prop("player.energy", 0, 100, 80, "Energie", "bar", "bolt", "#E8C440"),
     prop("inventory.money", 0, 900, 0, "Bani", "value", "coin", fmt="${0}"),
     prop("story.hasHandbook", 0, 1, 0, "Registru", "flag", "book"),
-    prop("story.evidence", 0, 3, 0, "Dovezi", "value", "clue", fmt="{0}/3"),
+    prop("story.evidence", 0, 3, 0, "Dovezi", "value", "clue", fmt="{0}/3", shared=True),
     prop("story.night", 1, 3, 1, "Noaptea", "value", "moon", fmt="{0}/3"),
     prop("story.cat", 0, 3, 0, "Pisica", "hidden"),
     prop("story.trust", 0, 1, 0, "Încredere în proprietar", "hidden"),

@@ -66,8 +66,11 @@ public static class LobbyView
             g.DrawString(extra, Mono(s, 5.6f), Gfx.Brush(Ink), view.X + 20 * s, view.Y + y * s);
             y += 7;
         }
-        Wrap(g, info.Note, Body(s, 4.6f), Muted, R(view, s, 20, y + 1, 130, 30));
-        return y + 32;
+        // nota ocupa doar cat ii trebuie, ca lista de jucatori sa nu ajunga peste optiunile de jos
+        var font = Body(s, 4.6f);
+        float h = Math.Min(30, g.MeasureString(info.Note, font, (int)(130 * s)).Height / s + 1);
+        Wrap(g, info.Note, font, Muted, R(view, s, 20, y + 1, 130, h));
+        return y + h + 3;
     }
 
     private static void DrawPlayers(Graphics g, RectangleF view, float s, NetSession net, Core.Model.StoryDefinition story,
@@ -75,16 +78,30 @@ public static class LobbyView
     {
         g.DrawString("JUCĂTORI", Mono(s, 5.2f), Gfx.Brush(Muted), view.X + 20 * s, view.Y + y * s);
         y += 7;
+        // randuri mai scunde daca altfel lista ar intra peste optiunea de sub ea (gazda are multe coduri)
+        float row = y + net.Lobby.Players.Count * 14 > ButtonsTop - 6 ? 10 : 14;
         foreach (var p in net.Lobby.Players)
         {
             var c = story.FindCharacter(p.CharacterId);
+            float icon = row - 5;
             if (c is not null && images is not null && Portraits.Badge(images, c) is { } badge)
-                g.DrawImage(badge, view.X + 20 * s, view.Y + y * s, 9 * s, 9 * s);
+                g.DrawImage(badge, view.X + 20 * s, view.Y + y * s, icon * s, icon * s);
             string tag = p.IsHost ? "gazdă" : p.Ready ? "gata" : "alege...";
-            g.DrawString(p.Name + (p.Id == net.LocalId ? " (tu)" : ""), Mono(s, 6f), Gfx.Brush(Ink), view.X + 32 * s, view.Y + (y + 0.5f) * s);
-            g.DrawString($"{c?.Name ?? "fără personaj"}, {tag}", Body(s, 4.8f), Gfx.Brush(p.Ready || p.IsHost ? Warm : Muted),
-                view.X + 32 * s, view.Y + (y + 6) * s);
-            y += 14;
+            string name = p.Name + (p.Id == net.LocalId ? " (tu)" : "");
+            var detailBrush = Gfx.Brush(p.Ready || p.IsHost ? Warm : Muted);
+            if (row < 14)
+            {
+                var nf = Mono(s, 5.4f);
+                g.DrawString(name, nf, Gfx.Brush(Ink), view.X + 30 * s, view.Y + y * s);
+                g.DrawString($"{c?.Name.Split(' ')[0] ?? "fără personaj"}, {tag}", Body(s, 4.6f), detailBrush,
+                    view.X + 30 * s + g.MeasureString(name, nf).Width + 2 * s, view.Y + (y + 0.6f) * s);
+            }
+            else
+            {
+                g.DrawString(name, Mono(s, 6f), Gfx.Brush(Ink), view.X + 32 * s, view.Y + (y + 0.5f) * s);
+                g.DrawString($"{c?.Name ?? "fără personaj"}, {tag}", Body(s, 4.8f), detailBrush, view.X + 32 * s, view.Y + (y + 6) * s);
+            }
+            y += row;
         }
         if (net.Lobby.Players.Count < Math.Max(1, story.MaxPlayers))
             g.DrawString("așteptăm încă un jucător...", Body(s, 5f), Gfx.Brush((int)(150 + 80 * MathF.Sin(time * 3)), Muted.R, Muted.G, Muted.B),
@@ -114,7 +131,7 @@ public static class LobbyView
             var it = m.Items[i];
             if (it.Value is not null)
             {
-                // optiunile (ex. „Drumuri separate: Da”) stau in coloana din stanga, sub jucatori
+                // optiunile (ex. „Decizii: Fiecare alege”) stau in coloana din stanga, sub jucatori
                 DrawOption(g, view, s, hits, it, i == m.Selected, optionY);
                 optionY += 13;
                 continue;

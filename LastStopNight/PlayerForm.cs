@@ -225,6 +225,10 @@ public sealed partial class PlayerForm : Form
             if (e is not ChapterCardEffect) e.DrawOverlay(g, view, s, _scene);
         if (_mode == Mode.Playing && _scene.Player is not null && !_paused) DrawPlayingHints(g, view, s);
         if (_mode == Mode.Playing && _net is { Votes.Count: > 0 } net) Overlays.DrawVoteBanner(g, view, s, net);
+        else if (_mode == Mode.Playing && !_showMap && _net?.Follow is { } follow)
+            Overlays.DrawBanner(g, view, s, $"{NamesOf(follow.Players)} a ales: „{follow.DecisionText}”.   F: mergi după el   sau alege altceva");
+        else if (_mode == Mode.Playing && !_showMap && _net is { Watching: true } w)
+            Overlays.DrawBanner(g, view, s, $"Te uiți la {NamesOf(w.RoutePlayers.Select(p => p.Id))}.   Esc: uită-te la altcineva");
         else if (_mode is Mode.Playing or Mode.Ending && !_showMap && _net is { IsSplit: true } split && _engine is { } eng)
             Overlays.DrawOtherRoutes(g, view, s, split, id => eng.Story.FindCharacter(id)?.Name.Split(' ')[0] ?? id);
         if (_mode == Mode.Ending)

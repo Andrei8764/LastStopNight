@@ -18,12 +18,14 @@ public sealed class PropertiesPage : EditorPage
         var icon = Ui.AddCombo(_grid, "icon", "Iconiță", ["", .. ctx.ImagesIn("images/ui/")], 110);
         Ui.AddText(_grid, "color", "Culoare", 60);
         Ui.AddText(_grid, "format", "Format", 50);
+        Ui.AddCheck(_grid, "shared", "La comun", 45);
         Ui.EnsureItems(icon, ctx.Story.Properties.Select(p => p.Icon));
         foreach (var p in ctx.Story.Properties)
-            _grid.Rows.Add(p.Key, p.Min, p.Max, p.Initial, p.HudLabel, p.Display.ToString(), p.Icon ?? "", p.Color ?? "", p.Format ?? "");
+            _grid.Rows.Add(p.Key, p.Min, p.Max, p.Initial, p.HudLabel, p.Display.ToString(), p.Icon ?? "", p.Color ?? "", p.Format ?? "", p.Shared);
         Controls.Add(_grid);
         Controls.Add(Title("PROPRIETĂȚI DE STARE",
-            "Valori numerice limitate la [min, max]. Afișare: Bar / Value / Flag / Hidden. Format: {0} = valoarea (ex. ${0})."));
+            "Valori numerice limitate la [min, max]. Afișare: Bar / Value / Flag / Hidden. Format: {0} = valoarea (ex. ${0}). " +
+            "La comun: în multiplayer, pe drumuri separate, ce găsește un drum (ex. indiciile) se adună și la ceilalți."));
     }
 
     public override string? Commit()
@@ -41,6 +43,7 @@ public sealed class PropertiesPage : EditorPage
                 Icon = NullIfEmpty(Ui.Cell(r, "icon")),
                 Color = NullIfEmpty(Ui.Cell(r, "color")),
                 Format = NullIfEmpty(Ui.Cell(r, "format")),
+                Shared = Ui.Check(r, "shared"),
             }).ToList();
             if (list.Any(p => p.Key.Length == 0)) return "Fiecare proprietate trebuie să aibă o cheie.";
             Ctx.Story.Properties = list;

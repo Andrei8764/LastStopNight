@@ -15,8 +15,9 @@ public sealed record RemoteMove(int PlayerId, string CharacterId, string BlockId
 
 /// <summary>
 /// Sesiunea multiplayer (P2P: unul dintre jucatori e gazda, nu exista server).
-/// - Gazda tine lobby-ul, numara voturile, aplica actiunile pe motorul ei si le trimite tuturor, numerotate.
-/// - Daca jucatorii voteaza diferit, se pot desparti: fiecare grup continua pe drumul lui (vezi NetSession.Timelines).
+/// - Gazda tine lobby-ul, aplica actiunile pe motorul ei si le trimite tuturor, numerotate.
+/// - Implicit fiecare alege liber: cine alege pleaca, ceilalti pot merge dupa el (vezi NetSession.Free si NetSession.Timelines).
+///   Optional (din lobby), vot comun: gazda numara voturile si castiga majoritatea.
 /// - Clientii trimit doar cereri (vot, examinare, pozitie) si aplica actiunile primite, in ordine.
 /// - Dupa fiecare actiune, clientii trimit amprenta starii; daca difera, gazda retrimite tot jurnalul.
 /// Toata logica ruleaza in <see cref="Pump"/>, apelat de joc pe firul interfetei.
@@ -205,17 +206,17 @@ public sealed partial class NetSession : IGameSession, IDisposable
         _peers.FirstOrDefault()?.Send(new ReadyMsg(ready));
     }
 
-    /// <summary>Votul jucatorului local pentru o decizie.</summary>
+    /// <summary>Decizia jucatorului local (in modul vot comun: votul lui).</summary>
     public void RequestChoose(DecisionOption option)
     {
-        if (Engine.CurrentBlock is not { } b || !option.IsAvailable) return;
+        if (Engine.CurrentBlock is not { } b || !option.IsAvailable || Watching) return;
         if (IsHost) CastVote(LocalId, b.Id, option.Index);
         else _peers.FirstOrDefault()?.Send(new VoteMsg(LocalId, b.Id, option.Index));
     }
 
     public void RequestExamine(ExamineDefinition examine)
     {
-        if (Engine.CurrentBlock is not { } b) return;
+        if (Engine.CurrentBlock is not { } b || Watching) return;
         if (IsHost) ApplyAndBroadcast(TimelineOf(LocalId), new ExamineAction(b.Id, examine.Id, LocalPlayer));
         else _peers.FirstOrDefault()?.Send(new ExamineReqMsg(b.Id, examine.Id));
     }
@@ -243,13 +244,17 @@ public sealed partial class NetSession : IGameSession, IDisposable
         Assignments.FirstOrDefault(kv => kv.Value == characterId) is { Value: not null } kv && kv.Key != 0
             ? Lobby.Players.FirstOrDefault(p => p.Id == kv.Key)?.Name : null;
 
-    /// <summary>Personajele celorlalti jucatori conectati de pe drumul tau (cei de pe alte drumuri nu sunt in scena ta).</summary>
+    /// <summary>
+    /// Personajele celorlalti jucatori conectati de pe drumul tau (cei de pe alte drumuri nu sunt in scena ta,
+    /// iar privitorii nu apar deloc).
+    /// </summary>
     public IEnumerable<string> RemoteCharacters =>
-        Assignments.Where(kv => kv.Key != LocalId && OnMyRoute(kv.Key) && Lobby.Players.Any(p => p.Id == kv.Key)).Select(kv => kv.Value);
+        Assignments.Where(kv => kv.Key != LocalId && OnMyRoute(kv.Key) && !IsWatching(kv.Key) && Lobby.Players.Any(p => p.Id == kv.Key))
+            .Select(kv => kv.Value);
 
     /// <summary>Unde e fiecare jucator de pe alt drum: numele, personajul si blocul (pentru interfata).</summary>
     public IEnumerable<(string Name, string CharacterId, StoryBlockInfo Block)> OtherRoutes =>
-        Lobby.Players.Where(p => !OnMyRoute(p.Id) && EngineOf(p.Id)?.CurrentBlock is not null)
+        Lobby.Players.Where(p => !OnMyRoute(p.Id) && !IsWatching(p.Id) && EngineOf(p.Id)?.CurrentBlock is not null)
             .Select(p => (p.Name, CharacterOf(p.Id), new StoryBlockInfo(EngineOf(p.Id)!.CurrentBlock!.Title, EngineOf(p.Id)!.CurrentBlock!.IsEnding)));
 
     public void Leave(string reason = "A ieșit din joc.")

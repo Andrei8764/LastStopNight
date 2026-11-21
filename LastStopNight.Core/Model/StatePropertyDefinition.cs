@@ -16,6 +16,10 @@ public sealed class StatePropertyDefinition
     public string? Color { get; set; }
     /// <summary>Format de afisare, unde {0} este valoarea (ex. "${0}", "{0}/3").</summary>
     public string? Format { get; set; }
+    /// <summary>
+    /// Multiplayer, drumuri separate: ce gaseste un drum (ex. indiciile) se aduna si pe celelalte drumuri.
+    /// </summary>
+    public bool Shared { get; set; }
 
     public int Clamp(int value) => Math.Clamp(value, Min, Math.Max(Min, Max));
 
