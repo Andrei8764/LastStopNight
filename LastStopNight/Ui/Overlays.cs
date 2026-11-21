@@ -79,9 +79,58 @@ public static class Overlays
             Gfx.Brush((int)(120 * alpha), 200, 190, 180), view.X + 4 * s, view.Bottom - 9 * s);
     }
 
-    public static void DrawCloseupHint(Graphics g, RectangleF view, float s) =>
+    /// <summary>
+    /// O hartie scrisa peste scena: pagina de registru (liniata, cu titlu) sau bilet mic, scrisa de mana.
+    /// <paramref name="t"/> 0..1: hartia urca si se indreapta cand apare. Textul se micsoreaza daca nu incape.
+    /// </summary>
+    public static void DrawPaper(Graphics g, RectangleF view, float s, PaperDefinition paper, float t)
+    {
+        g.FillRectangle(Gfx.Brush((int)(110 * t), 0, 0, 0), view);
+        float w = (paper.Note ? 130 : 220) * s, pad = 10 * s;
+        string hand = FontCache.Exists("Segoe Print") ? "Segoe Print" : "Georgia";
+        var titleFont = FontCache.Px(hand, paper.Note ? 6.5f : 6.2f, s, FontStyle.Bold);
+        Font body = FontCache.Px(hand, 5.2f, s);
+        float titleH = paper.Title is null ? 0 : g.MeasureString(paper.Title, titleFont, (int)(w - 2 * pad)).Height + 4 * s;
+        float maxH = 150 * s;
+        float bodyH = g.MeasureString(paper.Text, body, (int)(w - 2 * pad)).Height;
+        for (float px = 5f; titleH + bodyH + 2 * pad > maxH && px > 3.4f; px -= 0.3f)
+        {
+            body = FontCache.Px(hand, px, s);
+            bodyH = g.MeasureString(paper.Text, body, (int)(w - 2 * pad)).Height;
+        }
+        float h = Math.Min(maxH, titleH + bodyH + 2 * pad + 2 * s);
+        float x = view.X + (view.Width - w) / 2, y = view.Y + 12 * s + (1 - t) * 30 * s;
+
+        var state = g.Save();
+        g.TranslateTransform(x + w / 2, y + h / 2);
+        g.RotateTransform((1 - t) * -5 - (paper.Note ? 2.5f : 1f));
+        g.TranslateTransform(-w / 2, -h / 2);
+        int a = (int)(255 * t);
+        g.FillRectangle(Gfx.Brush((int)(120 * t), 0, 0, 0), 3 * s, 4 * s, w, h);
+        g.FillRectangle(paper.Note ? Gfx.Brush(a, 246, 232, 160) : Gfx.Brush(a, 238, 229, 206), 0, 0, w, h);
+        if (!paper.Note)
+        {
+            // pagina de registru: linii albastre si marginea rosie
+            var line = Gfx.Pen(Color.FromArgb((int)(70 * t), 90, 120, 170), Math.Max(1, 0.4f * s));
+            for (float ly = pad + titleH + 7 * s; ly < h - 4 * s; ly += 7 * s) g.DrawLine(line, 4 * s, ly, w - 4 * s, ly);
+            g.DrawLine(Gfx.Pen(Color.FromArgb((int)(110 * t), 200, 70, 70), Math.Max(1, 0.5f * s)), pad - 3 * s, 0, pad - 3 * s, h);
+        }
+        else
+        {
+            // biletul e prins cu banda adeziva
+            g.FillRectangle(Gfx.Brush((int)(150 * t), 230, 230, 215), w / 2 - 14 * s, -4 * s, 28 * s, 8 * s);
+        }
+        var ink = Gfx.Brush(a, 30, 36, 80);
+        if (paper.Title is not null)
+            g.DrawString(paper.Title, titleFont, Gfx.Brush(a, 120, 20, 24), new RectangleF(pad, pad, w - 2 * pad, titleH));
+        g.DrawString(paper.Text, body, ink, new RectangleF(pad, pad + titleH, w - 2 * pad, h - 2 * pad - titleH));
+        g.Restore(state);
+    }
+
+    /// <param name="y">Unde se scrie (unitati logice); sub hartie, ca sa nu acopere textul ei.</param>
+    public static void DrawCloseupHint(Graphics g, RectangleF view, float s, float y = 106) =>
         HudRenderer.DrawCenteredText(g, "C sau click: închide", FontCache.Px("Segoe UI", 5.4f, s),
-            Color.FromArgb(170, 220, 210, 200), view, view.Y + 106 * s, s);
+            Color.FromArgb(170, 220, 210, 200), view, view.Y + y * s, s);
 
     /// <summary>Easter egg: filtrul „VHS” (codul Konami) adauga linii de scanare si o banda care coboara.</summary>
     public static void DrawCrt(Graphics g, RectangleF view, double seconds)

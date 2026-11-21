@@ -65,8 +65,9 @@ def look(id, x, label, text, effects=None, condition=None, hidden=False, once=Tr
 
 def block(id, title, text, location=None, time="", decisions=None, chapter=None, mood="normal", fx=None,
           player_x=None, characters=None, closeup=None, background=None, ending=None, ending_title=None,
-          examine=None, props=None, lights=None):
-    """Bloc narativ. ending = "good" / "bad" / "secret" / "alternative" face din el un final."""
+          examine=None, props=None, lights=None, paper=None):
+    """Bloc narativ. ending = "good" / "bad" / "secret" / "alternative" face din el un final.
+    paper = hartie scrisa aratata mare peste scena (vezi paper()), in loc sa fie in textul de jos."""
     b = {"id": id, "title": title, "text": text, "location": location, "time": time, "mood": mood,
          "fx": fx or [], "characters": characters or [], "examine": examine or [], "decisions": decisions or [],
          "props": props or [], "lights": lights or []}
@@ -76,6 +77,8 @@ def block(id, title, text, location=None, time="", decisions=None, chapter=None,
         b["playerX"] = player_x
     if closeup:
         b["closeup"] = closeup
+    if paper:
+        b["paper"] = paper
     if background:
         b["background"] = background
     if ending:
@@ -83,6 +86,16 @@ def block(id, title, text, location=None, time="", decisions=None, chapter=None,
         b["endingType"] = ending
         b["endingTitle"] = ending_title or title
     return b
+
+
+def paper(text, title=None, note=False):
+    """Hartie scrisa (reguli, bilet). note=True: bilet mic, nu pagina de registru."""
+    p = {"text": text}
+    if title:
+        p["title"] = title
+    if note:
+        p["note"] = True
+    return p
 
 
 def playable(cid, role, blurb):

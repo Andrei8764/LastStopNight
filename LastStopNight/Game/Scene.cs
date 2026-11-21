@@ -44,6 +44,7 @@ public sealed class Scene
         Location = story.FindLocation(block.Location);
         Background = images.Get(story.ResolveBackground(block));
         Closeup = images.Get(block.Closeup);
+        Paper = block.Paper;
         Input = previous?.Input ?? new InputState();
         bool sameLocation = previous?.Location is not null && previous.Location.Id == Location?.Id && previous.Player is not null;
 
@@ -148,11 +149,17 @@ public sealed class Scene
     public LocationDefinition? Location { get; }
     public Bitmap? Background { get; }
     public Bitmap? Closeup { get; }
+    /// <summary>Hartia scrisa a blocului (reguli, bilet); se deseneaza la rezolutia ecranului, ca textul sa se citeasca.</summary>
+    public PaperDefinition? Paper { get; }
+    /// <summary>Blocul are ceva aratat mare peste scena: o imagine de prim-plan sau o hartie (tasta C le ascunde / arata).</summary>
+    public bool HasCloseup => Closeup is not null || Paper is not null;
+    /// <summary>Cat de mult a aparut prim-planul (0..1, cu incetinire la sfarsit); 0 cand e ascuns de meniu.</summary>
+    public float CloseupProgress => HideCloseup ? 0 : 1 - MathF.Pow(1 - _closeupT, 3);
     public bool ShowCloseup { get; set; } = true;
     /// <summary>Ascunde prim-planul doar la desenare (meniul de pauza deschis peste joc), fara sa-i schimbe starea.</summary>
     public bool HideCloseup { get; set; }
     /// <summary>Prim-planul e (inca) pe ecran; intre timp nu aratam indicii de interactiune.</summary>
-    public bool CloseupVisible => Closeup is not null && _closeupT > 0.05f;
+    public bool CloseupVisible => HasCloseup && _closeupT > 0.05f;
     public PlayerActor? Player { get; }
     public List<NpcActor> Npcs { get; } = new();
     public List<FollowerActor> Followers { get; } = new();
@@ -263,7 +270,7 @@ public sealed class Scene
         var near = CloseupVisible ? null : NearestInteractable();
         if (near != _focus) { _focus = near; _focusT = 0; }
         _focusT = Math.Min(1, _focusT + dt * 5);
-        _closeupT = Math.Clamp(_closeupT + (ShowCloseup && Closeup is not null ? dt : -dt) * 3.5f, 0, 1);
+        _closeupT = Math.Clamp(_closeupT + (ShowCloseup && HasCloseup ? dt : -dt) * 3.5f, 0, 1);
     }
 
     /// <summary>Deseneaza lumea; transformarea curenta a lui g mapeaza coordonatele 320x180 pe ecran.</summary>

@@ -32,6 +32,7 @@ public sealed partial class PlayerForm
         m.Sound ??= PlayMenuSound;
         _menu = m;
         if (overGame) return;
+        _audio.Narrate(null); // in meniuri naratorul tace
         _showMap = false;
         UseMenuSoundscape();
         _paused = false;
@@ -143,7 +144,8 @@ public sealed partial class PlayerForm
             },
             Hint = "Cât de repede apare textul scenei.",
         });
-        m.Items.Add(VolumeItem("Efecte", () => _settings.SfxVolume, v => _settings.SfxVolume = v, "Pași, uși, telefoane, decizii. Tasta M oprește tot sunetul."));
+        m.Items.Add(VolumeItem("Narator", () => _settings.NarrationVolume, v => _settings.NarrationVolume = v, "Vocea care citește povestea. Oprit = doar text."));
+        m.Items.Add(VolumeItem("Efecte", () => _settings.SfxVolume, v => _settings.SfxVolume = v, "Pași, uși, telefoane, decizii."));
         m.Items.Add(VolumeItem("Ambianță", () => _settings.AmbientVolume, v => _settings.AmbientVolume = v, "Ploaia, vântul, neonul, greierii."));
         m.Items.Add(VolumeItem("Muzică", () => _settings.MusicVolume, v => _settings.MusicVolume = v, "Tema din meniuri."));
         m.Items.Add(new MenuItem("Numele tău")

@@ -25,6 +25,53 @@ public static partial class AudioTests
         MixerFades(report);
         Engine(report, bank);
         NamesHaveFiles(report, bank, storyPaths);
+        Narration(report, bank, storyPaths);
+    }
+
+    /// <summary>
+    /// Naratorul: fiecare bloc (si fiecare paragraf de insotitor) are vocea lui in arhiva, se decodeaza (IMA ADPCM)
+    /// si dureaza cam cat textul citit; cat vorbeste, ambianta se aude mai incet.
+    /// </summary>
+    private static void Narration(Report report, SoundBank bank, IReadOnlyList<string> storyPaths)
+    {
+        foreach (var path in storyPaths)
+        {
+            var pkg = StoryArchive.Load(path);
+            int clips = 0;
+            double seconds = 0;
+            var missing = new List<string>();
+            var odd = new List<string>();
+            foreach (var b in pkg.Story.Blocks)
+            {
+                var texts = new List<(string Path, string Text)> { (StoryVoice.PathFor(b.Id), StoryVoice.SpokenText(b)) };
+                texts.AddRange(b.CompanionText.Select(kv => (StoryVoice.PathFor(b.Id, kv.Key), kv.Value)));
+                foreach (var (file, text) in texts.Where(t => t.Text.Trim().Length > 0))
+                {
+                    if (pkg.GetFile(file) is not { } data) { missing.Add(file); continue; }
+                    var clip = WavClip.Load(file, new MemoryStream(data));
+                    clips++;
+                    seconds += clip.Seconds;
+                    // o voce normala citeste ~8-25 caractere pe secunda; altfel fisierul e al altui text sau e stricat
+                    double rate = text.Length / Math.Max(0.1, clip.Seconds);
+                    if (rate is < 6 or > 30) odd.Add($"{file} ({rate:0} car/s)");
+                }
+            }
+            report.Check(missing.Count == 0 && odd.Count == 0,
+                $"{pkg.Story.Title}: naratorul are {clips} voci ({seconds / 60:0.0} minute)" +
+                (missing.Count > 0 ? $", lipsesc: {string.Join(", ", missing.Take(5))} (rulează tools/build_voice.py)" : "") +
+                (odd.Count > 0 ? $", ciudate: {string.Join(", ", odd.Take(5))}" : ""));
+        }
+
+        using var audio = new AudioEngine(bank, output: false);
+        audio.SetAmbient([("amb_rain", 1f)]);
+        Render(audio.Mixer, 22050);
+        audio.Narrate(Constant(0.1f, Mixer.SampleRate * 2));
+        Render(audio.Mixer, 22050);
+        bool ducked = Near(audio.Mixer.Duck, Mixer.DuckLevel, 0.01f) && audio.IsNarrating;
+        Render(audio.Mixer, Mixer.SampleRate * 2);
+        for (int i = 0; i < 10; i++) Render(audio.Mixer, 2205); // fundalul revine treptat, in bucati mici, ca la placa de sunet
+        report.Check(ducked && !audio.IsNarrating && audio.Mixer.Duck > 0.99f,
+            "cât vorbește naratorul, ploaia se aude mai încet, apoi revine");
     }
 
     private static WavClip Constant(float value, int samples) => new("test", Enumerable.Repeat(value, samples).ToArray());

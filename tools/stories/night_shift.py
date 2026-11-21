@@ -1,5 +1,5 @@
 """LAST STOP: NIGHT SHIFT, povestea principala (versiunea extinsa)."""
-from common import (AND, add, add_companion, add_remarks, block, char, cmp, dec, look, npc, obj, playable,
+from common import (AND, add, add_companion, add_remarks, block, char, cmp, dec, look, npc, obj, paper, playable,
                     prop, setv)
 from black_pine import black_pine_locations
 
@@ -45,16 +45,19 @@ def cat(night):
                 effects=[add("story.cat", 1)], y=166)
 
 
+HANDBOOK_INTRO = (
+    "În sertar e un registru legat în piele, cu un brad pe copertă. Pe prima pagină, scris apăsat, "
+    "sunt regulile. Le citesc. Apoi le mai citesc o dată."
+)
+
 HANDBOOK = (
-    "În sertar e un registru legat în piele, cu un brad pe copertă. Pe prima pagină, scris apăsat: "
-    "REGULI. CITEȘTE-LE. CHIAR LE CITEȘTE.\n\n"
     "1. Dacă un client nu apare în geam, nu-i da de mâncare. Stinge lumina și du-te în bucătărie.\n"
     "2. Femeia în roșu, după ora 1: nu te uita în ochii ei. Pune-i un pahar cu apă și pleacă.\n"
     "3. Cine comandă carne crudă primește carne crudă. Nu-l contrazice și nu te uita cum mănâncă.\n"
     "4. Trei bătăi în ușa din spate, când sala e goală: oprește ventilația și nu deschide.\n"
     "5. La 3 fix nu răspunde la telefon. Dacă răspunzi, nu-ți spune numele.\n"
     "6. Dacă intră cineva care arată ca tine: încuie bucătăria, stinge lumina, așteaptă.\n\n"
-    "Ultima pagină e ruptă. Cineva a scris pe margine, cu alt pix: nu le crede pe toate."
+    "Ultima pagină e ruptă. Pe margine, cu alt pix: nu le crede pe toate."
 )
 
 BLOCKS = [
@@ -68,10 +71,10 @@ BLOCKS = [
           decisions=[dec("Intră în restaurant", "intro.counter", hotspot=203, hy=110),
                      dec("Urcă înapoi în mașină și pleacă", "ending.quit", hotspot=290, hy=142)]),
     block("intro.counter", "Primul contact",
-          "Înăuntru miroase a cafea arsă și a clor. Nu e nimeni. Pe tejghea e un bilet prins sub o cheie ruginită:\n\n"
-          "\"Bine ai venit, Alex. Biroul e în spate. Citește registrul ÎNAINTE de miezul nopții.\"\n\n"
+          "Înăuntru miroase a cafea arsă și a clor. Nu e nimeni. Pe tejghea e un bilet prins sub o cheie ruginită.\n\n"
           "Ciudat. Nu-mi amintesc să-i fi spus cuiva cum mă cheamă.",
           location="dining", time="21:58", player_x=24,
+          paper=paper("Bine ai venit, Alex.\n\nBiroul e în spate. Citește registrul ÎNAINTE de miezul nopții.", note=True),
           props=[obj("note", 205, 106)],
           examine=[look("ic.note", 210, "Biletul",
                         "Scris de mână, cu pix albastru, de cineva care face liste. Cheia e ruginită și nu deschide "
@@ -84,8 +87,9 @@ BLOCKS = [
           location="office", time="22:00", player_x=30,
           decisions=[dec("Deschide sertarul biroului", "intro.handbook", hotspot=120, hy=130),
                      dec("Nu e treaba ta. Înapoi la tejghea", "night1.open")]),
-    block("intro.handbook", "Registrul", HANDBOOK,
-          location="office", time="22:05", player_x=130, closeup="images/closeups/handbook.png",
+    block("intro.handbook", "Registrul", HANDBOOK_INTRO,
+          location="office", time="22:05", player_x=130,
+          paper=paper(HANDBOOK, title="REGULI. CITEȘTE-LE. CHIAR LE CITEȘTE."),
           decisions=[dec("Citește regulile de două ori", "night1.open", [setv("story.hasHandbook", 1)]),
                      dec("Închide registrul, sună a glumă", "night1.open")]),
 

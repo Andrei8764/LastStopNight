@@ -26,7 +26,7 @@ public sealed partial class PlayerForm
     private void ApplyAudioSettings()
     {
         float max = GameSettings.MaxVolume;
-        _audio.SetVolumes(_settings.SfxVolume / max, _settings.AmbientVolume / max, _settings.MusicVolume / max);
+        _audio.SetVolumes(_settings.SfxVolume / max, _settings.AmbientVolume / max, _settings.MusicVolume / max, _settings.NarrationVolume / max);
         _audio.Muted = false; // tasta M nu mai exista: cine a oprit sunetul cu ea il primeste inapoi (volumele sunt in Setari)
     }
 

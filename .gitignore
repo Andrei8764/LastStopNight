@@ -16,3 +16,7 @@ __pycache__/
 
 # fisierele .resx goale create de designerul Visual Studio (jocul nu le foloseste)
 LastStopNight/*.resx
+
+# vocile naratorului: cache-ul de generare si copiile din povesti (sunt deja in arhivele din Assets/stories)
+tools/.voice_cache/
+stories/*/voice/

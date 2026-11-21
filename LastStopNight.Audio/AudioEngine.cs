@@ -14,6 +14,7 @@ public sealed class AudioEngine : IDisposable
     private readonly WaveOutPlayer? _player;
     private readonly Dictionary<string, Voice> _ambient = new(StringComparer.OrdinalIgnoreCase);
     private (string Name, Voice Voice)? _music;
+    private Voice? _narration;
 
     /// <param name="output">Fals = nu deschide placa de sunet (teste, capturi automate); mixerul merge oricum.</param>
     public AudioEngine(SoundBank bank, bool output = true)
@@ -33,12 +34,34 @@ public sealed class AudioEngine : IDisposable
     public bool Muted { get => _mixer.Muted; set => _mixer.Muted = value; }
 
     /// <summary>Volumele canalelor, intre 0 si 1.</summary>
-    public void SetVolumes(float sfx, float ambient, float music)
+    public void SetVolumes(float sfx, float ambient, float music, float narration = 1)
     {
         _mixer.SetChannelVolume(AudioChannel.Sfx, sfx);
         _mixer.SetChannelVolume(AudioChannel.Ambient, ambient);
         _mixer.SetChannelVolume(AudioChannel.Music, music);
+        _mixer.SetChannelVolume(AudioChannel.Narration, narration);
     }
+
+    /// <summary>
+    /// Naratorul citeste un text (null = tace). Ce citea inainte se stinge repede, ca sa nu vorbeasca peste.
+    /// <paramref name="delay"/> = secunde de liniste la inceput (ex. cat se vede cartonasul de capitol).
+    /// </summary>
+    public void Narrate(WavClip? clip, float delay = 0)
+    {
+        if (_narration is { } old) _mixer.FadeOut(old, 0.25f);
+        _narration = null;
+        if (clip is null || clip.Samples.Length == 0) return;
+        if (delay > 0)
+        {
+            var padded = new float[(int)(delay * Mixer.SampleRate) + clip.Samples.Length];
+            clip.Samples.CopyTo(padded, padded.Length - clip.Samples.Length);
+            clip = new WavClip(clip.Name, padded);
+        }
+        _narration = _mixer.Play(clip, AudioChannel.Narration);
+    }
+
+    /// <summary>Naratorul inca vorbeste.</summary>
+    public bool IsNarrating => _narration is { IsFinished: false };
 
     /// <summary>Un efect scurt. <paramref name="rate"/> schimba tonul (1 = normal), util ca pasii sa nu sune identic.</summary>
     public void Play(string name, float volume = 1, float rate = 1)

@@ -213,9 +213,12 @@ public sealed partial class PlayerForm
             PlaySfx("leave", 0.8f);
             _splitNotice = null;
         }
-        if (block.Closeup is not null) PlaySfx("paper", 0.7f);
+        if (block.Closeup is not null || block.Paper is not null) PlaySfx("paper", 0.7f);
         ShowStateFeedback(redirect);
         _text.SetText(block.Title, block.Time, _engine.CurrentText, instant: _settings.TextSpeed == TextSpeed.Instant);
+        float voiceDelay = _scene.HasChapterCard ? 2.6f : 0.4f; // cartonasul de capitol se citeste in liniste
+        float spoken = NarrateBlock(block, voiceDelay);
+        ShowDialogue(block, _engine.CurrentText, voiceDelay, spoken);
 
         if (block.IsEnding)
         {

@@ -768,7 +768,7 @@
     {
       "id": "intro.counter",
       "title": "Primul contact",
-      "text": "Înăuntru miroase a cafea arsă și a clor. Nu e nimeni. Pe tejghea e un bilet prins sub o cheie ruginită:\n\n\"Bine ai venit, Alex. Biroul e în spate. Citește registrul ÎNAINTE de miezul nopții.\"\n\nCiudat. Nu-mi amintesc să-i fi spus cuiva cum mă cheamă.",
+      "text": "Înăuntru miroase a cafea arsă și a clor. Nu e nimeni. Pe tejghea e un bilet prins sub o cheie ruginită.\n\nCiudat. Nu-mi amintesc să-i fi spus cuiva cum mă cheamă.",
       "location": "dining",
       "time": "21:58",
       "mood": "normal",
@@ -817,6 +817,10 @@
       ],
       "lights": [],
       "playerX": 24,
+      "paper": {
+        "text": "Bine ai venit, Alex.\n\nBiroul e în spate. Citește registrul ÎNAINTE de miezul nopții.",
+        "note": true
+      },
       "companionText": {
         "ioana": "Ioana citește biletul peste umărul meu. \"Pe mine nu mă salută nimeni\", zice. \"Cred că sunt figurantă.\""
       }
@@ -853,7 +857,7 @@
     {
       "id": "intro.handbook",
       "title": "Registrul",
-      "text": "În sertar e un registru legat în piele, cu un brad pe copertă. Pe prima pagină, scris apăsat: REGULI. CITEȘTE-LE. CHIAR LE CITEȘTE.\n\n1. Dacă un client nu apare în geam, nu-i da de mâncare. Stinge lumina și du-te în bucătărie.\n2. Femeia în roșu, după ora 1: nu te uita în ochii ei. Pune-i un pahar cu apă și pleacă.\n3. Cine comandă carne crudă primește carne crudă. Nu-l contrazice și nu te uita cum mănâncă.\n4. Trei bătăi în ușa din spate, când sala e goală: oprește ventilația și nu deschide.\n5. La 3 fix nu răspunde la telefon. Dacă răspunzi, nu-ți spune numele.\n6. Dacă intră cineva care arată ca tine: încuie bucătăria, stinge lumina, așteaptă.\n\nUltima pagină e ruptă. Cineva a scris pe margine, cu alt pix: nu le crede pe toate.",
+      "text": "În sertar e un registru legat în piele, cu un brad pe copertă. Pe prima pagină, scris apăsat, sunt regulile. Le citesc. Apoi le mai citesc o dată.",
       "location": "office",
       "time": "22:05",
       "mood": "normal",
@@ -881,7 +885,10 @@
       "props": [],
       "lights": [],
       "playerX": 130,
-      "closeup": "images/closeups/handbook.png",
+      "paper": {
+        "text": "1. Dacă un client nu apare în geam, nu-i da de mâncare. Stinge lumina și du-te în bucătărie.\n2. Femeia în roșu, după ora 1: nu te uita în ochii ei. Pune-i un pahar cu apă și pleacă.\n3. Cine comandă carne crudă primește carne crudă. Nu-l contrazice și nu te uita cum mănâncă.\n4. Trei bătăi în ușa din spate, când sala e goală: oprește ventilația și nu deschide.\n5. La 3 fix nu răspunde la telefon. Dacă răspunzi, nu-ți spune numele.\n6. Dacă intră cineva care arată ca tine: încuie bucătăria, stinge lumina, așteaptă.\n\nUltima pagină e ruptă. Pe margine, cu alt pix: nu le crede pe toate.",
+        "title": "REGULI. CITEȘTE-LE. CHIAR LE CITEȘTE."
+      },
       "solo": true
     },
     {

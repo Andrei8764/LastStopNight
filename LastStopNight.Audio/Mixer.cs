@@ -1,7 +1,8 @@
 namespace LastStopNight.Audio;
 
 /// <summary>Canalele mixerului; fiecare are volumul lui (din Setari).</summary>
-public enum AudioChannel { Sfx, Ambient, Music }
+/// <summary>Canalele mixerului. Narration = vocea care citeste povestea (cat vorbeste, ambianta si muzica se aud mai incet).</summary>
+public enum AudioChannel { Sfx, Ambient, Music, Narration }
 
 /// <summary>Un sunet care se aude acum. Volumul se schimba lin (fade), niciodata brusc.</summary>
 public sealed class Voice
@@ -41,8 +42,15 @@ public sealed class Mixer
 
     private readonly object _lock = new();
     private readonly List<Voice> _voices = new();
-    private readonly float[] _channelVolume = [1, 1, 1];
+    private readonly float[] _channelVolume = [1, 1, 1, 1];
     private float[] _scratch = [];
+    private float _duck = 1;
+
+    /// <summary>Cat de tare raman ambianta si muzica in timp ce vorbeste naratorul (1 = deloc mai incet).</summary>
+    public const float DuckLevel = 0.4f;
+
+    /// <summary>Cat de tare se aud acum ambianta si muzica (scade lin cand vorbeste naratorul).</summary>
+    public float Duck => _duck;
 
     public float MasterVolume { get; set; } = 1;
     public bool Muted { get; set; }
@@ -62,7 +70,7 @@ public sealed class Mixer
         {
             if (_voices.Count >= MaxVoices)
             {
-                int oldest = _voices.FindIndex(x => !x.Loop);
+                int oldest = _voices.FindIndex(x => !x.Loop && x.Channel != AudioChannel.Narration);
                 _voices[oldest < 0 ? 0 : oldest].IsFinished = true;
                 _voices.RemoveAt(oldest < 0 ? 0 : oldest);
             }
@@ -117,10 +125,15 @@ public sealed class Mixer
         output.Clear();
         lock (_lock)
         {
+            // cat vorbeste naratorul, fundalul coboara lin (in ~0.3 s) si revine la fel
+            bool narrating = _voices.Any(v => v.Channel == AudioChannel.Narration && !v.IsFinished && v.Target > 0);
+            float step = output.Length / (float)SampleRate / 0.3f;
+            _duck = narrating ? Math.Max(DuckLevel, _duck - step) : Math.Min(1, _duck + step);
             for (int k = _voices.Count - 1; k >= 0; k--)
             {
                 var v = _voices[k];
-                RenderVoice(v, output, _channelVolume[(int)v.Channel]);
+                float volume = _channelVolume[(int)v.Channel] * (v.Channel is AudioChannel.Ambient or AudioChannel.Music ? _duck : 1);
+                RenderVoice(v, output, volume);
                 if (v.IsFinished) _voices.RemoveAt(k);
             }
         }

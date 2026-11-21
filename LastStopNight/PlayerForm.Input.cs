@@ -87,7 +87,7 @@ public sealed partial class PlayerForm
             if (idx < options.Count) Activate(options[idx]);
         }
         else if (e.KeyCode == Keys.Space) _text.Complete();
-        else if (e.KeyCode == Keys.C && _scene.Closeup is not null)
+        else if (e.KeyCode == Keys.C && _scene.HasCloseup)
         {
             _scene.ShowCloseup = !_scene.ShowCloseup;
             PlaySfx("paper", 0.5f);
@@ -108,7 +108,7 @@ public sealed partial class PlayerForm
         _idleTime = 0;
         if (ActiveMenu is { } menu) { menu.Click(e.Location); return; }
         if (_mode != Mode.Playing || _scene is null) return;
-        if (_scene.Closeup is not null && _scene.ShowCloseup) { _scene.ShowCloseup = false; return; }
+        if (_scene.HasCloseup && _scene.ShowCloseup) { _scene.ShowCloseup = false; return; }
         var w = _canvas.ToWorld(e.Location);
         var hit = _scene.Interactables.Where(h => !h.IsHidden).FirstOrDefault(h => MathF.Abs(h.X - w.X) <= 8 && w.Y > _scene.FloorY - 70);
         if (hit is not null)
@@ -127,7 +127,7 @@ public sealed partial class PlayerForm
         "E                         folosești ce e lângă tine\n" +
         "1 - 9                     alegi o decizie\n" +
         "Space                     tot textul deodată\n" +
-        "C                         ascunzi / arăți imaginea mare\n" +
+        "C                         ascunzi / arăți imaginea mare sau hârtia\n" +
         "Esc                       pauză (sau te oprești din mers)\n" +
         "H                         harta turei (unde e fiecare)\n" +
         "F                         multiplayer: mergi după cine a ales\n" +

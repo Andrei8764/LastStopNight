@@ -68,6 +68,11 @@ def build(module):
         z.write(os.path.join(folder, "story.json"), "story.json")
         for rel in images:
             z.write(os.path.join(folder, rel), rel)
+        # vocile naratorului (generate de build_voice.py), daca exista
+        vdir = os.path.join(folder, "voice")
+        if os.path.isdir(vdir):
+            for name in sorted(os.listdir(vdir)):
+                z.write(os.path.join(vdir, name), "voice/" + name)
     endings = sum(1 for b in story["blocks"] if b.get("isEnding"))
     print(f"  {module.ID}: {len(story['blocks'])} blocuri, {endings} finaluri, {len(images)} imagini -> {zip_path}")
 

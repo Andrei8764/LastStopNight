@@ -23,6 +23,8 @@ public sealed class StoryBlock
     public string? Background { get; set; }
     /// <summary>Imagine de prim-plan afisata peste scena (registru, fotografie...).</summary>
     public string? Closeup { get; set; }
+    /// <summary>Hartie scrisa aratata peste scena (reguli, bilet), cu textul ei lizibil.</summary>
+    public PaperDefinition? Paper { get; set; }
     public SceneMood Mood { get; set; } = SceneMood.Normal;
     /// <summary>Efecte vizuale: "flicker", "shake", "ring", "rain".</summary>
     public List<string> Fx { get; set; } = new();

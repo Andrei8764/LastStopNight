@@ -221,6 +221,7 @@ public sealed partial class PlayerForm : Form
             return;
         }
 
+        if (_scene.Paper is { } paper && _scene.CloseupProgress > 0) Overlays.DrawPaper(g, view, s, paper, _scene.CloseupProgress);
         foreach (var e in _scene.Effects)
             if (e is not ChapterCardEffect) e.DrawOverlay(g, view, s, _scene);
         if (_mode == Mode.Playing && _scene.Player is not null && !_paused) DrawPlayingHints(g, view, s);
@@ -255,7 +256,7 @@ public sealed partial class PlayerForm : Form
                 : $"{h.Label} ({(h.Decision.Decision.LockedHint ?? "nu încă").ToLowerInvariant()})";
             HudRenderer.DrawHint(g, view, s, _scene.Anchor(h), verb, h.IsAvailable, h.Decision is null, fade);
         }
-        if (_scene.CloseupVisible) Overlays.DrawCloseupHint(g, view, s);
+        if (_scene.CloseupVisible) Overlays.DrawCloseupHint(g, view, s, _scene.Paper is null ? 106 : 170);
         else Overlays.DrawControlsHint(g, view, s, Math.Clamp((ControlsHintSeconds - _playTime) / ControlsHintFadeSeconds, 0, 1));
     }
 
