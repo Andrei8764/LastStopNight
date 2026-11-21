@@ -1,0 +1,1189 @@
+{
+  "title": "BLACK PINE: 1987",
+  "order": 3,
+  "author": "Înainte de tot",
+  "description": "Cu 39 de ani înainte de Alex, un băiat pe nume Dan își începe prima tură la Black Pine Diner. Proprietarul e încă acolo, registrul e încă gol, iar pe perete nu e nicio poză. Deocamdată.",
+  "version": 1,
+  "startBlockId": "d87.start",
+  "playerCharacterId": "dan",
+  "properties": [
+    {
+      "key": "player.nerve",
+      "min": 0,
+      "max": 100,
+      "initial": 70,
+      "hudLabel": "Sânge rece",
+      "display": "bar",
+      "icon": "images/ui/bolt.png",
+      "color": "#E8C440"
+    },
+    {
+      "key": "inventory.money",
+      "min": 0,
+      "max": 500,
+      "initial": 0,
+      "hudLabel": "Bacșiș",
+      "display": "value",
+      "icon": "images/ui/coin.png",
+      "format": "${0}"
+    },
+    {
+      "key": "story.clues",
+      "min": 0,
+      "max": 4,
+      "initial": 0,
+      "hudLabel": "Ce știi",
+      "display": "value",
+      "icon": "images/ui/clue.png",
+      "format": "{0}/4"
+    },
+    {
+      "key": "story.signed",
+      "min": 0,
+      "max": 1,
+      "initial": 0,
+      "hudLabel": "Contract",
+      "display": "flag",
+      "icon": "images/ui/book.png"
+    },
+    {
+      "key": "story.fakeName",
+      "min": 0,
+      "max": 1,
+      "initial": 0,
+      "hudLabel": "Nume fals",
+      "display": "hidden"
+    },
+    {
+      "key": "story.page",
+      "min": 0,
+      "max": 1,
+      "initial": 0,
+      "hudLabel": "Pagina",
+      "display": "hidden"
+    }
+  ],
+  "redirects": [
+    {
+      "condition": {
+        "type": "COMPARISON",
+        "key": "player.nerve",
+        "operator": "<=",
+        "value": 0
+      },
+      "target": "d87.end.flash",
+      "description": "Îți cedează nervii"
+    }
+  ],
+  "locations": [
+    {
+      "id": "exterior",
+      "name": "Parcarea",
+      "image": "images/diner_exterior.png",
+      "floorY": 162,
+      "minX": 14,
+      "maxX": 306,
+      "windows": [],
+      "ambient": [
+        "rain",
+        "fog"
+      ],
+      "sounds": [
+        "rain",
+        "wind"
+      ],
+      "points": {},
+      "actorTint": "#A4ACCC",
+      "decor": [
+        {
+          "image": "images/decor/moths.png",
+          "x": 90,
+          "y": 44,
+          "frameWidth": 16,
+          "frameHeight": 14,
+          "fps": 6,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 205,
+          "y": 70,
+          "radius": 36,
+          "color": "#FF3040",
+          "alpha": 55,
+          "flicker": 0.35
+        },
+        {
+          "x": 99,
+          "y": 56,
+          "radius": 22,
+          "color": "#FFE0A0",
+          "alpha": 50,
+          "flicker": 0.1
+        }
+      ],
+      "examine": []
+    },
+    {
+      "id": "exterior_dawn",
+      "name": "Parcarea, dimineața",
+      "image": "images/diner_exterior_dawn.png",
+      "floorY": 162,
+      "minX": 14,
+      "maxX": 306,
+      "windows": [],
+      "ambient": [
+        "fog"
+      ],
+      "sounds": [
+        "birds",
+        "wind"
+      ],
+      "points": {},
+      "decor": [],
+      "lights": [],
+      "examine": [],
+      "actorTint": "#F0D0C4"
+    },
+    {
+      "id": "dining",
+      "name": "Sala",
+      "image": "images/diner_interior.png",
+      "floorY": 174,
+      "minX": 14,
+      "maxX": 308,
+      "windows": [
+        {
+          "x": 40,
+          "y": 28,
+          "w": 142,
+          "h": 62
+        }
+      ],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room",
+        "hum"
+      ],
+      "actorTint": "#F2E6DA",
+      "points": {
+        "phone": {
+          "x": 189,
+          "y": 64
+        },
+        "switch": {
+          "x": 188,
+          "y": 95
+        }
+      },
+      "decor": [
+        {
+          "image": "images/decor/fan.png",
+          "x": 180,
+          "y": 1,
+          "frameWidth": 40,
+          "frameHeight": 12,
+          "fps": 10,
+          "random": false,
+          "front": false
+        },
+        {
+          "image": "images/decor/open_sign.png",
+          "x": 8,
+          "y": 44,
+          "frameWidth": 22,
+          "frameHeight": 9,
+          "fps": 3,
+          "random": true,
+          "front": false
+        },
+        {
+          "image": "images/decor/steam.png",
+          "x": 271,
+          "y": 66,
+          "frameWidth": 10,
+          "frameHeight": 16,
+          "fps": 5,
+          "random": false,
+          "front": false
+        },
+        {
+          "image": "images/decor/cat.png",
+          "x": 296,
+          "y": 161,
+          "frameWidth": 16,
+          "frameHeight": 14,
+          "fps": 2,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 276,
+          "y": 18,
+          "radius": 18,
+          "color": "#FF5080",
+          "alpha": 60,
+          "flicker": 0.5
+        },
+        {
+          "x": 153,
+          "y": 112,
+          "radius": 24,
+          "color": "#FFA040",
+          "alpha": 55,
+          "flicker": 0.05
+        },
+        {
+          "x": 245,
+          "y": 106,
+          "radius": 12,
+          "color": "#A0D8E8",
+          "alpha": 40,
+          "flicker": 0.0
+        }
+      ],
+      "examine": []
+    },
+    {
+      "id": "kitchen",
+      "name": "Bucătăria",
+      "image": "images/kitchen.png",
+      "floorY": 172,
+      "minX": 16,
+      "maxX": 294,
+      "actorTint": "#DCE6EA",
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "hum"
+      ],
+      "points": {},
+      "decor": [
+        {
+          "image": "images/decor/steam.png",
+          "x": 70,
+          "y": 84,
+          "frameWidth": 10,
+          "frameHeight": 16,
+          "fps": 5,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 163,
+          "y": 52,
+          "radius": 16,
+          "color": "#FF2020",
+          "alpha": 55,
+          "flicker": 0.2
+        },
+        {
+          "x": 163,
+          "y": 12,
+          "radius": 30,
+          "color": "#C0F0FF",
+          "alpha": 40,
+          "flicker": 0.45
+        }
+      ],
+      "examine": []
+    },
+    {
+      "id": "office",
+      "name": "Biroul",
+      "image": "images/office.png",
+      "floorY": 176,
+      "minX": 14,
+      "maxX": 306,
+      "actorTint": "#E0D0B4",
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room",
+        "clock"
+      ],
+      "points": {},
+      "decor": [
+        {
+          "image": "images/decor/led.png",
+          "x": 206,
+          "y": 108,
+          "frameWidth": 3,
+          "frameHeight": 3,
+          "fps": 2,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 124,
+          "y": 100,
+          "radius": 30,
+          "color": "#FFC070",
+          "alpha": 55,
+          "flicker": 0.05
+        },
+        {
+          "x": 192,
+          "y": 95,
+          "radius": 22,
+          "color": "#60FF90",
+          "alpha": 35,
+          "flicker": 0.15
+        }
+      ],
+      "examine": []
+    },
+    {
+      "id": "office87",
+      "name": "Biroul (1987)",
+      "image": "images/office_1987.png",
+      "floorY": 176,
+      "minX": 14,
+      "maxX": 306,
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room",
+        "clock"
+      ],
+      "points": {},
+      "actorTint": "#E0D0B4",
+      "decor": [],
+      "lights": [
+        {
+          "x": 124,
+          "y": 100,
+          "radius": 30,
+          "color": "#FFC070",
+          "alpha": 55,
+          "flicker": 0.05
+        }
+      ],
+      "examine": []
+    }
+  ],
+  "playable": [
+    {
+      "characterId": "dan",
+      "role": "Ospătar nou, 19 ani",
+      "blurb": "Are o Dacie roșie legată cu sârmă și nevoie de bani. Citește scrisul mic."
+    },
+    {
+      "characterId": "lucia",
+      "role": "Ospătăriță, prima zi",
+      "blurb": "Dansează cu tava printre mese. Zâmbește perfect la poze. Prea perfect."
+    }
+  ],
+  "maxPlayers": 2,
+  "characters": [
+    {
+      "id": "dan",
+      "name": "Dan",
+      "sprite": "images/sprites/dan.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": "Ospătar nou, 19 ani, 1987."
+    },
+    {
+      "id": "owner",
+      "name": "Proprietarul",
+      "sprite": "images/sprites/owner.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": false,
+      "description": ""
+    },
+    {
+      "id": "red_woman",
+      "name": "Femeia în roșu",
+      "sprite": "images/sprites/red_woman.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "patron",
+      "name": "Camionagiul",
+      "sprite": "images/sprites/patron.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "dancer_m",
+      "name": "Perechea de la tonomat (el)",
+      "sprite": "images/sprites/dancer_m.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "dancer_f",
+      "name": "Perechea de la tonomat (ea)",
+      "sprite": "images/sprites/dancer_f.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "waiter",
+      "name": "Ceilalți ospătari",
+      "sprite": "images/sprites/waiter.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": false,
+      "description": ""
+    },
+    {
+      "id": "lucia",
+      "name": "Lucia",
+      "sprite": "images/sprites/lucia.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": "Ospătăriță, 18 ani, angajată în aceeași zi cu Dan."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "d87.start",
+      "title": "Prima zi",
+      "text": "Octombrie 1987. Am 19 ani, o Dacie roșie cu ușa din dreapta legată cu sârmă și un anunț decupat din ziar: \"Ospătar, tura de noapte, plata foarte bună\".\n\nProprietarul mă așteaptă în ușă. Șapca trasă pe ochi, șorț alb, mâini mari. \"Tu ești băiatul nou. Intră, că se răcește cafeaua.\"",
+      "location": "exterior",
+      "time": "21:30",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 203,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Intră după el",
+          "target": "d87.contract",
+          "effects": [],
+          "hotspotY": 110,
+          "hotspotX": 203
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "chapter": "1987: Prima zi",
+      "playerX": 262,
+      "companionText": {
+        "lucia": "Lângă Dacie așteaptă o fată cu părul cârlionțat și o geantă prea mare: Lucia, angajată tot azi, tot din anunț. \"Tu ești Dan? Super. Măcar nu sunt singura nouă.\""
+      }
+    },
+    {
+      "id": "d87.contract",
+      "title": "Contractul",
+      "text": "În birou mirosul de hârtie e nou, nu vechi. Pe perete nu e încă nicio poză. Proprietarul pune în fața mea un contract și un pix.\n\n\"Semnezi aici. Cu numele întreg. Restaurantul ține minte numele.\"",
+      "location": "office87",
+      "time": "21:40",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 180,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Semnează repede",
+          "target": "d87.shift",
+          "effects": [
+            {
+              "key": "story.signed",
+              "op": "set",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Citește tot, inclusiv scrisul mic",
+          "target": "d87.fineprint",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 110,
+      "closeup": "images/closeups/contract.png",
+      "companionText": {
+        "lucia": "Lucia semnează înaintea mea, repede, fără să citească. Proprietarul se uită la semnătura ei și zâmbește."
+      }
+    },
+    {
+      "id": "d87.fineprint",
+      "title": "Scrisul mic",
+      "text": "Clauza 13, scrisă atât de mic încât trebuie să mă aplec: \"Angajatul rămâne în serviciul restaurantului până când acesta găsește un înlocuitor cu același nume.\"\n\nProprietarul nu zice nimic. Doar bate cu degetul în masă. Tic. Tic. Tic.",
+      "location": "office87",
+      "time": "21:45",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 180,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Semnează oricum, ai nevoie de bani",
+          "target": "d87.shift",
+          "effects": [
+            {
+              "key": "story.signed",
+              "op": "set",
+              "value": 1
+            },
+            {
+              "key": "player.nerve",
+              "op": "add",
+              "value": -10
+            }
+          ]
+        },
+        {
+          "text": "Semnează cu alt nume",
+          "target": "d87.shift",
+          "effects": [
+            {
+              "key": "story.signed",
+              "op": "set",
+              "value": 1
+            },
+            {
+              "key": "story.fakeName",
+              "op": "set",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Pune pixul jos și pleacă",
+          "target": "d87.end.road",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 110
+    },
+    {
+      "id": "d87.shift",
+      "title": "Sala plină",
+      "text": "La 11 sala e plină. Camionagii, o pereche care dansează lângă tonomat, fum de țigară. Proprietarul stă la tejghea și glumește cu o femeie într-o rochie roșie. Ea râde și îmi face cu ochiul.\n\nNimeni nu pare să se teamă de nimic. Asta mă sperie un pic.",
+      "location": "dining",
+      "time": "23:00",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 70,
+          "facingLeft": false
+        },
+        {
+          "id": "owner",
+          "x": 268,
+          "facingLeft": true
+        },
+        {
+          "id": "red_woman",
+          "x": 236,
+          "facingLeft": false
+        },
+        {
+          "id": "dancer_m",
+          "x": 146,
+          "facingLeft": false
+        },
+        {
+          "id": "dancer_f",
+          "x": 162,
+          "facingLeft": true
+        }
+      ],
+      "examine": [
+        {
+          "id": "d87.woman",
+          "x": 236,
+          "label": "Femeia în roșu",
+          "text": "\"Ești nou\", zice. \"Pari de treabă. Ascultă-mă: nu-l lăsa să-ți facă poză.\" Apoi râde, ca și cum ar fi fost o glumă.",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "lucia": "Femeia în roșu se uită la Lucia: \"Tu ai ochi de om care pleacă la timp. Pleacă la timp, puiule.\""
+          }
+        },
+        {
+          "id": "d87.trucker",
+          "x": 70,
+          "label": "Camionagiul",
+          "text": "\"Vin aici de zece ani\", zice. \"Ospătarii se schimbă. Patronul niciodată. Nici măcar nu îmbătrânește, ce zici de asta?\"",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 5
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "lucia": "Camionagiul îi face cu ochiul Luciei: \"Să nu te lași pozată, auzi?\""
+          }
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Servește cafea la toată lumea",
+          "target": "d87.night",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 12
+            }
+          ]
+        },
+        {
+          "text": "Uită-te în geam la toată sala",
+          "target": "d87.mirror",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "hotspotY": 60,
+          "hotspotX": 120
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 40,
+      "companionText": {
+        "lucia": "Lucia dansează cu tava printre mese. Camionagiii o adoră deja."
+      }
+    },
+    {
+      "id": "d87.mirror",
+      "title": "Geamul",
+      "text": "În geam se văd toți: camionagiul, perechea, femeia în roșu, eu cu tava. Proprietarul nu.\n\nMă întorc. El e acolo, la tejghea, și se uită fix la mine. Își duce un deget la buze.",
+      "location": "dining",
+      "time": "23:20",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 70,
+          "facingLeft": false
+        },
+        {
+          "id": "owner",
+          "x": 268,
+          "facingLeft": true
+        },
+        {
+          "id": "red_woman",
+          "x": 236,
+          "facingLeft": false
+        },
+        {
+          "id": "dancer_m",
+          "x": 146,
+          "facingLeft": false
+        },
+        {
+          "id": "dancer_f",
+          "x": 162,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Fă-te că n-ai văzut nimic",
+          "target": "d87.night",
+          "effects": [
+            {
+              "key": "player.nerve",
+              "op": "add",
+              "value": -15
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 120
+    },
+    {
+      "id": "d87.night",
+      "title": "Registrul",
+      "text": "Pe la 2, în bucătărie, proprietarul scrie ceva într-un registru gros, legat în piele. Un brad pe copertă.\n\n\"Reguli\", zice fără să ridice ochii. \"Pentru cei care vin după tine. Restaurantul are nevoie de cineva care să-l țină minte.\"",
+      "location": "kitchen",
+      "time": "02:00",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 200,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Întreabă-l pentru cine",
+          "target": "d87.why",
+          "effects": []
+        },
+        {
+          "text": "Rupe ultima pagină cât nu se uită",
+          "target": "d87.page",
+          "effects": [
+            {
+              "key": "story.page",
+              "op": "set",
+              "value": 1
+            },
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "hotspotX": 190
+        },
+        {
+          "text": "Lucia îl ține de vorbă, tu citești registrul",
+          "target": "d87.lucia",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "requiresCharacter": "lucia"
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 60,
+      "companionText": {
+        "lucia": "Lucia spală pahare și se uită la registru peste umăr, fără să întoarcă capul."
+      }
+    },
+    {
+      "id": "d87.lucia",
+      "title": "Plăcinta cu afine",
+      "text": "Lucia îl întreabă pe proprietar de rețeta plăcintei cu afine. El lasă pixul jos și începe să povestească, cu mâinile, ca un bunic.\n\nEu citesc registrul pe furiș. Prima regulă e scrisă cu cerneală proaspătă: DACĂ UN CLIENT NU APARE ÎN GEAM... Regulile sunt pentru Alex. Dar scrisul de mână e al meu.",
+      "location": "kitchen",
+      "time": "02:04",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 120,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Închide registrul fără zgomot",
+          "target": "d87.photo",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 180
+    },
+    {
+      "id": "d87.why",
+      "title": "Pentru cine",
+      "text": "\"Pentru Alex\", zice. \"Vine un Alex mereu. Peste un an, peste zece, peste treizeci. Și o să aibă nevoie de reguli.\"\n\n\"Eu nu mă cheamă Alex\", zic. Zâmbește sub șapcă. \"Încă.\"",
+      "location": "kitchen",
+      "time": "02:05",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 200,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Înapoi la treabă",
+          "target": "d87.photo",
+          "effects": [
+            {
+              "key": "player.nerve",
+              "op": "add",
+              "value": -10
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 150
+    },
+    {
+      "id": "d87.page",
+      "title": "Ultima pagină",
+      "text": "Pagina se rupe aproape fără zgomot. O bag în buzunar. Pe ea e un singur rând, scris de altă mână, mai tremurată:\n\n\"NU LĂSA PE NIMENI SĂ-ȚI FACĂ POZĂ.\"\n\nDeci de-aia lipsește ultima pagină.",
+      "location": "kitchen",
+      "time": "02:06",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 120,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Ascunde pagina și zâmbește",
+          "target": "d87.photo",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 190
+    },
+    {
+      "id": "d87.photo",
+      "title": "Poza pentru perete",
+      "text": "Dimineața, proprietarul ne strânge pe toți în fața firmei. Are un aparat foto vechi, cu bliț. \"Poza pentru perete\", zice. \"Toată echipa. Zâmbiți.\"\n\nCeilalți patru ospătari se aliniază. Au fețe obosite și ochi foarte calmi. Locul al treilea din stânga e gol.",
+      "location": "exterior_dawn",
+      "time": "05:50",
+      "mood": "sepia",
+      "fx": [],
+      "characters": [
+        {
+          "id": "owner",
+          "x": 112,
+          "facingLeft": false
+        },
+        {
+          "id": "waiter",
+          "x": 144,
+          "facingLeft": true
+        },
+        {
+          "id": "waiter",
+          "x": 161,
+          "facingLeft": true
+        },
+        {
+          "id": "waiter",
+          "x": 199,
+          "facingLeft": true
+        },
+        {
+          "id": "waiter",
+          "x": 216,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Zâmbește pentru poză",
+          "target": "d87.end.flash",
+          "effects": [],
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.fakeName",
+            "operator": "==",
+            "value": 0
+          },
+          "hotspotX": 180,
+          "showWhenLocked": false
+        },
+        {
+          "text": "Zâmbește pentru poză",
+          "target": "d87.end.alex",
+          "effects": [],
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.fakeName",
+            "operator": "==",
+            "value": 1
+          },
+          "hotspotX": 180,
+          "showWhenLocked": false
+        },
+        {
+          "text": "Ascunde-te după mașină",
+          "target": "d87.end.road",
+          "effects": [],
+          "hotspotY": 142,
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.page",
+            "operator": "==",
+            "value": 1
+          },
+          "hotspotX": 290,
+          "lockedHint": "nu ai niciun motiv să fugi"
+        },
+        {
+          "text": "Ia tu aparatul și fă poza",
+          "target": "d87.end.owner",
+          "effects": [],
+          "hotspotY": 138,
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.clues",
+            "operator": ">=",
+            "value": 3
+          },
+          "hotspotX": 124,
+          "lockedHint": "nu știi destul (3)"
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/photo_camera.png",
+          "x": 117,
+          "y": 134,
+          "frameWidth": 9,
+          "frameHeight": 8,
+          "fps": 1,
+          "random": false,
+          "front": true
+        }
+      ],
+      "lights": [],
+      "playerX": 262,
+      "companionText": {
+        "lucia": "Lucia își aranjează părul și se pune la capătul rândului. Lângă ea mai e un loc gol. Doi, de fapt."
+      }
+    },
+    {
+      "id": "d87.end.road",
+      "title": "Drumul spre casă",
+      "text": "Mă bag în Dacie și pornesc. Blițul se declanșează în spatele meu, alb, de trei ori, dar eu sunt deja pe drum.\n\nPeste treizeci de ani o să văd o poză veche, cu un loc gol pe rândul de ospătari, și o să știu exact cui i-a fost păstrat.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/d87_road.png",
+      "isEnding": true,
+      "endingType": "good",
+      "endingTitle": "Drumul spre casă",
+      "companionText": {
+        "lucia": "Lucia e pe scaunul din dreapta. A sărit în mașină în ultima secundă, cu tava încă în mână."
+      }
+    },
+    {
+      "id": "d87.end.flash",
+      "title": "Pe perete",
+      "text": "Zâmbesc. Blițul e mai alb decât orice. Când pot să văd din nou, sunt în ramă, pe peretele din birou, cu ceilalți.\n\nDe aici se vede toată sala. E chiar plăcut. Doar că nu mai pot să clipesc.",
+      "location": null,
+      "time": "05:51",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/d87_flash.png",
+      "isEnding": true,
+      "endingType": "bad",
+      "endingTitle": "Pe perete",
+      "companionText": {
+        "lucia": "În ramă, lângă mine, Lucia zâmbește perfect. Ea a știut mereu să zâmbească la poze."
+      }
+    },
+    {
+      "id": "d87.end.alex",
+      "title": "ALEX",
+      "text": "Zâmbesc. Blițul. Pe ecusonul meu, unde scria Dan, acum scrie numele pe care l-am inventat în contract: ALEX.\n\nRestaurantul a ținut minte numele. O să-l aștepte. Un an, zece, treizeci și ceva. Până într-o noapte ploioasă, când un tip pe nume Alex Morgan o să parcheze în fața firmei roșii.",
+      "location": null,
+      "time": "05:51",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/d87_flash.png",
+      "isEnding": true,
+      "endingType": "secret",
+      "endingTitle": "ALEX",
+      "companionText": {
+        "lucia": "Pe ecusonul Luciei acum scrie IOANA. N-am idee de ce. Restaurantul are planurile lui."
+      }
+    },
+    {
+      "id": "d87.end.owner",
+      "title": "Noul proprietar",
+      "text": "Iau aparatul din mâinile lui. Nu se opune. Pare chiar ușurat. Fac poza: patru ospătari și un loc gol.\n\nProprietarul își scoate șapca și mi-o pune pe cap. \"Acum tu ții minte\", zice, și pleacă pe jos în pădure. Din seara asta, eu scriu regulile.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/d87_owner.png",
+      "isEnding": true,
+      "endingType": "alternative",
+      "endingTitle": "Noul proprietar",
+      "companionText": {
+        "lucia": "Lucia rămâne cu mine. Cineva trebuie să facă plăcinta cu afine."
+      }
+    }
+  ]
+}

@@ -1,0 +1,2240 @@
+{
+  "title": "LAST STOP: NIGHT SHIFT",
+  "order": 1,
+  "author": "Black Pine Diner",
+  "description": "Alex acceptă trei ture de noapte la un restaurant izolat în pădure. Salariul e prea bun ca să fie adevărat. Uită-te în geamuri, citește regulile și nu-ți spune numele la telefon.",
+  "version": 2,
+  "startBlockId": "intro.arrival",
+  "playerCharacterId": "alex",
+  "properties": [
+    {
+      "key": "player.life",
+      "min": 0,
+      "max": 100,
+      "initial": 100,
+      "hudLabel": "Integritate",
+      "display": "bar",
+      "icon": "images/ui/heart.png",
+      "color": "#D8333F"
+    },
+    {
+      "key": "player.suspicion",
+      "min": 0,
+      "max": 100,
+      "initial": 0,
+      "hudLabel": "Suspiciune",
+      "display": "bar",
+      "icon": "images/ui/eye.png",
+      "color": "#9A4FD0"
+    },
+    {
+      "key": "player.energy",
+      "min": 0,
+      "max": 100,
+      "initial": 80,
+      "hudLabel": "Energie",
+      "display": "bar",
+      "icon": "images/ui/bolt.png",
+      "color": "#E8C440"
+    },
+    {
+      "key": "inventory.money",
+      "min": 0,
+      "max": 900,
+      "initial": 0,
+      "hudLabel": "Bani",
+      "display": "value",
+      "icon": "images/ui/coin.png",
+      "format": "${0}"
+    },
+    {
+      "key": "story.hasHandbook",
+      "min": 0,
+      "max": 1,
+      "initial": 0,
+      "hudLabel": "Registru",
+      "display": "flag",
+      "icon": "images/ui/book.png"
+    },
+    {
+      "key": "story.evidence",
+      "min": 0,
+      "max": 3,
+      "initial": 0,
+      "hudLabel": "Dovezi",
+      "display": "value",
+      "icon": "images/ui/clue.png",
+      "format": "{0}/3"
+    },
+    {
+      "key": "story.night",
+      "min": 1,
+      "max": 3,
+      "initial": 1,
+      "hudLabel": "Noaptea",
+      "display": "value",
+      "icon": "images/ui/moon.png",
+      "format": "{0}/3"
+    },
+    {
+      "key": "story.cat",
+      "min": 0,
+      "max": 3,
+      "initial": 0,
+      "hudLabel": "Pisica",
+      "display": "hidden"
+    },
+    {
+      "key": "story.trust",
+      "min": 0,
+      "max": 1,
+      "initial": 0,
+      "hudLabel": "Încredere în proprietar",
+      "display": "hidden"
+    }
+  ],
+  "redirects": [
+    {
+      "condition": {
+        "type": "COMPARISON",
+        "key": "player.life",
+        "operator": "<=",
+        "value": 0
+      },
+      "target": "ending.captured",
+      "description": "Nu mai ai putere să te ridici"
+    },
+    {
+      "condition": {
+        "type": "COMPARISON",
+        "key": "player.suspicion",
+        "operator": ">=",
+        "value": 100
+      },
+      "target": "ending.replaced",
+      "description": "Te-au văzut. Toți."
+    }
+  ],
+  "locations": [
+    {
+      "id": "exterior",
+      "name": "Parcarea",
+      "image": "images/diner_exterior.png",
+      "floorY": 162,
+      "minX": 14,
+      "maxX": 306,
+      "windows": [],
+      "ambient": [
+        "rain",
+        "fog"
+      ],
+      "sounds": [
+        "rain",
+        "wind"
+      ],
+      "points": {},
+      "actorTint": "#A4ACCC",
+      "decor": [
+        {
+          "image": "images/decor/moths.png",
+          "x": 90,
+          "y": 44,
+          "frameWidth": 16,
+          "frameHeight": 14,
+          "fps": 6,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 205,
+          "y": 70,
+          "radius": 36,
+          "color": "#FF3040",
+          "alpha": 55,
+          "flicker": 0.35
+        },
+        {
+          "x": 99,
+          "y": 56,
+          "radius": 22,
+          "color": "#FFE0A0",
+          "alpha": 50,
+          "flicker": 0.1
+        }
+      ],
+      "examine": [
+        {
+          "id": "ext.sign",
+          "x": 43,
+          "label": "Panoul",
+          "text": "BLACK PINE DINER. Dedesubt, zgâriat cu cheia: NU OPRI. Mersi, foarte util acum.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"NU OPRI. Am oprit. Acum ce facem cu informația asta?\""
+          },
+          "y": 80
+        },
+        {
+          "id": "ext.car",
+          "x": 290,
+          "label": "Mașina",
+          "text": "Mașina mea. Pe bancheta din spate e geaca pe care o caut de o săptămână. Măcar ceva e normal aici.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Geaca aia e a mea, de fapt. Ți-am zis că mi-o dai înapoi.\""
+          },
+          "y": 142
+        },
+        {
+          "id": "ext.moon",
+          "x": 252,
+          "label": "Luna",
+          "text": "Lună plină. Și acum trei zile era tot plină. Hai că nu mă mai gândesc la asta.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        }
+      ]
+    },
+    {
+      "id": "exterior_dawn",
+      "name": "Parcarea, dimineața",
+      "image": "images/diner_exterior_dawn.png",
+      "floorY": 162,
+      "minX": 14,
+      "maxX": 306,
+      "windows": [],
+      "ambient": [
+        "fog"
+      ],
+      "sounds": [
+        "birds",
+        "wind"
+      ],
+      "points": {},
+      "decor": [],
+      "lights": [],
+      "examine": [],
+      "actorTint": "#F0D0C4"
+    },
+    {
+      "id": "dining",
+      "name": "Sala",
+      "image": "images/diner_interior.png",
+      "floorY": 174,
+      "minX": 14,
+      "maxX": 308,
+      "windows": [
+        {
+          "x": 40,
+          "y": 28,
+          "w": 142,
+          "h": 62
+        }
+      ],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room",
+        "hum"
+      ],
+      "actorTint": "#F2E6DA",
+      "points": {
+        "phone": {
+          "x": 189,
+          "y": 64
+        },
+        "switch": {
+          "x": 188,
+          "y": 95
+        }
+      },
+      "decor": [
+        {
+          "image": "images/decor/fan.png",
+          "x": 180,
+          "y": 1,
+          "frameWidth": 40,
+          "frameHeight": 12,
+          "fps": 10,
+          "random": false,
+          "front": false
+        },
+        {
+          "image": "images/decor/open_sign.png",
+          "x": 8,
+          "y": 44,
+          "frameWidth": 22,
+          "frameHeight": 9,
+          "fps": 3,
+          "random": true,
+          "front": false
+        },
+        {
+          "image": "images/decor/steam.png",
+          "x": 271,
+          "y": 66,
+          "frameWidth": 10,
+          "frameHeight": 16,
+          "fps": 5,
+          "random": false,
+          "front": false
+        },
+        {
+          "image": "images/decor/cat.png",
+          "x": 296,
+          "y": 161,
+          "frameWidth": 16,
+          "frameHeight": 14,
+          "fps": 2,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 276,
+          "y": 18,
+          "radius": 18,
+          "color": "#FF5080",
+          "alpha": 60,
+          "flicker": 0.5
+        },
+        {
+          "x": 153,
+          "y": 112,
+          "radius": 24,
+          "color": "#FFA040",
+          "alpha": 55,
+          "flicker": 0.05
+        },
+        {
+          "x": 245,
+          "y": 106,
+          "radius": 12,
+          "color": "#A0D8E8",
+          "alpha": 40,
+          "flicker": 0.0
+        }
+      ],
+      "examine": [
+        {
+          "id": "din.jukebox",
+          "x": 153,
+          "label": "Tonomatul",
+          "text": "Are un singur disc: Tura de noapte (încă o dată). Apăs butonul. Nimic. Apoi cineva din bucătărie începe să fredoneze refrenul.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Melodia asta o fredona bunica mea. Și nu cred că a ascultat-o vreodată la radio.\""
+          },
+          "y": 116
+        },
+        {
+          "id": "din.menu",
+          "x": 234,
+          "label": "Meniul",
+          "text": "Specialitatea casei: plăcintă cu afine. Prețul a fost șters și rescris de vreo șase ori. Ultimul zice doar: nu întreba.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Am lucrat la trei restaurante. Nicio plăcintă cu afine n-a fost vreodată de afine.\""
+          },
+          "y": 46
+        },
+        {
+          "id": "din.phone",
+          "x": 189,
+          "label": "Telefonul",
+          "text": "Telefon cu disc. Lipsesc cifrele 0 și 3. Cineva chiar n-a vrut să mai sune nimeni la 03:00.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Fără 0 și fără 3. Deci nici la 112 nu poți suna. Super loc de muncă.\""
+          },
+          "y": 67
+        },
+        {
+          "id": "din.poster",
+          "x": 37,
+          "label": "Afișul",
+          "text": "ANGAJĂM. Dedesubt, cu pixul, mic de tot: din nou.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "Bucătăria",
+      "image": "images/kitchen.png",
+      "floorY": 172,
+      "minX": 16,
+      "maxX": 294,
+      "actorTint": "#DCE6EA",
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "hum"
+      ],
+      "points": {},
+      "decor": [
+        {
+          "image": "images/decor/steam.png",
+          "x": 70,
+          "y": 84,
+          "frameWidth": 10,
+          "frameHeight": 16,
+          "fps": 5,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 163,
+          "y": 52,
+          "radius": 16,
+          "color": "#FF2020",
+          "alpha": 55,
+          "flicker": 0.2
+        },
+        {
+          "x": 163,
+          "y": 12,
+          "radius": 30,
+          "color": "#C0F0FF",
+          "alpha": 40,
+          "flicker": 0.45
+        }
+      ],
+      "examine": [
+        {
+          "id": "kit.vent",
+          "x": 230,
+          "label": "Ventilația",
+          "text": "Pe grilaj e prins un fir de păr. Lung, negru. Nimeni de aici nu are părul așa.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana se uită la firul de păr și își strânge mai bine coada. \"Nu e al meu. Sper.\""
+          },
+          "y": 22
+        },
+        {
+          "id": "kit.fridge",
+          "x": 296,
+          "label": "Frigiderul",
+          "text": "Lapte, ouă, muștar. Și o farfurie acoperită cu folie, cu un bilețel: NU PENTRU OAMENI. Închid frigiderul.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"NU PENTRU OAMENI. Bine că sunt vegetariană.\""
+          },
+          "y": 90
+        },
+        {
+          "id": "kit.pans",
+          "x": 70,
+          "label": "Tigăile",
+          "text": "Toate tigăile sunt spălate lună. Toate, în afară de una. N-o să întreb.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "name": "Biroul",
+      "image": "images/office.png",
+      "floorY": 176,
+      "minX": 14,
+      "maxX": 306,
+      "actorTint": "#E0D0B4",
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room",
+        "clock"
+      ],
+      "points": {},
+      "decor": [
+        {
+          "image": "images/decor/led.png",
+          "x": 206,
+          "y": 108,
+          "frameWidth": 3,
+          "frameHeight": 3,
+          "fps": 2,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 124,
+          "y": 100,
+          "radius": 30,
+          "color": "#FFC070",
+          "alpha": 55,
+          "flicker": 0.05
+        },
+        {
+          "x": 192,
+          "y": 95,
+          "radius": 22,
+          "color": "#60FF90",
+          "alpha": 35,
+          "flicker": 0.15
+        }
+      ],
+      "examine": [
+        {
+          "id": "off.board",
+          "x": 58,
+          "label": "Avizierul",
+          "text": "Poze cu foști angajați, legate cu ață roșie. La câțiva fața e zgâriată cu pixul. Nu vreau să știu de ce.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Ăsta seamănă cu tine. Și ăsta. Și... ok, toți seamănă cu tine.\""
+          },
+          "y": 57
+        },
+        {
+          "id": "off.frame",
+          "x": 162,
+          "label": "Angajatul lunii",
+          "text": "Rama zice Angajatul lunii. Poza din ea e atât de ștearsă încât poate fi oricine. Poate fi și eu.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Angajatul lunii. Pe mine nu m-ar pune. Nici nu știu dacă m-ar vedea în poză.\""
+          },
+          "y": 49
+        },
+        {
+          "id": "off.cabinet",
+          "x": 260,
+          "label": "Dosarele",
+          "text": "Dosare de personal. Alex Morgan, Alex Pop, Alex Ionescu, Alex Varga... Toți Alex. Cineva are o problemă cu numele.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {},
+          "y": 100
+        },
+        {
+          "id": "off.pc",
+          "x": 192,
+          "label": "Calculatorul",
+          "text": "Ecranul zice: utilizator ALEX, parolă ALEX. Ultima conectare: 1987. Siguranța cibernetică la nivel de pădure.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        },
+        {
+          "id": "off.window",
+          "x": 300,
+          "label": "Fereastra",
+          "text": "Afară, între copaci, stă cineva. Clipesc. Nu mai e nimeni. Super.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        }
+      ]
+    },
+    {
+      "id": "office87",
+      "name": "Biroul (1987)",
+      "image": "images/office_1987.png",
+      "floorY": 176,
+      "minX": 14,
+      "maxX": 306,
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room",
+        "clock"
+      ],
+      "points": {},
+      "actorTint": "#E0D0B4",
+      "decor": [],
+      "lights": [
+        {
+          "x": 124,
+          "y": 100,
+          "radius": 30,
+          "color": "#FFC070",
+          "alpha": 55,
+          "flicker": 0.05
+        }
+      ],
+      "examine": []
+    }
+  ],
+  "playable": [
+    {
+      "characterId": "alex",
+      "role": "Ospătar nou, trei nopți",
+      "blurb": "A acceptat slujba pentru bani. Citește regulile, de obicei."
+    },
+    {
+      "characterId": "ioana",
+      "role": "Ospătăriță, tot din anunț",
+      "blurb": "Glumește când îi e frică. Restaurantul nu pare să știe că există."
+    }
+  ],
+  "maxPlayers": 2,
+  "characters": [
+    {
+      "id": "alex",
+      "name": "Alex Morgan",
+      "sprite": "images/sprites/alex.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": "Protagonistul, angajat nou."
+    },
+    {
+      "id": "faceless",
+      "name": "Clientul fără reflexie",
+      "sprite": "images/sprites/faceless.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": false,
+      "description": ""
+    },
+    {
+      "id": "red_woman",
+      "name": "Femeia în rochie roșie",
+      "sprite": "images/sprites/red_woman.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "double",
+      "name": "Dublura",
+      "sprite": "images/sprites/double.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "patron",
+      "name": "Client de noapte",
+      "sprite": "images/sprites/patron.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "ioana",
+      "name": "Ioana",
+      "sprite": "images/sprites/ioana.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": "Ospătăriță nouă, a răspuns la același anunț."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "intro.arrival",
+      "title": "Sosirea",
+      "text": "Plouă de la ultima benzinărie. Parchez în fața restaurantului Black Pine Diner. Firma roșie bâzâie deasupra ușii, ca o muscă prinsă în borcan.\n\n300 de dolari pe tură, trei nopți, de la 10 seara la 6 dimineața. Anunțul nu zicea nimic despre restul. Anunțurile bune nu zic niciodată.",
+      "location": "exterior",
+      "time": "21:50",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Intră în restaurant",
+          "target": "intro.counter",
+          "effects": [],
+          "hotspotY": 110,
+          "hotspotX": 203
+        },
+        {
+          "text": "Urcă înapoi în mașină și pleacă",
+          "target": "ending.quit",
+          "effects": [],
+          "hotspotY": 142,
+          "hotspotX": 290
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "chapter": "LAST STOP: NIGHT SHIFT",
+      "playerX": 262,
+      "companionText": {
+        "ioana": "Pe scaunul din dreapta, Ioana își verifică rujul în oglinda parasolarului. Am răspuns amândoi la același anunț. Ea zice că e un semn. Eu zic că e o coincidență cu salariu."
+      }
+    },
+    {
+      "id": "intro.counter",
+      "title": "Primul contact",
+      "text": "Înăuntru miroase a cafea arsă și a clor. Nu e nimeni. Pe tejghea e un bilet prins sub o cheie ruginită:\n\n\"Bine ai venit, Alex. Biroul e în spate. Citește registrul ÎNAINTE de miezul nopții.\"\n\nCiudat. Nu-mi amintesc să-i fi spus cuiva cum mă cheamă.",
+      "location": "dining",
+      "time": "21:58",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [
+        {
+          "id": "ic.note",
+          "x": 210,
+          "label": "Biletul",
+          "text": "Scris de mână, cu pix albastru, de cineva care face liste. Cheia e ruginită și nu deschide nimic din ce am încercat. O păstrez, totuși.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Pe mine nu scrie nicăieri. Ce frumos, sunt angajată pe nevăzute.\""
+          },
+          "y": 109
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Mergi în birou",
+          "target": "intro.office",
+          "effects": [],
+          "hotspotY": 60,
+          "hotspotX": 300
+        },
+        {
+          "text": "Lasă biletul și apucă-te de treabă",
+          "target": "night1.open",
+          "effects": []
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/note.png",
+          "x": 205,
+          "y": 106,
+          "frameWidth": 11,
+          "frameHeight": 6,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [],
+      "playerX": 24,
+      "companionText": {
+        "ioana": "Ioana citește biletul peste umărul meu. \"Pe mine nu mă salută nimeni\", zice. \"Cred că sunt figurantă.\""
+      }
+    },
+    {
+      "id": "intro.office",
+      "title": "Biroul",
+      "text": "Biroul e mic, cald și miroase a hârtie veche. Pe pereți, poze cu foști angajați. Pe birou, un monitor pornit care arată sala din spatele meu. Mă întorc. Sala e goală. Pe monitor, la fel. Bine.",
+      "location": "office",
+      "time": "22:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Deschide sertarul biroului",
+          "target": "intro.handbook",
+          "effects": [],
+          "hotspotY": 130,
+          "hotspotX": 120
+        },
+        {
+          "text": "Nu e treaba ta. Înapoi la tejghea",
+          "target": "night1.open",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 30,
+      "solo": true
+    },
+    {
+      "id": "intro.handbook",
+      "title": "Registrul",
+      "text": "În sertar e un registru legat în piele, cu un brad pe copertă. Pe prima pagină, scris apăsat: REGULI. CITEȘTE-LE. CHIAR LE CITEȘTE.\n\n1. Dacă un client nu apare în geam, nu-i da de mâncare. Stinge lumina și du-te în bucătărie.\n2. Femeia în roșu, după ora 1: nu te uita în ochii ei. Pune-i un pahar cu apă și pleacă.\n3. Cine comandă carne crudă primește carne crudă. Nu-l contrazice și nu te uita cum mănâncă.\n4. Trei bătăi în ușa din spate, când sala e goală: oprește ventilația și nu deschide.\n5. La 3 fix nu răspunde la telefon. Dacă răspunzi, nu-ți spune numele.\n6. Dacă intră cineva care arată ca tine: încuie bucătăria, stinge lumina, așteaptă.\n\nUltima pagină e ruptă. Cineva a scris pe margine, cu alt pix: nu le crede pe toate.",
+      "location": "office",
+      "time": "22:05",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Citește regulile de două ori",
+          "target": "night1.open",
+          "effects": [
+            {
+              "key": "story.hasHandbook",
+              "op": "set",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Închide registrul, sună a glumă",
+          "target": "night1.open",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 130,
+      "closeup": "images/closeups/handbook.png",
+      "solo": true
+    },
+    {
+      "id": "night1.open",
+      "title": "Primii clienți",
+      "text": "Prima oră e aproape plictisitoare. Un camionagiu vrea cafea neagră și nu zice nimic. O pereche se ceartă în șoaptă pe cine conduce la întoarcere.\n\nPe la miezul nopții sala se golește. Clopoțelul sună. Intră un bărbat înalt, la costum, și se oprește lângă masa de la geam. Zâmbește. Ceva nu e bine cu el, dar nu-mi dau seama ce.",
+      "location": "dining",
+      "time": "00:40",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "faceless",
+          "x": 112,
+          "facingLeft": false
+        },
+        {
+          "id": "patron",
+          "x": 270,
+          "facingLeft": true
+        }
+      ],
+      "examine": [
+        {
+          "id": "cat.1",
+          "x": 300,
+          "label": "Pisica",
+          "text": "Sub tejghea stă o pisică neagră. Mă studiază ca pe un client care nu lasă bacșiș. Îi dau o bucată de șuncă.",
+          "effects": [
+            {
+              "key": "story.cat",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Nu-i da șuncă, că se învață.\" Pisica se uită la ea ca la o trădătoare."
+          },
+          "y": 166
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Uită-te în geam, pe lângă el",
+          "target": "night1.reflection",
+          "effects": [],
+          "hotspotY": 60,
+          "hotspotX": 150
+        },
+        {
+          "text": "Du-te și ia-i comanda",
+          "target": "night1.served",
+          "effects": [],
+          "hotspotX": 132
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "chapter": "NOAPTEA 1: Prima tură",
+      "playerX": 250,
+      "companionText": {
+        "ioana": "Ioana ia comenzile de la mesele din stânga. Trece pe lângă bărbatul la costum fără să-l vadă, ca pe un scaun în plus."
+      }
+    },
+    {
+      "id": "night1.reflection",
+      "title": "Clientul fără reflexie",
+      "text": "Mă prefac că șterg o masă și mă uit în geam. Mă văd pe mine, cârpa, lampa care se leagănă. Locul unde stă el e gol. Complet gol.\n\nNu se mișcă. Doar capul i se întoarce spre mine. Încet. Prea încet.",
+      "location": "dining",
+      "time": "00:45",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "faceless",
+          "x": 112,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Stinge lumina și fugi în bucătărie",
+          "target": "night1.safe",
+          "effects": [],
+          "hotspotY": 95,
+          "hotspotX": 188
+        },
+        {
+          "text": "Întreabă-l direct ce e",
+          "target": "night1.danger",
+          "effects": [],
+          "hotspotX": 126
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 150
+    },
+    {
+      "id": "night1.served",
+      "title": "Greșeala",
+      "text": "Îi pun farfuria în față. Nu mănâncă. Nu clipește. Doar zâmbește, cu prea mulți dinți, până când lampa de deasupra pâlpâie și scaunul rămâne gol.\n\nPe masă a rămas o pată neagră și lipicioasă. Miroase a pământ ud.",
+      "location": "dining",
+      "time": "00:50",
+      "mood": "normal",
+      "fx": [
+        "flicker"
+      ],
+      "characters": [
+        {
+          "id": "faceless",
+          "x": 112,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Curăță pata",
+          "target": "night1.knocks",
+          "effects": [
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": -5
+            }
+          ],
+          "hotspotY": 120,
+          "hotspotX": 112
+        },
+        {
+          "text": "Lasă pata și du-te în spate",
+          "target": "night1.knocks",
+          "effects": [
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 5
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 132
+    },
+    {
+      "id": "night1.safe",
+      "title": "În bucătărie",
+      "text": "Sting lumina și mă strecor în bucătărie. Mă lipesc de frigider. E rece și bâzâie, ca mine.\n\nPași. Rari și grei. Se opresc fix în fața ușii batante. Prin geamul rotund nu se vede nimic. Apoi apare o pată de abur, de parcă cineva respiră pe sticlă.",
+      "location": "kitchen",
+      "time": "01:30",
+      "mood": "dark",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Stai nemișcat",
+          "target": "night1.knocks",
+          "effects": [
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": -5
+            }
+          ]
+        },
+        {
+          "text": "Deschide ușa",
+          "target": "night1.danger",
+          "effects": [],
+          "hotspotY": 79,
+          "hotspotX": 20
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 280,
+      "solo": true
+    },
+    {
+      "id": "night1.danger",
+      "title": "Regula încălcată",
+      "text": "E deja lângă mine. Lumina tremură și fața lui se topește, ca o mască de ceară ținută prea aproape de foc. Simt un frig în umăr, de parcă cineva mi-a furat o bucată de căldură.",
+      "location": "dining",
+      "time": "01:10",
+      "mood": "red",
+      "fx": [
+        "shake",
+        "flicker"
+      ],
+      "characters": [
+        {
+          "id": "faceless",
+          "x": 128,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Fugi",
+          "target": "night1.knocks",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -35
+            },
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 20
+            },
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": -15
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 150
+    },
+    {
+      "id": "night1.knocks",
+      "title": "Trei bătăi",
+      "text": "Pe la 2 se face liniște. Sala e goală, cafeaua s-a răcit.\n\nCineva bate în ușa din spate a bucătăriei. Trei bătăi. Pauză. Încă trei. Ventilația duce mirosul de prăjeli afară, în pădure. Poate de-aia a venit.",
+      "location": "kitchen",
+      "time": "02:10",
+      "mood": "dim",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Oprește ventilația și taci",
+          "target": "night1.knocks.quiet",
+          "effects": [],
+          "hotspotY": 22,
+          "hotspotX": 230
+        },
+        {
+          "text": "Întreabă cine e",
+          "target": "night1.knocks.voice",
+          "effects": [
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "text": "Deschide ușa",
+          "target": "night1.knocks.open",
+          "effects": [],
+          "hotspotY": 100,
+          "hotspotX": 163
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 40,
+      "solo": true
+    },
+    {
+      "id": "night1.knocks.quiet",
+      "title": "Liniște",
+      "text": "Ventilatorul se oprește cu un oftat. În liniștea care rămâne aud cum cineva, afară, adulmecă aerul. Lung. Apoi pași care se îndepărtează prin frunze.\n\nRespir abia după un minut.",
+      "location": "kitchen",
+      "time": "02:14",
+      "mood": "dark",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Înapoi la tejghea",
+          "target": "night1.phone",
+          "effects": [
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": -5
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 230,
+      "solo": true
+    },
+    {
+      "id": "night1.knocks.voice",
+      "title": "Vocea",
+      "text": "\"Alex, sunt eu, proprietarul. Mi-am uitat cheile. Deschide-mi, te rog, că plouă.\"\n\nVocea e caldă și obosită. Exact cum ți-ai imagina un proprietar. Doar că nu l-am văzut niciodată și nu știu cum vorbește.",
+      "location": "kitchen",
+      "time": "02:12",
+      "mood": "dim",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Nu deschide",
+          "target": "night1.phone",
+          "effects": []
+        },
+        {
+          "text": "Deschide, totuși e șeful",
+          "target": "night1.knocks.open",
+          "effects": [],
+          "hotspotY": 100,
+          "hotspotX": 163
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 150,
+      "solo": true
+    },
+    {
+      "id": "night1.knocks.open",
+      "title": "Ușa din spate",
+      "text": "Afară nu e nimeni. Doar ploaia și pădurea. Fac un pas să mă uit mai bine și o mână rece mă prinde de încheietură, din întuneric, de undeva de jos.\n\nTrag de mână până mă ustură pielea.",
+      "location": "kitchen",
+      "time": "02:15",
+      "mood": "red",
+      "fx": [
+        "shake"
+      ],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Trage ușa și încuie",
+          "target": "night1.phone",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -25
+            },
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 10
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 163,
+      "solo": true
+    },
+    {
+      "id": "night1.phone",
+      "title": "Telefonul de la 3",
+      "text": "03:00. Telefonul de pe perete sună. Șapte ori. Se oprește. Sună din nou.\n\nRobotul pornește singur și aud o voce pe care o știu prea bine. A mea. \"Alex? Sunt eu. Sunt afară, în parcare. Lasă-mă înăuntru. Spune-mi doar cum te cheamă.\"",
+      "location": "dining",
+      "time": "03:00",
+      "mood": "dim",
+      "fx": [
+        "ring"
+      ],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Lasă-l să sune",
+          "target": "night1.photo",
+          "effects": []
+        },
+        {
+          "text": "Ridică, dar nu zice nimic",
+          "target": "night1.photo",
+          "effects": [
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 10
+            }
+          ],
+          "hotspotY": 67,
+          "hotspotX": 189
+        },
+        {
+          "text": "Răspunde: Sunt Alex",
+          "target": "ending.captured",
+          "effects": [],
+          "hotspotY": 67,
+          "hotspotX": 189
+        },
+        {
+          "text": "Las-o pe Ioana să răspundă",
+          "target": "night1.ioana.phone",
+          "effects": [],
+          "requiresCharacter": "ioana"
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 240,
+      "companionText": {
+        "ioana": "Ioana se uită la telefon, apoi la mine. \"Vocea aia nu știe cum mă cheamă pe mine\", zice încet."
+      }
+    },
+    {
+      "id": "night1.ioana.phone",
+      "title": "Ioana la telefon",
+      "text": "Ioana ridică receptorul înainte să apuc să zic ceva. \"Black Pine, bună seara. Nu, nu cunosc niciun Alex. Eu sunt ospătărița.\"\n\nPe fir se face liniște. Apoi vocea mea, de acolo, zice încet, ca pentru cineva de lângă ea: \"Nu e pe listă.\" Și închide.\n\nIoana pune receptorul jos. \"Cineva ține o listă\", zice. \"Și eu nu sunt pe ea. Nu știu dacă e bine.\"",
+      "location": "dining",
+      "time": "03:01",
+      "mood": "dim",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Notează asta. E o dovadă",
+          "target": "night1.photo",
+          "effects": [
+            {
+              "key": "story.evidence",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 200
+    },
+    {
+      "id": "night1.photo",
+      "title": "Fotografia",
+      "text": "Ca să nu adorm, scotocesc prin dulapul din birou. Printre facturi îngălbenite găsesc o poză: echipa restaurantului, în fața firmei, 1987.\n\nAl treilea din stânga poartă uniforma mea. Are fața mea. Pe ecuson scrie ALEX.",
+      "location": "office",
+      "time": "05:40",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Bagă poza în buzunar",
+          "target": "night1.dawn",
+          "effects": [
+            {
+              "key": "story.evidence",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Pune-o la loc și uită de ea",
+          "target": "night1.dawn",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 250,
+      "closeup": "images/closeups/photo.png"
+    },
+    {
+      "id": "night1.dawn",
+      "title": "Dimineața",
+      "text": "La 6 fix ies în parcare. Cerul e roz, păsările cântă, totul arată ca o reclamă la cereale.\n\nPe parbriz e un plic. Înăuntru, 300 de dolari și un bilet: \"Ne vedem diseară, Alex.\" Nu l-am auzit pe nimeni ieșind.",
+      "location": "exterior_dawn",
+      "time": "06:00",
+      "mood": "dawn",
+      "fx": [],
+      "characters": [],
+      "examine": [
+        {
+          "id": "dawn1.car",
+          "x": 280,
+          "label": "Capota",
+          "text": "Pe capotă sunt urme de palme. Mici. Din interior.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {},
+          "y": 146
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Ia banii. Te întorci diseară",
+          "target": "night2.open",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 300
+            },
+            {
+              "key": "story.night",
+              "op": "set",
+              "value": 2
+            },
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": 15
+            }
+          ],
+          "hotspotY": 138,
+          "hotspotX": 294
+        },
+        {
+          "text": "Ia banii și nu te mai întorci",
+          "target": "ending.runaway",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 300
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 200
+    },
+    {
+      "id": "night2.open",
+      "title": "Carne crudă",
+      "text": "A doua noapte începe prea liniștit. Pe la 12 și jumătate vine un tip cu barbă și șapcă. Se așază lângă geam și comandă friptură. Crudă. \"Complet crudă, puișor. Fără sare.\"\n\nBucătarul nu există, deci bucătarul sunt eu.",
+      "location": "dining",
+      "time": "00:30",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 66,
+          "facingLeft": false
+        }
+      ],
+      "examine": [
+        {
+          "id": "cat.2",
+          "x": 300,
+          "label": "Pisica",
+          "text": "Pisica e tot acolo. Azi îmi dă voie s-o mângâi. Toarce ca un motor vechi. Primul lucru normal din noaptea asta.",
+          "effects": [
+            {
+              "key": "story.cat",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana o scarpină pe pisică după ureche. \"Tu știi tot, nu?\""
+          },
+          "y": 166
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Pune farfuria pe masă și nu te uita",
+          "target": "night2.meat.safe",
+          "effects": [],
+          "hotspotY": 120,
+          "hotspotX": 84
+        },
+        {
+          "text": "Spune-i că nu servim carne crudă",
+          "target": "night2.meat.angry",
+          "effects": []
+        },
+        {
+          "text": "Uită-te cum mănâncă",
+          "target": "night2.meat.look",
+          "effects": [],
+          "hotspotY": 120,
+          "hotspotX": 84
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "chapter": "NOAPTEA 2: Ceva nu e în regulă",
+      "playerX": 250,
+      "companionText": {
+        "ioana": "Ioana a venit și ea. Zice că nu-și amintește cum a ajuns acasă aseară, dar banii erau în buzunar."
+      }
+    },
+    {
+      "id": "night2.meat.safe",
+      "title": "Nu te uita",
+      "text": "Las farfuria și mă întorc cu spatele. Aud ceva ce n-o să uit prea curând. Ceva ud. Ceva care se rupe.\n\nCând mă întorc, farfuria e curată lună și pe masă sunt 20 de dolari. Bacșiș generos, măcar.",
+      "location": "dining",
+      "time": "00:40",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 66,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Strânge masa",
+          "target": "night2.red",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 20
+            }
+          ],
+          "hotspotY": 120,
+          "hotspotX": 100
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 110
+    },
+    {
+      "id": "night2.meat.angry",
+      "title": "Nu-l contrazice",
+      "text": "\"Nu servim carne crudă\", zic. Se lasă o liniște în care se aude până și frigiderul.\n\nSe ridică. E mai înalt decât părea. Mult mai înalt. Mă împinge în tejghea fără să mă atingă, doar cu privirea. Apoi iese în ploaie.",
+      "location": "dining",
+      "time": "00:35",
+      "mood": "red",
+      "fx": [
+        "shake"
+      ],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Ridică-te de jos",
+          "target": "night2.red",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -15
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 200
+    },
+    {
+      "id": "night2.meat.look",
+      "title": "M-am uitat",
+      "text": "Mă uit. Nu folosește tacâmuri. Nici mâini. Gura i se deschide mai mult decât ar trebui să se deschidă o gură.\n\nSub geacă, pe uniforma lui veche de ospătar, are un ecuson ruginit: ALEX, 1961. Apoi se oprește din mestecat și se uită la mine.",
+      "location": "dining",
+      "time": "00:40",
+      "mood": "red",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 66,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Fugi la tejghea",
+          "target": "night2.red",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -10
+            },
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 15
+            },
+            {
+              "key": "story.evidence",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 84
+    },
+    {
+      "id": "night2.red",
+      "title": "Femeia în roșu",
+      "text": "La 1 și 5 intră o femeie într-o rochie roșie, udă leoarcă, deși afară s-a oprit ploaia de o oră. Se așază la tejghea și așteaptă. Știu că așteaptă să mă uit la ea.",
+      "location": "dining",
+      "time": "01:05",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "red_woman",
+          "x": 246,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Pune-i un pahar cu apă, cu ochii în jos",
+          "target": "night2.red.safe",
+          "effects": [],
+          "hotspotY": 110,
+          "hotspotX": 222
+        },
+        {
+          "text": "Uită-te la ea",
+          "target": "night2.red.danger",
+          "effects": [],
+          "hotspotX": 232
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 40
+    },
+    {
+      "id": "night2.red.safe",
+      "title": "Paharul cu apă",
+      "text": "Pun paharul fără să ridic privirea. O aud cum bea. Înghițituri lungi și ude. Cu coada ochiului văd că buzele ei nu se mișcă.\n\nCând paharul e gol, o voce îmi șoptește direct în ureche, deși ea e la doi metri: \"Nu ești primul Alex.\"",
+      "location": "dining",
+      "time": "01:20",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "red_woman",
+          "x": 246,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Notează ce a zis pe un șervețel",
+          "target": "night2.camera",
+          "effects": [
+            {
+              "key": "story.evidence",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Încearcă să uiți",
+          "target": "night2.camera",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 222
+    },
+    {
+      "id": "night2.red.danger",
+      "title": "Privirea",
+      "text": "Mă uit. Ochii ei sunt negri de la o margine la alta, ca două fântâni. Zâmbește și toate luminile din restaurant se sting deodată.\n\nCeva ud îmi atinge obrazul. Cred că a fost mâna ei. Sper.",
+      "location": "dining",
+      "time": "01:15",
+      "mood": "red",
+      "fx": [
+        "shake",
+        "flicker"
+      ],
+      "characters": [
+        {
+          "id": "red_woman",
+          "x": 236,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Fugi în bucătărie",
+          "target": "night2.camera",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -20
+            },
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 15
+            }
+          ],
+          "hotspotY": 45,
+          "hotspotX": 305
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 222
+    },
+    {
+      "id": "night2.camera",
+      "title": "Înregistrarea",
+      "text": "Mai târziu, în birou, derulez înregistrările camerei. 01:22. Eu, la tejghea, servind un client fără față.\n\nDoar că la 01:22 eram în bucătărie. Sunt sigur. Pe ecran, celălalt eu se oprește, se întoarce încet și se uită direct în cameră. Îmi face cu mâna.",
+      "location": "office",
+      "time": "04:10",
+      "mood": "normal",
+      "fx": [
+        "flicker"
+      ],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Copiază înregistrarea pe o casetă",
+          "target": "night2.dawn",
+          "effects": [
+            {
+              "key": "story.evidence",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Șterge tot",
+          "target": "night2.dawn",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 190,
+      "closeup": "images/closeups/camera.png",
+      "solo": true
+    },
+    {
+      "id": "night2.dawn",
+      "title": "A doua dimineață",
+      "text": "Mașina pornește abia a treia oară. Mă uit în oglinda retrovizoare la restaurant. Firma e stinsă, dar mi s-a părut că cineva stă la geam și îmi face cu mâna.\n\nPe scaunul din dreapta, alt plic cu 300 de dolari. Încă o noapte.",
+      "location": "exterior_dawn",
+      "time": "06:00",
+      "mood": "dawn",
+      "fx": [],
+      "characters": [],
+      "examine": [
+        {
+          "id": "dawn2.radio",
+          "x": 290,
+          "label": "Radioul din mașină",
+          "text": "La radio: accident la kilometrul 13, lângă benzinărie. Drumul e închis până la prânz. Ciudat, n-am auzit niciodată de o benzinărie pe drumul ăsta.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {},
+          "y": 140
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Du-te acasă și dormi",
+          "target": "night3.open",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 300
+            },
+            {
+              "key": "story.night",
+              "op": "set",
+              "value": 3
+            },
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": 15
+            }
+          ],
+          "hotspotY": 138,
+          "hotspotX": 300
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 230
+    },
+    {
+      "id": "night3.open",
+      "title": "Ultima tură",
+      "text": "Ultima noapte. Pe tejghea, un bilet nou: \"Termină tura. Orice vezi. Oricine intră.\"\n\nAm recitit registrul de trei ori. Paginile par să se contrazică acum: una zice să încui bucătăria, alta să nu te ascunzi niciodată. Și din spate se aude cineva fluierând melodia pe care o fluier eu când am emoții.",
+      "location": "dining",
+      "time": "22:10",
+      "mood": "dim",
+      "fx": [
+        "flicker"
+      ],
+      "characters": [],
+      "examine": [
+        {
+          "id": "cat.3",
+          "x": 300,
+          "label": "Pisica",
+          "text": "Pisica mi se urcă în brațe și nu mai vrea să coboare. Ok, am înțeles. Tu ai fost aici înaintea tuturor.",
+          "effects": [
+            {
+              "key": "story.cat",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "ioana": "Ioana: \"Dacă plecăm, o luăm și pe ea. Nu discut.\""
+          },
+          "y": 166
+        }
+      ],
+      "decisions": [
+        {
+          "text": "Recitește dovezile adunate",
+          "target": "night3.call",
+          "effects": []
+        },
+        {
+          "text": "Ignoră tot și muncește",
+          "target": "night3.call",
+          "effects": [
+            {
+              "key": "player.energy",
+              "op": "add",
+              "value": -10
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "chapter": "NOAPTEA 3: Ultimul schimb",
+      "playerX": 250,
+      "companionText": {
+        "ioana": "Ioana își leagă șorțul fără să zică nimic. Azi nu mai glumește."
+      }
+    },
+    {
+      "id": "night3.call",
+      "title": "Proprietarul",
+      "text": "03:00. Telefonul. De data asta nu sună de șapte ori, sună o dată. Robotul pornește și, în sfârșit, aud vocea proprietarului. Răgușită, de om bătrân.\n\n\"Regula 6 e greșită. Când vine celălalt, nu te ascunde. Deschide-i și lasă-l să-ți ia locul. E mai simplu așa. Pentru toată lumea.\"",
+      "location": "dining",
+      "time": "03:00",
+      "mood": "dim",
+      "fx": [
+        "ring"
+      ],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Ai încredere în registru",
+          "target": "night3.knocks",
+          "effects": []
+        },
+        {
+          "text": "Ai încredere în proprietar",
+          "target": "night3.knocks",
+          "effects": [
+            {
+              "key": "story.trust",
+              "op": "set",
+              "value": 1
+            },
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "text": "Întreabă-l cum arată celălalt",
+          "target": "night3.call.ask",
+          "effects": [],
+          "hotspotY": 67,
+          "hotspotX": 189
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 240
+    },
+    {
+      "id": "night3.call.ask",
+      "title": "Cum arată",
+      "text": "\"Cum arată celălalt?\" întreb în receptor.\n\nPauză lungă. Apoi râde. Și râsul nu mai e al unui om bătrân. E al meu. \"Ca tine, Alex. Doar că mai odihnit.\"",
+      "location": "dining",
+      "time": "03:02",
+      "mood": "red",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Trântește telefonul",
+          "target": "night3.knocks",
+          "effects": [
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 5
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 189
+    },
+    {
+      "id": "night3.knocks",
+      "title": "Eu, la ușă",
+      "text": "Pe la 5 fără un sfert, bătăi în ușa din spate. Trei. Și vocea mea, de afară: \"Hai, frate, deschide. E frig. Sunt eu, pe bune.\"\n\nSe aude până și cum își freacă palmele. Exact cum le frec eu.",
+      "location": "kitchen",
+      "time": "04:45",
+      "mood": "dark",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Nu deschide",
+          "target": "night3.double",
+          "effects": []
+        },
+        {
+          "text": "Deschide",
+          "target": "night3.double",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -40
+            },
+            {
+              "key": "player.suspicion",
+              "op": "add",
+              "value": 20
+            }
+          ],
+          "hotspotY": 100,
+          "hotspotX": 163
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 60,
+      "solo": true
+    },
+    {
+      "id": "night3.double",
+      "title": "Dublura",
+      "text": "05:30. Clopoțelul de la intrare. Intră un tip cu geaca udă, cu părul meu, cu mersul meu. Pe ecuson scrie ALEX.\n\nSe oprește în mijlocul sălii și zâmbește cum zâmbesc eu în poze. \"Gata tura\", zice. \"Du-te acasă. Preiau eu de aici.\"",
+      "location": "dining",
+      "time": "05:30",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "double",
+          "x": 60,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Arată-i dovezile",
+          "target": "ending.sunrise",
+          "effects": [
+            {
+              "key": "inventory.money",
+              "op": "add",
+              "value": 300
+            }
+          ],
+          "condition": {
+            "type": "AND",
+            "children": [
+              {
+                "type": "COMPARISON",
+                "key": "player.life",
+                "operator": ">",
+                "value": 0
+              },
+              {
+                "type": "COMPARISON",
+                "key": "story.evidence",
+                "operator": ">=",
+                "value": 2
+              }
+            ]
+          },
+          "lockedHint": "ai nevoie de cel puțin 2 dovezi"
+        },
+        {
+          "text": "Du-te spre el",
+          "target": "ending.replaced",
+          "effects": [],
+          "hotspotX": 84
+        },
+        {
+          "text": "Încuie bucătăria, stinge lumina și așteaptă",
+          "target": "ending.secret",
+          "effects": [],
+          "hotspotY": 45,
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.evidence",
+            "operator": ">=",
+            "value": 3
+          },
+          "hotspotX": 306,
+          "lockedHint": "ai nevoie de toate cele 3 dovezi"
+        },
+        {
+          "text": "Ia pisica în brațe și ieși prin spate",
+          "target": "ending.cat",
+          "effects": [],
+          "hotspotY": 166,
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.cat",
+            "operator": ">=",
+            "value": 3
+          },
+          "hotspotX": 292,
+          "showWhenLocked": false
+        },
+        {
+          "text": "Fă cum a zis proprietarul: lasă-l să preia",
+          "target": "ending.replaced",
+          "effects": [],
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.trust",
+            "operator": "==",
+            "value": 1
+          },
+          "showWhenLocked": false
+        },
+        {
+          "text": "Ioana: \"Dacă ești el, spune-mi cum mă cheamă\"",
+          "target": "ending.ioana",
+          "effects": [],
+          "requiresCharacter": "ioana"
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 250,
+      "companionText": {
+        "ioana": "Ioana se uită de la mine la el și înapoi. Apoi face un pas în față."
+      }
+    },
+    {
+      "id": "ending.sunrise",
+      "title": "The Last Sunrise",
+      "text": "Pun dovezile pe tejghea, una câte una: poza, șervețelul, caseta. Celălalt se uită la ele mult. Zâmbetul i se topește ca ceara. Când ridic ochii, sala e goală.\n\nLa 6 ies în parcare. Soarele răsare peste brazi și pădurea arată, pentru prima dată, doar ca o pădure. Nu mă uit înapoi. Bine, mă uit o dată.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_sunrise.png",
+      "isEnding": true,
+      "endingType": "good",
+      "endingTitle": "The Last Sunrise",
+      "companionText": {
+        "ioana": "Ioana iese în parcare după mine și își aprinde o țigară. \"Data viitoare\", zice, \"căutăm un anunț cu salariu mic.\""
+      }
+    },
+    {
+      "id": "ending.ioana",
+      "title": "Doi pe tură",
+      "text": "\"Dacă ești el\", zice Ioana, \"spune-mi cum mă cheamă.\"\n\nCelălalt deschide gura. Zâmbește. Nu zice nimic. Nu știe. N-avea de unde: în trei nopți n-am vorbit despre ea cu nimeni de aici. Restaurantul ține minte numele, dar doar pe cele pe care i le spui.\n\nSe topește încet, ca o lumânare uitată aprinsă. La 6 ieșim amândoi în parcare. Pe ușă e un afiș nou, scris de mână: ANGAJĂM. DOI.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_sunrise.png",
+      "isEnding": true,
+      "endingType": "good",
+      "endingTitle": "Doi pe tură"
+    },
+    {
+      "id": "ending.captured",
+      "title": "Employee of the Month",
+      "text": "Vocea din receptor râde cu gura mea. Luminile se sting. Când se aprind la loc, eu sunt cel din spatele geamului.\n\nO săptămână mai târziu, un tip nou găsește registrul pe tejghea. Pe perete, în rama cu Angajatul lunii, e o poză cu mine. Nu zâmbesc.",
+      "location": null,
+      "time": "",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_captured.png",
+      "isEnding": true,
+      "endingType": "bad",
+      "endingTitle": "Employee of the Month",
+      "companionText": {
+        "ioana": "Ioana n-a mai venit. Pe lista de angajați numele ei nu apare nicăieri. Nici n-a apărut vreodată."
+      }
+    },
+    {
+      "id": "ending.replaced",
+      "title": "Employee of the Month",
+      "text": "Îi întind mâna. E rece și cunoscută. Clipesc și el poartă geaca mea. Eu nu mai port nimic. Nicio culoare, nicio greutate.\n\nÎn noaptea următoare, Alex servește cafea la tejghea. Eu stau la masa de lângă geam și aștept. Geamul nu mă mai arată.",
+      "location": null,
+      "time": "",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_replaced.png",
+      "isEnding": true,
+      "endingType": "bad",
+      "endingTitle": "Employee of the Month",
+      "companionText": {
+        "ioana": "Ioana vine și în noaptea următoare. Îmi pune un pahar cu apă pe masă, fără să ridice privirea. Știe regulile."
+      }
+    },
+    {
+      "id": "ending.secret",
+      "title": "The Fourth Night",
+      "text": "Încui bucătăria și sting lumina. Pașii lui trec pe lângă ușă, o dată, de două ori, apoi intră în pereți. În întuneric, dovezile se leagă: ani diferiți, aceeași față, același ecuson.\n\nDimineață caut restaurantul pe hartă. Drumul e acolo. Pădurea e acolo. Black Pine Diner nu e nicăieri. Foștii angajați n-au plecat niciodată. Ei sunt restaurantul.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_secret.png",
+      "isEnding": true,
+      "endingType": "secret",
+      "endingTitle": "The Fourth Night",
+      "companionText": {
+        "ioana": "Când caut numele Ioanei pe internet, găsesc un singur rezultat: un anunț de angajare din 1987. Același salariu."
+      }
+    },
+    {
+      "id": "ending.cat",
+      "title": "Pisica de noapte",
+      "text": "Iau pisica în brațe. Se lipește de mine și toarce atât de tare încât nu-l mai aud pe celălalt. Ies prin ușa din spate, prin ploaie, până la mașină. Nimeni nu ne oprește. Nimeni nu îndrăznește.\n\nLa radio e 06:02. Pisica doarme pe scaunul din dreapta. Cred că o s-o cheme Regula 7.",
+      "location": null,
+      "time": "06:02",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_cat.png",
+      "isEnding": true,
+      "endingType": "secret",
+      "endingTitle": "Pisica de noapte",
+      "companionText": {
+        "ioana": "Ioana stă în spate, cu pisica în brațe. Pe ea o lasă. Pe mine nu m-a lăsat niciodată."
+      }
+    },
+    {
+      "id": "ending.quit",
+      "title": "Plecarea",
+      "text": "Pornesc motorul. În oglinda retrovizoare, firma roșie pâlpâie de trei ori, de parcă mi-ar face cu mâna. N-o să aflu niciodată ce era acolo.\n\nUneori, la 3 noaptea, îmi sună telefonul de pe un număr necunoscut. Nu răspund niciodată.",
+      "location": null,
+      "time": "21:52",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_quit.png",
+      "isEnding": true,
+      "endingType": "alternative",
+      "endingTitle": "Plecarea",
+      "companionText": {
+        "ioana": "Ioana nu urcă în mașină. Îmi face cu mâna din ușa restaurantului, cu șorțul deja pe ea."
+      }
+    },
+    {
+      "id": "ending.runaway",
+      "title": "300 de dolari",
+      "text": "Iau plicul și conduc până nu mai văd brazi. 300 de dolari pentru o noapte. Nu e rău.\n\nPeste o lună văd din nou anunțul pe internet. Același salariu, aceleași ore. La rubrica Contact scrie numele meu.",
+      "location": null,
+      "time": "06:10",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/ending_quit.png",
+      "isEnding": true,
+      "endingType": "alternative",
+      "endingTitle": "300 de dolari",
+      "companionText": {
+        "ioana": "Ioana zice că ea mai rămâne o noapte. Doar una."
+      }
+    }
+  ]
+}

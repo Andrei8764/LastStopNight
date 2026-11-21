@@ -1,0 +1,1427 @@
+{
+  "title": "KM 13",
+  "order": 2,
+  "author": "Benzinăria de la kilometrul 13",
+  "description": "Mara lucrează noaptea la o benzinărie care nu apare pe nicio hartă. Radioul prinde știri din 1998, pompele pornesc singure, iar pe la 1 și 13 intră o fetiță într-o pelerină galbenă.",
+  "version": 1,
+  "startBlockId": "km.start",
+  "playerCharacterId": "mara",
+  "properties": [
+    {
+      "key": "player.fear",
+      "min": 0,
+      "max": 100,
+      "initial": 10,
+      "hudLabel": "Frică",
+      "display": "bar",
+      "icon": "images/ui/eye.png",
+      "color": "#9A4FD0"
+    },
+    {
+      "key": "player.life",
+      "min": 0,
+      "max": 100,
+      "initial": 100,
+      "hudLabel": "Integritate",
+      "display": "bar",
+      "icon": "images/ui/heart.png",
+      "color": "#D8333F"
+    },
+    {
+      "key": "story.clues",
+      "min": 0,
+      "max": 7,
+      "initial": 0,
+      "hudLabel": "Indicii",
+      "display": "value",
+      "icon": "images/ui/clue.png"
+    },
+    {
+      "key": "story.promise",
+      "min": 0,
+      "max": 1,
+      "initial": 0,
+      "hudLabel": "Promisiune",
+      "display": "hidden"
+    },
+    {
+      "key": "story.radio",
+      "min": 0,
+      "max": 2,
+      "initial": 0,
+      "hudLabel": "Radio",
+      "display": "hidden"
+    }
+  ],
+  "redirects": [
+    {
+      "condition": {
+        "type": "COMPARISON",
+        "key": "player.fear",
+        "operator": ">=",
+        "value": 100
+      },
+      "target": "km.end.lights",
+      "description": "Nu mai poți să respiri de frică"
+    },
+    {
+      "condition": {
+        "type": "COMPARISON",
+        "key": "player.life",
+        "operator": "<=",
+        "value": 0
+      },
+      "target": "km.end.lights",
+      "description": "Totul se face alb"
+    }
+  ],
+  "locations": [
+    {
+      "id": "gas",
+      "name": "Pompele",
+      "image": "images/gas_exterior.png",
+      "floorY": 160,
+      "minX": 12,
+      "maxX": 300,
+      "windows": [],
+      "ambient": [
+        "fog"
+      ],
+      "sounds": [
+        "night",
+        "wind",
+        "hum"
+      ],
+      "points": {},
+      "actorTint": "#8C98C0",
+      "decor": [
+        {
+          "image": "images/decor/tube.png",
+          "x": 50,
+          "y": 61,
+          "frameWidth": 30,
+          "frameHeight": 3,
+          "fps": 8,
+          "random": true,
+          "front": false
+        },
+        {
+          "image": "images/decor/tube.png",
+          "x": 130,
+          "y": 61,
+          "frameWidth": 30,
+          "frameHeight": 3,
+          "fps": 7,
+          "random": true,
+          "front": false
+        },
+        {
+          "image": "images/decor/moths.png",
+          "x": 100,
+          "y": 64,
+          "frameWidth": 16,
+          "frameHeight": 14,
+          "fps": 6,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 108,
+          "y": 74,
+          "radius": 60,
+          "color": "#D0F0FF",
+          "alpha": 35,
+          "flicker": 0.3
+        },
+        {
+          "x": 15,
+          "y": 66,
+          "radius": 24,
+          "color": "#FF8040",
+          "alpha": 50,
+          "flicker": 0.1
+        },
+        {
+          "x": 250,
+          "y": 102,
+          "radius": 46,
+          "color": "#FFF0B0",
+          "alpha": 35,
+          "flicker": 0.0
+        }
+      ],
+      "examine": [
+        {
+          "id": "gas.sign",
+          "x": 15,
+          "label": "Panoul cu prețuri",
+          "text": "Benzina e 6,13. Motorina 6,66. Cineva de la firmă are un simț al umorului foarte specific.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "vlad": "Vlad: \"Prețurile le-a pus șeful. Când l-am întrebat de ce 6,66, a zis că așa a fost mereu.\""
+          },
+          "y": 62
+        },
+        {
+          "id": "gas.booth",
+          "x": 185,
+          "label": "Cabina telefonică",
+          "text": "Cabină telefonică. Funcționează cu fise. Fise! Nu mai fac fise din 2000.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {
+            "vlad": "Vlad: \"Am o fisă. O țin de noroc. Nu, n-o folosesc. Nu știi pe cine prinzi.\""
+          }
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "name": "Magazinul",
+      "image": "images/gas_store.png",
+      "floorY": 172,
+      "minX": 14,
+      "maxX": 300,
+      "windows": [
+        {
+          "x": 11,
+          "y": 31,
+          "w": 118,
+          "h": 64
+        }
+      ],
+      "ambient": [],
+      "sounds": [
+        "hum",
+        "room"
+      ],
+      "points": {
+        "phone": {
+          "x": 300,
+          "y": 62
+        }
+      },
+      "actorTint": "#E6EEE6",
+      "decor": [
+        {
+          "image": "images/decor/radio.png",
+          "x": 278,
+          "y": 99,
+          "frameWidth": 14,
+          "frameHeight": 9,
+          "fps": 3,
+          "random": false,
+          "front": false
+        },
+        {
+          "image": "images/decor/led.png",
+          "x": 307,
+          "y": 30,
+          "frameWidth": 3,
+          "frameHeight": 3,
+          "fps": 2,
+          "random": false,
+          "front": false
+        },
+        {
+          "image": "images/decor/wall_phone.png",
+          "x": 294,
+          "y": 56,
+          "frameWidth": 12,
+          "frameHeight": 26,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 251,
+          "y": 105,
+          "radius": 34,
+          "color": "#60A0FF",
+          "alpha": 55,
+          "flicker": 0.12
+        },
+        {
+          "x": 298,
+          "y": 100,
+          "radius": 14,
+          "color": "#80FF90",
+          "alpha": 30,
+          "flicker": 0.0
+        }
+      ],
+      "examine": [
+        {
+          "id": "st.freezer",
+          "x": 251,
+          "label": "Congelatorul",
+          "text": "Înghețată de vanilie, expirată din 1999. Nimeni n-a observat 25 de ani. Sincer, respect.",
+          "effects": [],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "vlad": "Vlad scoate o înghețată. \"Expirată din '99? A rezistat până acum, rezist și eu.\""
+          },
+          "y": 100
+        },
+        {
+          "id": "st.poster",
+          "x": 152,
+          "label": "Afișul LIPSĂ",
+          "text": "LIPSĂ. Ioana, 7 ani, pelerină galbenă. Văzută ultima dată la km 13, pe 14 octombrie 1998. Afișul e nou. Lipiciul e încă ud. Cine l-a lipit azi?",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "vlad": "Vlad: \"Lipiciul e de la noi din magazie. Doar noi avem din ăsta.\""
+          },
+          "y": 41
+        },
+        {
+          "id": "st.cctv",
+          "x": 290,
+          "label": "Monitorul camerei",
+          "text": "Camera 2 arată pompele. Lângă pompa 1 stă o fetiță în pelerină galbenă. Mă uit pe geam. Nu e nimeni. Mă uit pe monitor. E acolo.",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 10
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "vlad": "Vlad: \"E acolo de când m-am angajat. Eu îi zic bună seara.\""
+          },
+          "y": 38
+        },
+        {
+          "id": "st.gum",
+          "x": 200,
+          "label": "Raftul cu gumă",
+          "text": "Gumă cu mentă, gumă cu căpșuni, gumă cu... lacrimi? Ah, nu, cu lămâie. Am nevoie de somn.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        }
+      ]
+    },
+    {
+      "id": "back",
+      "name": "Magazia",
+      "image": "images/gas_back.png",
+      "floorY": 172,
+      "minX": 14,
+      "maxX": 300,
+      "windows": [],
+      "ambient": [
+        "dust"
+      ],
+      "sounds": [
+        "room"
+      ],
+      "points": {},
+      "actorTint": "#DCCCA8",
+      "decor": [],
+      "lights": [
+        {
+          "x": 160,
+          "y": 20,
+          "radius": 26,
+          "color": "#FFD890",
+          "alpha": 60,
+          "flicker": 0.6
+        }
+      ],
+      "examine": [
+        {
+          "id": "bk.calendar",
+          "x": 222,
+          "label": "Calendarul",
+          "text": "Calendar din 1998, rămas pe octombrie. Ziua de 14 e încercuită cu roșu. Lângă, cineva a scris: tura M.",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            },
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 5
+            }
+          ],
+          "once": true,
+          "hidden": false,
+          "textBy": {
+            "vlad": "Vlad: \"Tura M. Pe atunci era o Mariana. Sau Marcel. Sau... Mara?\""
+          },
+          "y": 45
+        },
+        {
+          "id": "bk.mop",
+          "x": 298,
+          "label": "Mopul",
+          "text": "Mopul are numele meu scris pe coadă. Nu l-am scris eu. Cred.",
+          "effects": [],
+          "once": true,
+          "hidden": true,
+          "textBy": {}
+        }
+      ]
+    }
+  ],
+  "playable": [
+    {
+      "characterId": "mara",
+      "role": "Casieră, tura de noapte",
+      "blurb": "Pe ecuson scrie Mara. Nu știe încă de ce contează asta."
+    },
+    {
+      "characterId": "vlad",
+      "role": "Coleg de tură, mecanic",
+      "blurb": "Doarme pe scaun lângă casă. Știe orice mașină după sunet."
+    }
+  ],
+  "maxPlayers": 2,
+  "characters": [
+    {
+      "id": "mara",
+      "name": "Mara",
+      "sprite": "images/sprites/mara.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": "Casieră în tura de noapte."
+    },
+    {
+      "id": "girl",
+      "name": "Fetița în pelerină galbenă",
+      "sprite": "images/sprites/girl.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": false,
+      "description": ""
+    },
+    {
+      "id": "hitchhiker",
+      "name": "Omul cu pălărie",
+      "sprite": "images/sprites/hitchhiker.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "patron",
+      "name": "Camionagiul",
+      "sprite": "images/sprites/patron.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": ""
+    },
+    {
+      "id": "vlad",
+      "name": "Vlad",
+      "sprite": "images/sprites/vlad.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "idleFrames": [
+        0,
+        1
+      ],
+      "walkFrames": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "hasReflection": true,
+      "description": "Colegul de tură. Mecanic. Doarme mult."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "km.start",
+      "title": "Tura de noapte",
+      "text": "Ultimul client a plecat la 11. De atunci sunt doar eu, radioul și congelatorul care bâzâie ca un frigider cu anxietate.\n\nBenzinăria de la kilometrul 13 nu e pe nicio hartă online. Șeful zice că e mai bine așa. Șeful zice multe.",
+      "location": "store",
+      "time": "23:40",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Dă mai tare la radio",
+          "target": "km.radio1",
+          "effects": [
+            {
+              "key": "story.radio",
+              "op": "set",
+              "value": 1
+            }
+          ],
+          "hotspotY": 103,
+          "hotspotX": 285
+        },
+        {
+          "text": "Ieși să verifici pompele",
+          "target": "km.pumps",
+          "effects": [],
+          "hotspotX": 16
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "chapter": "KM 13: Tura de noapte",
+      "playerX": 280,
+      "companionText": {
+        "vlad": "Bine, nu chiar singură. Vlad, colegul de tură, doarme pe un scaun lângă casă de la 11 fără un sfert. Zice că el e tura de zi care a rămas din greșeală."
+      }
+    },
+    {
+      "id": "km.radio1",
+      "title": "Știrile de la miezul nopții",
+      "text": "Radioul se aude prost, cu foșnet. Un crainic cu voce de anii 90: \"...accident grav la kilometrul 13. Șoferul a fugit de la locul faptei. Fetița, în vârstă de 7 ani, nu a fost găsită.\"\n\nMă uit la ceas. Radioul ăsta n-are cum să prindă un post din 1998.",
+      "location": "store",
+      "time": "23:50",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Schimbă postul",
+          "target": "km.trucker",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Ascultă până la capăt",
+          "target": "km.radio2",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            },
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 10
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 285
+    },
+    {
+      "id": "km.radio2",
+      "title": "Până la capăt",
+      "text": "\"...casiera benzinăriei, Mara, a declarat că nu a văzut nimic.\"\n\nMara. Pe ecusonul meu scrie Mara. În 1998 aveam patru ani. Radioul se oprește singur, cu un clic.",
+      "location": "store",
+      "time": "23:55",
+      "mood": "dim",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Respiră și mergi mai departe",
+          "target": "km.trucker",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            },
+            {
+              "key": "story.radio",
+              "op": "set",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 285
+    },
+    {
+      "id": "km.pumps",
+      "title": "Pompele",
+      "text": "Afară e ceață. Tuburile de neon de sub copertină pâlpâie. Pompa 1 pornește singură. Contorul se învârte și se oprește la 13,13 litri. Nimeni n-a ținut pistolul.",
+      "location": "gas",
+      "time": "23:50",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Oprește pompa",
+          "target": "km.trucker",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 5
+            }
+          ],
+          "hotspotY": 118,
+          "hotspotX": 79
+        },
+        {
+          "text": "Intră repede înapoi",
+          "target": "km.trucker",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 20,
+      "companionText": {
+        "vlad": "Vlad iese după mine, cu mâinile în buzunare. \"Pompa asta n-a mai mers din 2009\", zice. \"Am reparat-o eu. Adică, am încercat.\""
+      }
+    },
+    {
+      "id": "km.trucker",
+      "title": "Camionagiul",
+      "text": "La 12 și jumătate intră un camionagiu. Ia o cafea, un covrig și se uită de trei ori spre geam înainte să plătească.\n\n\"Ai grijă la km 13, fată\", zice. \"Am văzut-o de trei ori pe marginea drumului pe fetița aia. Eu nu mai opresc niciodată.\"",
+      "location": "store",
+      "time": "00:30",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 250,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Întreabă-l de fetiță",
+          "target": "km.trucker.talk",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "hotspotX": 262
+        },
+        {
+          "text": "Dă-i restul și atât",
+          "target": "km.girl",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 290,
+      "companionText": {
+        "vlad": "Camionagiul se uită lung la Vlad. \"Tu încă lucrezi aici?\" Vlad ridică din umeri: \"Cineva trebuie.\""
+      }
+    },
+    {
+      "id": "km.trucker.talk",
+      "title": "Ce a văzut",
+      "text": "\"Pelerină galbenă, ca de ploaie. Stă cu fața spre pădure. Odată am oprit. M-am uitat în oglindă și era pe bancheta din spate.\"\n\nÎși bea cafeaua dintr-o înghițitură, deși e fierbinte. \"Nu-i da nimic. Și nu-i promite nimic.\"",
+      "location": "store",
+      "time": "00:35",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "patron",
+          "x": 250,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Mulțumește-i",
+          "target": "km.girl",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 262
+    },
+    {
+      "id": "km.girl",
+      "title": "Fetița",
+      "text": "La 1 și 13 clopoțelul nu sună, dar în magazin e o fetiță. Pelerină galbenă, cizme galbene, apă care picură pe gresie. Stă lângă geam.\n\n\"Ați văzut-o pe mama?\"",
+      "location": "store",
+      "time": "01:13",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "girl",
+          "x": 70,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Întreab-o cum o cheamă",
+          "target": "km.girl.name",
+          "effects": [],
+          "hotspotX": 90
+        },
+        {
+          "text": "Uită-te în geam, pe lângă ea",
+          "target": "km.girl.mirror",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 15
+            },
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ],
+          "hotspotY": 60,
+          "hotspotX": 110
+        },
+        {
+          "text": "Sună la poliție",
+          "target": "km.police",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 10
+            }
+          ],
+          "hotspotY": 66,
+          "hotspotX": 300
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 200,
+      "companionText": {
+        "vlad": "Vlad, care până acum dormea, e brusc foarte treaz și foarte departe de geam."
+      }
+    },
+    {
+      "id": "km.girl.name",
+      "title": "Ioana",
+      "text": "\"Ioana\", zice. \"Mama a zis să aștept aici până vine ea cu mașina. Dar a trecut mult. Mi-e frig.\"\n\nPelerina ei e udă, deși afară nu plouă de două zile.",
+      "location": "store",
+      "time": "01:16",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "girl",
+          "x": 70,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Promite-i că o ajuți s-o găsească",
+          "target": "km.hitch",
+          "effects": [
+            {
+              "key": "story.promise",
+              "op": "set",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "text": "Spune-i frumos să plece",
+          "target": "km.hitch",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 10
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 90
+    },
+    {
+      "id": "km.girl.mirror",
+      "title": "În geam",
+      "text": "În geam, magazinul e gol. Rafturile, congelatorul, eu. Fetița nu e acolo.\n\nPe sticlă, din interior, cineva a scris cu degetul în aburi: EL SE ÎNTOARCE.",
+      "location": "store",
+      "time": "01:15",
+      "mood": "red",
+      "fx": [],
+      "characters": [
+        {
+          "id": "girl",
+          "x": 70,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Întoarce-te spre ea",
+          "target": "km.hitch",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 110
+    },
+    {
+      "id": "km.police",
+      "title": "112",
+      "text": "Formez. Sună de mult. Răspunde o operatoare, cu voce plată: \"Dispeceratul de la kilometrul 13 a fost desființat în 1999. Vă rugăm să nu mai sunați.\"\n\nTon. Când mă întorc, fetița stă chiar lângă mine.",
+      "location": "store",
+      "time": "01:18",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "girl",
+          "x": 282,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Pune receptorul jos",
+          "target": "km.hitch",
+          "effects": []
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 300
+    },
+    {
+      "id": "km.hitch",
+      "title": "Omul cu pălărie",
+      "text": "La 3 fără 20, faruri. O mașină veche, cu un far spart, oprește la pompa 2. Coboară un om înalt, cu palton lung și pălărie. Nu-i văd fața, doar două puncte de lumină unde ar trebui să fie ochii.\n\nFetița dispare. Omul bate în geam cu o monedă. \"Plinul. Plătesc cash.\"",
+      "location": "gas",
+      "time": "02:40",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "hitchhiker",
+          "x": 236,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Servește-l",
+          "target": "km.hitch.serve",
+          "effects": [],
+          "hotspotY": 118,
+          "hotspotX": 128
+        },
+        {
+          "text": "Spune-i că pompele sunt stricate",
+          "target": "km.hitch.lie",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "text": "Uită-te la mașina lui",
+          "target": "km.hitch.car",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            },
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 10
+            }
+          ],
+          "hotspotY": 152,
+          "hotspotX": 152
+        },
+        {
+          "text": "Lasă-l pe Vlad să se uite la motor",
+          "target": "km.vlad.engine",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 2
+            },
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": 5
+            }
+          ],
+          "requiresCharacter": "vlad",
+          "hotspotY": 146,
+          "hotspotX": 176
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/car.png",
+          "x": 146,
+          "y": 132,
+          "frameWidth": 80,
+          "frameHeight": 30,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 148,
+          "y": 148,
+          "radius": 14,
+          "color": "#FFF0C0",
+          "alpha": 55,
+          "flicker": 0.0
+        }
+      ],
+      "playerX": 40,
+      "companionText": {
+        "vlad": "Vlad îmi șoptește: \"Dacia 1300, din '78. Farul stâng spart, bara îndoită. Am mai văzut-o. În poze.\""
+      }
+    },
+    {
+      "id": "km.vlad.engine",
+      "title": "Motorul",
+      "text": "Vlad ridică capota cu o scuză despre ulei. Omul cu pălărie nu se întoarce, doar se uită la pădure.\n\nMotorul e rece. De tot. Rece ca în februarie. Mașina asta n-a mers de ani buni, deși a oprit aici acum un minut. Pe blocul motor cineva a zgâriat cu un cui o dată: 14.10.1998.\n\nVlad lasă capota jos foarte încet. \"Intrăm\", zice. \"Acum.\"",
+      "location": "gas",
+      "time": "02:44",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "hitchhiker",
+          "x": 236,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Înapoi în magazin, repede",
+          "target": "km.back",
+          "effects": []
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/car.png",
+          "x": 146,
+          "y": 132,
+          "frameWidth": 80,
+          "frameHeight": 30,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 148,
+          "y": 148,
+          "radius": 14,
+          "color": "#FFF0C0",
+          "alpha": 55,
+          "flicker": 0.0
+        }
+      ],
+      "playerX": 176
+    },
+    {
+      "id": "km.hitch.serve",
+      "title": "Plata",
+      "text": "Îi fac plinul. Se uită în pădure tot timpul, cu spatele la mine. Plătește cu o bancnotă de 10.000 de lei. Din cele vechi, cu Grigorescu. Nu mai sunt bune de 20 de ani.\n\n\"Păstrează restul\", zice. \"Pentru fetiță.\"",
+      "location": "gas",
+      "time": "02:50",
+      "mood": "normal",
+      "fx": [],
+      "characters": [
+        {
+          "id": "hitchhiker",
+          "x": 236,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Ia bancnota",
+          "target": "km.back",
+          "effects": [
+            {
+              "key": "story.clues",
+              "op": "add",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/car.png",
+          "x": 146,
+          "y": 132,
+          "frameWidth": 80,
+          "frameHeight": 30,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 148,
+          "y": 148,
+          "radius": 14,
+          "color": "#FFF0C0",
+          "alpha": 55,
+          "flicker": 0.0
+        }
+      ],
+      "playerX": 128
+    },
+    {
+      "id": "km.hitch.lie",
+      "title": "Stricate",
+      "text": "\"Pompele sunt stricate\", zic. Zâmbește, cred. Se aude ca un zâmbet.\n\n\"Nu sunt stricate. Nimic nu e stricat aici de 25 de ani.\" Pompa 2 pornește singură și se oprește la 13,13.",
+      "location": "gas",
+      "time": "02:45",
+      "mood": "red",
+      "fx": [
+        "shake"
+      ],
+      "characters": [
+        {
+          "id": "hitchhiker",
+          "x": 236,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Fugi înăuntru",
+          "target": "km.back",
+          "effects": [
+            {
+              "key": "player.life",
+              "op": "add",
+              "value": -15
+            }
+          ]
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/car.png",
+          "x": 146,
+          "y": 132,
+          "frameWidth": 80,
+          "frameHeight": 30,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 148,
+          "y": 148,
+          "radius": 14,
+          "color": "#FFF0C0",
+          "alpha": 55,
+          "flicker": 0.0
+        }
+      ],
+      "playerX": 60
+    },
+    {
+      "id": "km.hitch.car",
+      "title": "Bara din față",
+      "text": "Mă duc spre mașină ca și cum aș verifica presiunea în roți. Bara din față e îndoită. În îndoitură sunt prinse bucăți de plastic galben. Ca de pelerină.\n\nCând ridic ochii, el stă chiar în spatele meu.",
+      "location": "gas",
+      "time": "02:46",
+      "mood": "red",
+      "fx": [],
+      "characters": [
+        {
+          "id": "hitchhiker",
+          "x": 170,
+          "facingLeft": true
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Treci pe lângă el, fără grabă",
+          "target": "km.back",
+          "effects": []
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/car.png",
+          "x": 146,
+          "y": 132,
+          "frameWidth": 80,
+          "frameHeight": 30,
+          "fps": 1,
+          "random": false,
+          "front": false
+        }
+      ],
+      "lights": [
+        {
+          "x": 148,
+          "y": 148,
+          "radius": 14,
+          "color": "#FFF0C0",
+          "alpha": 55,
+          "flicker": 0.0
+        }
+      ],
+      "playerX": 152
+    },
+    {
+      "id": "km.back",
+      "title": "Pana de curent",
+      "text": "La 3 și 13 se ia curentul. Totul. Mă duc pe bâjbâite în magazie, la tabloul electric. Becul de rezervă se aprinde singur.\n\nFetița e acolo, cu fața spre perete. Arată cu degetul spre calendar.",
+      "location": "back",
+      "time": "03:13",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "girl",
+          "x": 236,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Urcă siguranțele",
+          "target": "km.final",
+          "effects": [],
+          "hotspotY": 60,
+          "hotspotX": 125
+        },
+        {
+          "text": "Stai lângă ea pe întuneric",
+          "target": "km.final",
+          "effects": [
+            {
+              "key": "player.fear",
+              "op": "add",
+              "value": -15
+            }
+          ]
+        }
+      ],
+      "props": [],
+      "lights": [],
+      "playerX": 60,
+      "solo": true
+    },
+    {
+      "id": "km.final",
+      "title": "Farurile",
+      "text": "Când ies, mașina cu farul spart e pe mijlocul drumului, cu motorul pornit. Farurile bat drept în fetița care stă pe marginea șoselei, cu fața spre pădure.\n\nOmul cu pălărie stă la volan. Așteaptă ceva. Poate pe mine.",
+      "location": "gas",
+      "time": "04:44",
+      "mood": "dim",
+      "fx": [],
+      "characters": [
+        {
+          "id": "girl",
+          "x": 150,
+          "facingLeft": false
+        }
+      ],
+      "examine": [],
+      "decisions": [
+        {
+          "text": "Spune-i în față ce a făcut la km 13",
+          "target": "km.end.peace",
+          "effects": [],
+          "hotspotY": 154,
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.clues",
+            "operator": ">=",
+            "value": 3
+          },
+          "hotspotX": 268,
+          "lockedHint": "nu știi destul (3 indicii)"
+        },
+        {
+          "text": "Dă radioul pe 13,13 și lasă-l să audă",
+          "target": "km.end.radio",
+          "effects": [],
+          "condition": {
+            "type": "AND",
+            "children": [
+              {
+                "type": "COMPARISON",
+                "key": "story.radio",
+                "operator": ">=",
+                "value": 2
+              },
+              {
+                "type": "COMPARISON",
+                "key": "story.clues",
+                "operator": ">=",
+                "value": 5
+              }
+            ]
+          },
+          "showWhenLocked": false
+        },
+        {
+          "text": "Ține fetița de mână până se face lumină",
+          "target": "km.end.wait",
+          "effects": [],
+          "hotspotY": 140,
+          "condition": {
+            "type": "COMPARISON",
+            "key": "story.promise",
+            "operator": "==",
+            "value": 1
+          },
+          "hotspotX": 150,
+          "lockedHint": "nu i-ai promis nimic"
+        },
+        {
+          "text": "Fugi în magazin și încuie ușa",
+          "target": "km.end.lights",
+          "effects": []
+        }
+      ],
+      "props": [
+        {
+          "image": "images/props/beams.png",
+          "x": 109,
+          "y": 132,
+          "frameWidth": 130,
+          "frameHeight": 50,
+          "fps": 1,
+          "random": false,
+          "front": true
+        },
+        {
+          "image": "images/props/car_driver.png",
+          "x": 236,
+          "y": 146,
+          "frameWidth": 80,
+          "frameHeight": 30,
+          "fps": 1,
+          "random": false,
+          "front": true
+        }
+      ],
+      "lights": [
+        {
+          "x": 238,
+          "y": 162,
+          "radius": 18,
+          "color": "#FFF0C0",
+          "alpha": 80,
+          "flicker": 0.0
+        },
+        {
+          "x": 150,
+          "y": 150,
+          "radius": 30,
+          "color": "#FFF0C0",
+          "alpha": 45,
+          "flicker": 0.0
+        }
+      ],
+      "playerX": 40,
+      "companionText": {
+        "vlad": "Vlad stă lângă mine. Pentru prima dată în noaptea asta nu face nicio glumă."
+      }
+    },
+    {
+      "id": "km.end.peace",
+      "title": "Kilometrul 13",
+      "text": "\"Tu ai lovit-o\", îi zic. \"Pe 14 octombrie 1998. Ai fugit și ai lăsat-o în ploaie.\"\n\nMotorul se oprește. Omul coboară, își scoate pălăria și, pentru prima oară, îi văd fața. E bătrân și plânge. Fetița se întoarce, îl ia de mână și pornesc amândoi pe marginea drumului, spre pădure.\n\nDimineață, pe banca de lângă pompe, găsesc o pelerină galbenă, împăturită frumos.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/km13_peace.png",
+      "isEnding": true,
+      "endingType": "good",
+      "endingTitle": "Kilometrul 13",
+      "companionText": {
+        "vlad": "Vlad ia pelerina și o pune frumos în dulapul cu obiecte pierdute. \"Dacă vine cineva după ea\", zice."
+      }
+    },
+    {
+      "id": "km.end.radio",
+      "title": "13,13 MHz",
+      "text": "Dau radioul pe 13,13 și îl întorc spre drum. Din difuzor vine vocea mea: \"Casiera a declarat că a văzut tot. Numărul mașinii, fața șoferului, tot.\"\n\nFarurile se sting. Mașina nu mai e acolo. Nici fetița. Doar radioul, care repetă știrea până dimineață, de fiecare dată un pic mai aproape de adevăr.",
+      "location": null,
+      "time": "05:13",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/km13_radio.png",
+      "isEnding": true,
+      "endingType": "secret",
+      "endingTitle": "13,13 MHz",
+      "companionText": {
+        "vlad": "Vlad zice că el a dormit toată noaptea și n-a auzit nimic. Dar fredonează știrea."
+      }
+    },
+    {
+      "id": "km.end.wait",
+      "title": "Schimbul de dimineață",
+      "text": "Țin fetița de mână. E rece ca apa din râu. Nu zicem nimic. Mașina stă pe loc până se luminează, apoi pur și simplu nu mai e.\n\nLa 6 vine colegul de dimineață. \"Ai stat singură toată noaptea?\" mă întreabă. Mă uit la mâna mea. E udă.",
+      "location": null,
+      "time": "06:00",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/km13_wait.png",
+      "isEnding": true,
+      "endingType": "alternative",
+      "endingTitle": "Schimbul de dimineață",
+      "companionText": {
+        "vlad": "Vlad zice că el a dormit toată noaptea și n-a văzut nimic. Dar are cizmele ude."
+      }
+    },
+    {
+      "id": "km.end.lights",
+      "title": "Faruri",
+      "text": "Fug. Încui ușa. Farurile se aprind mai tare, apoi mai tare, până când magazinul e alb, rafturile sunt albe, mâinile mele sunt albe.\n\nDimineața, colegul găsește benzinăria deschisă și goală. Pe monitorul camerei 2, lângă pompa 1, acum sunt două siluete.",
+      "location": null,
+      "time": "",
+      "mood": "normal",
+      "fx": [],
+      "characters": [],
+      "examine": [],
+      "decisions": [],
+      "props": [],
+      "lights": [],
+      "background": "images/endings/km13_lights.png",
+      "isEnding": true,
+      "endingType": "bad",
+      "endingTitle": "Faruri",
+      "companionText": {
+        "vlad": "Pe monitor, lângă cele două siluete, e un scaun gol. Exact cum îl lăsa Vlad."
+      }
+    }
+  ]
+}
