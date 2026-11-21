@@ -1,0 +1,21 @@
+# Stilul comun al codului (Visual Studio, Rider si `dotnet format` il citesc automat).
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,csproj,props,slnx}]
+indent_size = 4
+
+[*.cs]
+# using-urile nefolosite sunt semnalate (si sterse de `dotnet format`)
+dotnet_diagnostic.IDE0005.severity = warning
+dotnet_sort_system_directives_first = true
+csharp_style_namespace_declarations = file_scoped:warning
+
+[*.py]
+indent_size = 4
+max_line_length = 120

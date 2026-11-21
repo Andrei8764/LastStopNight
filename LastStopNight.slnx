@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="LastStopNight.Audio/LastStopNight.Audio.csproj" />
+  <Project Path="LastStopNight.Core/LastStopNight.Core.csproj" />
+  <Project Path="LastStopNight.Net/LastStopNight.Net.csproj" />
+  <Project Path="LastStopNight/LastStopNight.csproj" />
+  <Project Path="LastStopNight.Editor/LastStopNight.Editor.csproj" />
+  <Project Path="tools/StoryCheck/StoryCheck.csproj" />
+</Solution>

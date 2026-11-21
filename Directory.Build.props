@@ -1,0 +1,16 @@
+<!-- Setari comune pentru toate proiectele C# din solutie. -->
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>1.4.0</Version>
+    <Product>Last Stop</Product>
+    <!-- documentatia XML permite analizei de stil sa gaseasca using-urile nefolosite (IDE0005) -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- ...dar nu si in exe-ul publicat, care trebuie sa ramana un singur fisier -->
+    <PublishDocumentationFile>false</PublishDocumentationFile>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
+    <!-- CS1591 / CS1573: nu orice membru sau parametru are nevoie de comentariu; WFO1000: avertisment WinForms despre serializarea proprietatilor in designer (nu folosim designerul) -->
+    <NoWarn>$(NoWarn);CS1591;CS1573;WFO1000</NoWarn>
+  </PropertyGroup>
+</Project>
