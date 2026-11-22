@@ -85,7 +85,7 @@ public static class Overlays
     /// </summary>
     public static void DrawPaper(Graphics g, RectangleF view, float s, PaperDefinition paper, float t)
     {
-        g.FillRectangle(Gfx.Brush((int)(110 * t), 0, 0, 0), view);
+        Screen2D.RequestTint(1, (int)(110 * t), Color.Black);
         float w = (paper.Note ? 130 : 220) * s, pad = 10 * s;
         string hand = FontCache.Exists("Segoe Print") ? "Segoe Print" : "Georgia";
         var titleFont = FontCache.Px(hand, paper.Note ? 6.5f : 6.2f, s, FontStyle.Bold);

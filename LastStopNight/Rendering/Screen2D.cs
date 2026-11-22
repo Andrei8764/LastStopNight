@@ -10,6 +10,32 @@ public static class Screen2D
     public const int Width = 320;
     public const int Height = 180;
 
+    /// <summary>
+    /// O intunecare (sau un fundal opac) peste toata zona meniului: <paramref name="Width01"/> &lt; 1 = gradient de la
+    /// stanga spre dreapta, care se stinge la acea fractiune din latime.
+    /// </summary>
+    public readonly record struct Tint(float Width01, int Alpha, Color Color);
+
+    private static List<Tint> _requested = new(), _pending = new();
+
+    /// <summary>
+    /// Cere intunecarea scenei din spatele unui meniu / al hartii / al unei hartii scrise. Nu deseneaza nimic acum:
+    /// suprafata de joc o aplica la urmatorul cadru, in imaginea interna a lumii (de ~7 ori mai putini pixeli decat
+    /// ecranul complet). Un strat semitransparent pe tot ecranul de 2560x1440 costa ~6 ms in GDI+, un gradient ~14 ms.
+    /// </summary>
+    public static void RequestTint(float width01, int alpha, Color color)
+    {
+        if (alpha > 0) _requested.Add(new Tint(width01, Math.Clamp(alpha, 0, 255), color));
+    }
+
+    /// <summary>Intunecarile cerute in cadrul trecut (pentru cadrul de acum); cererile noi incep de la zero.</summary>
+    public static IReadOnlyList<Tint> TakeTints()
+    {
+        (_pending, _requested) = (_requested, _pending);
+        _requested.Clear();
+        return _pending;
+    }
+
     public static void SetPixelArt(Graphics g)
     {
         g.InterpolationMode = InterpolationMode.NearestNeighbor;

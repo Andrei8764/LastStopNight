@@ -26,11 +26,9 @@ public static class MenuStyle
     /// <summary>Intuneca partea stanga a scenei, ca meniul sa se citeasca peste orice fundal.</summary>
     public static void Shade(Graphics g, RectangleF view, float width01 = 0.62f, int alpha = 225)
     {
-        var r = new RectangleF(view.X, view.Y, view.Width * width01, view.Height);
-        using var lg = new LinearGradientBrush(new PointF(r.Left - 1, 0), new PointF(r.Right + 1, 0),
-            Color.FromArgb(alpha, 8, 5, 7), Color.FromArgb(0, 8, 5, 7));
-        g.FillRectangle(lg, r);
-        g.FillRectangle(Gfx.Brush(70, 0, 0, 0), view);
+        // desenate de GameCanvas in imaginea interna a lumii (vezi Screen2D.RequestTint), nu aici la rezolutia ecranului
+        Screen2D.RequestTint(width01, alpha, Color.FromArgb(8, 5, 7));
+        Screen2D.RequestTint(1, 70, Color.Black);
     }
 
     /// <summary>Titlul in stil firma de neon: stralucire rosie in spate si un palpait rar.</summary>
@@ -94,7 +92,9 @@ public static class MenuStyle
                 string v = it.Value();
                 if (it.Adjust is not null && sel) v = "<  " + v + "  >";
                 var vs = g.MeasureString(v, valFont);
-                g.DrawString(v, valFont, Gfx.Brush(sel ? Warm : Muted), view.X + (x + w) * s - vs.Width, view.Y + (y + 0.6f) * s);
+                float vx = view.X + (x + w) * s - vs.Width;
+                g.DrawString(v, valFont, Gfx.Brush(sel ? Warm : Muted), vx, view.Y + (y + 0.6f) * s);
+                if (it.Adjust is not null) m.AddValueHit(i, new RectangleF(vx, row.Y, vs.Width, row.Height));
             }
             y += step;
         }

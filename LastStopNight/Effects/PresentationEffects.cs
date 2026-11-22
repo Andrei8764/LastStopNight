@@ -83,7 +83,7 @@ public sealed class ChapterCardEffect(string text) : SceneEffect
     public override void DrawOverlay(Graphics g, RectangleF view, float scale, Scene scene)
     {
         float k = Elapsed < Hold ? 1 : 1 - (Elapsed - Hold) / FadeOut;
-        g.FillRectangle(Gfx.Brush((int)(255 * k), 6, 4, 6), view);
+        Screen2D.RequestTint(1, (int)(255 * k), Color.FromArgb(6, 4, 6));
 
         int split = text.IndexOf(": ", StringComparison.Ordinal);
         string main = split > 0 ? text[..split] : text;

@@ -66,6 +66,13 @@ public sealed partial class PlayerForm
         if (e.KeyCode is Keys.A or Keys.B) TrackKonami(e.KeyCode);
         if (ActiveMenu is { } menu)
         {
+            // „<” / „>” (tasta de langa Shift stanga sau , si .) si A / D reglează valoarea, ca sagetile
+            if (menu.Current is { Adjust: not null, TypeChar: null } && AdjustDirection(e) is int dir and not 0)
+            {
+                menu.HandleKey(dir < 0 ? Keys.Left : Keys.Right);
+                e.SuppressKeyPress = true;
+                return;
+            }
             if (e.KeyCode is Keys.Space or Keys.Back) menu.HandleKey(e.KeyCode);
             e.SuppressKeyPress = e.KeyCode is Keys.Space;
             return;
@@ -94,6 +101,15 @@ public sealed partial class PlayerForm
         }
         e.SuppressKeyPress = e.KeyCode is Keys.Space or Keys.E;
     }
+
+    /// <summary>-1 / +1 pentru tastele care scad / cresc o valoare din meniu, 0 pentru celelalte.</summary>
+    private static int AdjustDirection(KeyEventArgs e) => e.KeyCode switch
+    {
+        Keys.OemBackslash => e.Shift ? 1 : -1, // tastatura romaneasca: „<”, cu Shift „>”
+        Keys.Oemcomma or Keys.A or Keys.Subtract or Keys.OemMinus => -1,
+        Keys.OemPeriod or Keys.D or Keys.Add or Keys.Oemplus => 1,
+        _ => 0,
+    };
 
     /// <summary>Esc in joc: opreste mersul automat; daca nu mergea nimic, deschide pauza.</summary>
     private void OnEscapeInGame()

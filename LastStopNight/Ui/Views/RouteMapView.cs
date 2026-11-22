@@ -30,7 +30,7 @@ public static class RouteMapView
     public static void Draw(Graphics g, RectangleF view, float s, StoryDefinition story, IReadOnlyList<MapRoute> routes,
                             ImageCache? images, float time)
     {
-        g.FillRectangle(Gfx.Brush(255, 12, 9, 11), view); // opac: harta trebuie sa se citeasca peste orice scena
+        Screen2D.RequestTint(1, 255, Color.FromArgb(12, 9, 11)); // opac: harta trebuie sa se citeasca peste orice scena
         g.DrawString("HARTA TUREI", Mono(s, 9f), Gfx.Brush(Neon), view.X + 14 * s, view.Y + 8 * s);
         g.DrawString((routes.Count > 1 ? $"{routes.Count} drumuri.  " : "") + "+2 = alegeri încă neîncercate.  H sau Esc: închide",
             Body(s, 4.6f), Gfx.Brush(Muted), view.X + 15 * s, view.Y + 20 * s);

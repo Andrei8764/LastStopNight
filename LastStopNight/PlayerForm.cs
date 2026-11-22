@@ -221,10 +221,16 @@ public sealed partial class PlayerForm : Form
             return;
         }
 
-        if (_scene.Paper is { } paper && _scene.CloseupProgress > 0) Overlays.DrawPaper(g, view, s, paper, _scene.CloseupProgress);
-        foreach (var e in _scene.Effects)
-            if (e is not ChapterCardEffect) e.DrawOverlay(g, view, s, _scene);
-        if (_mode == Mode.Playing && _scene.Player is not null && !_paused) DrawPlayingHints(g, view, s);
+        // fundalurile opace (harta, concluziile, cartonasul de capitol) sunt in imaginea lumii, deci ce e desenat
+        // aici, la rezolutia ecranului, s-ar vedea prin ele: bulele, hartia si indiciile asteapta pana se inchid
+        bool covered = _showMap || _scene.HasChapterCard || (_paused && _menu?.Title == "Concluzii");
+        if (!covered)
+        {
+            if (_scene.Paper is { } paper && _scene.CloseupProgress > 0) Overlays.DrawPaper(g, view, s, paper, _scene.CloseupProgress);
+            foreach (var e in _scene.Effects)
+                if (e is not ChapterCardEffect) e.DrawOverlay(g, view, s, _scene);
+        }
+        if (_mode == Mode.Playing && _scene.Player is not null && !_paused && !covered) DrawPlayingHints(g, view, s);
         if (_mode == Mode.Playing && _net is { Votes.Count: > 0 } net) Overlays.DrawVoteBanner(g, view, s, net);
         else if (_mode == Mode.Playing && !_showMap && _net?.Follow is { } follow)
             Overlays.DrawBanner(g, view, s, $"{NamesOf(follow.Players)} a ales: „{follow.DecisionText}”.   F: mergi după el   sau alege altceva");

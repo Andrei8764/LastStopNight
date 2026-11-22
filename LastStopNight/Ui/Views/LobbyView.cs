@@ -108,7 +108,7 @@ public static class LobbyView
                 view.X + 20 * s, view.Y + y * s);
     }
 
-    private static void DrawOption(Graphics g, RectangleF view, float s, List<RectangleF> hits, MenuItem it, bool sel, float y)
+    private static void DrawOption(Graphics g, RectangleF view, float s, List<RectangleF> hits, MenuScreen m, int index, MenuItem it, bool sel, float y)
     {
         var font = Mono(s, 5.6f);
         string text = $"{it.Label}: {it.Value!()}";
@@ -116,6 +116,7 @@ public static class LobbyView
         float w = g.MeasureString(text, font).Width / s + 12;
         var r = R(view, s, 20, y, w, 11);
         hits.Add(r);
+        if (it.Adjust is not null) m.AddValueHit(index, r);
         g.FillRectangle(Gfx.Brush(sel ? 140 : 60, it.Enabled ? 90 : 50, 30, 50), r);
         if (sel) g.FillRectangle(Gfx.Brush(Neon), r.X, r.Y, 1.2f * s, r.Height);
         g.DrawString(text, font, Gfx.Brush(!it.Enabled ? Muted : sel ? Ink : Warm), r.X + 6 * s, r.Y + 2.2f * s);
@@ -132,7 +133,7 @@ public static class LobbyView
             if (it.Value is not null)
             {
                 // optiunile (ex. „Decizii: Fiecare alege”) stau in coloana din stanga, sub jucatori
-                DrawOption(g, view, s, hits, it, i == m.Selected, optionY);
+                DrawOption(g, view, s, hits, m, i, it, i == m.Selected, optionY);
                 optionY += 13;
                 continue;
             }

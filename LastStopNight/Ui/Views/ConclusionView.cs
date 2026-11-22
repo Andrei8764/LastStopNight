@@ -19,7 +19,7 @@ public static class ConclusionView
     public static void Draw(Graphics g, RectangleF view, float s, List<RectangleF> hits, MenuScreen m, StoryDefinition story,
                             IReadOnlyList<PlayerEnding> endings, ImageCache? images)
     {
-        g.FillRectangle(Gfx.Brush(255, 10, 7, 9), view); // opac: banda de final din spate nu trebuie sa se vada prin el
+        Screen2D.RequestTint(1, 255, Color.FromArgb(10, 7, 9)); // opac: banda de final din spate nu trebuie sa se vada prin el
         float top = Logo(g, view, s, m.Title, m.Subtitle, m.Time, Left, 6);
         g.DrawString(Verdict(endings), FontCache.Px("Georgia", 6.4f, s, FontStyle.Italic), Gfx.Brush(Warm), view.X + Left * s, view.Y + top * s);
         float cardsTop = top + 11;

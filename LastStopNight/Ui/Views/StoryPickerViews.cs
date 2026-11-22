@@ -22,7 +22,7 @@ public static class StoryPickerViews
     public static void DrawStoryCards(Graphics g, RectangleF view, float s, List<RectangleF> hits, MenuScreen m,
                                       IReadOnlyList<StoryPackage> stories, Func<StoryPackage, Bitmap?> thumbnail, EndingsTracker endings)
     {
-        g.FillRectangle(Gfx.Brush(150, 0, 0, 0), view);
+        Screen2D.RequestTint(1, 150, Color.Black);
         Logo(g, view, s, m.Title, null, m.Time, 18, 10);
         int n = m.Items.Count;
         float cw = Math.Min(StoryCardMaxWidth, (StoryCardsWidth - StoryCardGap * (n - 1)) / n);
@@ -75,7 +75,7 @@ public static class StoryPickerViews
     public static void DrawCompanionChoice(Graphics g, RectangleF view, float s, List<RectangleF> hits, MenuScreen m,
                                            StoryDefinition story, List<PlayableDefinition> companions, ImageCache? images)
     {
-        g.FillRectangle(Gfx.Brush(150, 0, 0, 0), view);
+        Screen2D.RequestTint(1, 150, Color.Black);
         Logo(g, view, s, m.Title, story.Title, m.Time, 18, 10);
 
         var hero = story.FindPlayable(story.PlayerCharacterId);
@@ -122,7 +122,7 @@ public static class StoryPickerViews
     public static void DrawEndingsGallery(Graphics g, RectangleF view, float s, List<RectangleF> hits, MenuScreen m,
                                           IReadOnlyList<StoryPackage> stories, EndingsTracker endings)
     {
-        g.FillRectangle(Gfx.Brush(175, 0, 0, 0), view);
+        Screen2D.RequestTint(1, 175, Color.Black);
         Logo(g, view, s, m.Title, null, m.Time, 18, 10);
         int n = Math.Max(1, stories.Count);
         float cw = (296 - 6 * (n - 1)) / n;

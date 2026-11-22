@@ -108,12 +108,28 @@ public class MenuScreen(string title)
             }
     }
 
+    /// <summary>
+    /// Unde e desenata valoarea fiecarei optiuni reglabile („&lt;  80%  &gt;”): click in jumatatea stanga scade,
+    /// in cea dreapta creste (altfel click-ul pe „&lt;” ar fi crescut valoarea).
+    /// </summary>
+    private readonly Dictionary<int, RectangleF> _valueHits = new();
+
+    /// <summary>Desenarea anunta zona valorii optiunii <paramref name="index"/> (vezi <see cref="Click"/>).</summary>
+    public void AddValueHit(int index, RectangleF area) => _valueHits[index] = area;
+
     public bool Click(PointF p)
     {
         for (int i = 0; i < _hits.Count && i < Items.Count; i++)
         {
             if (!_hits[i].Contains(p) || !Items[i].Enabled) continue;
             Selected = i;
+            if (Items[i].Adjust is { } adjust && Items[i].Activate is null && _valueHits.TryGetValue(i, out var value))
+            {
+                Sound?.Invoke("ui_move");
+                // pe valoare: stanga = mai putin, dreapta = mai mult; in restul randului, la fel, fata de mijlocul valorii
+                adjust(p.X < value.X + value.Width / 2 ? -1 : 1);
+                return true;
+            }
             Use(Items[i]);
             return true;
         }
@@ -132,6 +148,7 @@ public class MenuScreen(string title)
     public void Render(Graphics g, RectangleF view, float s)
     {
         _hits.Clear();
+        _valueHits.Clear();
         if (Draw is not null) Draw(g, view, s, _hits);
         else MenuStyle.DrawList(g, view, s, this, _hits);
     }
