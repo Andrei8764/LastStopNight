@@ -1,0 +1,52 @@
+# Release automat: la fiecare tag vX.Y.Z (ex. git tag v1.5.0 && git push origin v1.5.0), GitHub construieste
+# jocul pe Windows, ruleaza StoryCheck (povestile, sunetul, vocile, multiplayer pe localhost) si publica un
+# Release cu LastStopNight.zip si LastStopNight.exe. Se poate porni si manual, din tab-ul Actions.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versiunea (ex. v1.5.0); se creeaza tag-ul pe commit-ul ales"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Verificare si build (build_release.ps1)
+        shell: pwsh
+        env:
+          LASTSTOP_NOUPNP: "1"
+        run: ./build_release.ps1
+
+      - name: Publica release-ul
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ github.event.inputs.version || github.ref_name }}
+        run: |
+          $notes = @'
+          Descarcă **LastStopNight.zip**, dezarhivează și pornește `LastStopNight.exe` (nu trebuie instalat nimic, nici .NET).
+
+          - Dacă Windows zice „Windows protected your PC”: More info → Run anyway (exe-ul nu e semnat).
+          - Multiplayer: amândoi trebuie să aveți **aceeași versiune**. Ghid: docs/MULTIPLAYER.md.
+          '@
+          gh release create $env:VERSION dist/LastStopNight.zip dist/LastStopNight.exe `
+            --target $env:GITHUB_SHA --title "Last Stop $env:VERSION" --notes $notes --generate-notes

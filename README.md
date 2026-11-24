@@ -2,6 +2,17 @@
 
 Joc 2D de tip poveste interactivă, cu 3 povești de groază de tura de noapte, însoțitori, editor de povești și multiplayer în doi (P2P). C# / .NET 10, WinForms.
 
+**[Descarcă jocul (ultimul release)](https://github.com/Andrei8764/LastStopNight/releases/latest)**: `LastStopNight.zip`, un singur exe, fără instalare.
+
+## Release nou
+
+Release-urile se fac singure: pui un tag `vX.Y.Z` și îl urci. GitHub verifică poveștile (StoryCheck), construiește exe-ul și publică release-ul cu zip-ul (`.github/workflows/release.yml`).
+
+```powershell
+git tag v1.5.0
+git push origin v1.5.0
+```
+
 ## Pornire rapidă
 
 Ai nevoie de .NET SDK 10. Python 3 cu Pillow îți trebuie doar dacă regenerezi grafica.
