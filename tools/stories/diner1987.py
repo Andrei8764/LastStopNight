@@ -96,7 +96,7 @@ BLOCKS = [
           decisions=[dec("Închide registrul fără zgomot", "d87.photo")]),
     block("d87.why", "Pentru cine",
           "\"Pentru Alex\", zice. \"Vine un Alex mereu. Peste un an, peste zece, peste treizeci. Și o să aibă "
-          "nevoie de reguli.\"\n\n\"Eu nu mă cheamă Alex\", zic. Zâmbește sub șapcă. \"Încă.\"",
+          "nevoie de reguli.\"\n\n\"Pe mine nu mă cheamă Alex\", zic. Zâmbește sub șapcă. \"Încă.\"",
           location="kitchen", time="02:05", player_x=150, mood="sepia", characters=[npc("owner", 200, True)],
           decisions=[dec("Înapoi la treabă", "d87.photo", [add("player.nerve", -10)])]),
     block("d87.page", "Ultima pagină",

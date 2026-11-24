@@ -1182,7 +1182,7 @@
     },
     {
       "id": "km.back",
-      "title": "Pana de curent",
+      "title": "Pană de curent",
       "text": "La 3 și 13 se ia curentul. Totul. Mă duc pe bâjbâite în magazie, la tabloul electric. Becul de rezervă se aprinde singur.\n\nFetița e acolo, cu fața spre perete. Arată cu degetul spre calendar.",
       "location": "back",
       "time": "03:13",
@@ -1385,7 +1385,7 @@
     {
       "id": "km.end.wait",
       "title": "Schimbul de dimineață",
-      "text": "Țin fetița de mână. E rece ca apa din râu. Nu zicem nimic. Mașina stă pe loc până se luminează, apoi pur și simplu nu mai e.\n\nLa 6 vine colegul de dimineață. \"Ai stat singură toată noaptea?\" mă întreabă. Mă uit la mâna mea. E udă.",
+      "text": "Țin fetița de mână. E rece ca apa din râu. Nu zicem nimic. Mașina stă pe loc până se luminează, apoi pur și simplu nu mai e.\n\nLa 6 vine colegul de dimineață. \"A fost liniște în noaptea asta?\" mă întreabă. Mă uit la mâna mea. E udă.",
       "location": null,
       "time": "06:00",
       "mood": "normal",

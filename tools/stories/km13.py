@@ -180,7 +180,7 @@ BLOCKS = [
           location="gas", time="02:46", player_x=152, mood="red", characters=[npc("hitchhiker", 170, True)],
           props=CAR_AT_PUMP, lights=CAR_AT_PUMP_LIGHTS,
           decisions=[dec("Treci pe lângă el, fără grabă", "km.back")]),
-    block("km.back", "Pana de curent",
+    block("km.back", "Pană de curent",
           "La 3 și 13 se ia curentul. Totul. Mă duc pe bâjbâite în magazie, la tabloul electric. Becul de "
           "rezervă se aprinde singur.\n\nFetița e acolo, cu fața spre perete. Arată cu degetul spre calendar.",
           location="back", time="03:13", player_x=60, mood="dim", characters=[npc("girl", 236)],
@@ -216,7 +216,7 @@ BLOCKS = [
     block("km.end.wait", "Schimbul de dimineață",
           "Țin fetița de mână. E rece ca apa din râu. Nu zicem nimic. Mașina stă pe loc până se luminează, "
           "apoi pur și simplu nu mai e.\n\n"
-          "La 6 vine colegul de dimineață. \"Ai stat singură toată noaptea?\" mă întreabă. Mă uit la mâna mea. "
+          "La 6 vine colegul de dimineață. \"A fost liniște în noaptea asta?\" mă întreabă. Mă uit la mâna mea. "
           "E udă.",
           background="images/endings/km13_wait.png", time="06:00", ending="alternative"),
     block("km.end.lights", "Faruri",
