@@ -36,8 +36,13 @@ public static class StoryPickerViews
             if (i < stories.Count) DrawStoryCard(g, s, r, cw, stories[i], thumbnail(stories[i]), endings, sel);
             else
             {
-                Wrap(g, "Din fișier...", Mono(s, 7f), sel ? Ink : Muted, new RectangleF(r.X + 6 * s, r.Y + 50 * s, r.Width - 12 * s, 30 * s));
-                Wrap(g, "o poveste .zip făcută în Editor", Body(s, 5.4f), Dim, new RectangleF(r.X + 6 * s, r.Y + 62 * s, r.Width - 12 * s, 30 * s));
+                // titlul poate avea doua randuri cand sunt multe povesti (cartonase inguste): textul de sub el vine dupa el
+                var titleFont = Mono(s, 7f);
+                var titleBox = new RectangleF(r.X + 6 * s, r.Y + 50 * s, r.Width - 12 * s, 30 * s);
+                float titleH = g.MeasureString("Din fișier...", titleFont, (int)titleBox.Width).Height;
+                Wrap(g, "Din fișier...", titleFont, sel ? Ink : Muted, titleBox);
+                Wrap(g, "o poveste .zip făcută în Editor", Body(s, 5.4f), Dim,
+                    new RectangleF(r.X + 6 * s, titleBox.Y + titleH + 2 * s, r.Width - 12 * s, 30 * s));
             }
         }
         Footer(g, view, s, "Stânga / dreapta: alegi povestea    Enter: continui    Esc: înapoi");

@@ -7,11 +7,16 @@ public static class FontCache
 {
     private static readonly Dictionary<(string, int, FontStyle), Font> Fonts = new();
 
+    /// <summary>
+    /// Font de <paramref name="sizePt"/> puncte, socotite la 96 DPI (1 pt = 4/3 pixeli), dar creat in pixeli:
+    /// marimea nu depinde de scalarea din Windows (125%, 150%...). In puncte, pe un laptop cu scalare 150%
+    /// textul iesea de 1,5 ori mai mare, iar scena (desenata in pixeli) nu, deci titlurile ieseau din cartonase.
+    /// </summary>
     public static Font Get(string family, float sizePt, FontStyle style = FontStyle.Regular)
     {
         int key = (int)MathF.Round(Math.Max(5, sizePt) * 2);
         if (!Fonts.TryGetValue((family, key, style), out var f))
-            Fonts[(family, key, style)] = f = new Font(family, key / 2f, style);
+            Fonts[(family, key, style)] = f = new Font(family, key / 2f * 96f / 72f, style, GraphicsUnit.Pixel);
         return f;
     }
 
