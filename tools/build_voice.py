@@ -26,7 +26,7 @@ import zipfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, "tools", ".voice_cache")
 OUT_ZIPS = os.path.join(ROOT, "LastStopNight", "Assets", "stories")
-STORIES = ["night_shift", "km13", "diner1987"]
+STORIES = ["night_shift", "km13", "diner1987", "last_call"]  # last_call e facuta din Editor (doar story.json + arhiva)
 
 # vocea naratorului dupa protagonist (povestea e scrisa la persoana intai, de el)
 VOICES = {"alex": "ro-RO-EmilNeural", "dan": "ro-RO-EmilNeural", "mara": "ro-RO-AlinaNeural"}
