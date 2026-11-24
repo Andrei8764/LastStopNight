@@ -65,8 +65,14 @@ public sealed partial class PlayerForm : Form
     {
         Text = "Last Stop";
         BackColor = Color.Black;
-        ClientSize = new Size(1180, 860);
-        MinimumSize = new Size(820, 640);
+        // pe un ecran cu scalare 150% / 200%, panourile ferestrei cresc la fel (vezi UiScale)
+        UiScale.SetDpi(DeviceDpi);
+        var work = Screen.PrimaryScreen?.WorkingArea.Size ?? new Size(1920, 1080);
+        ClientSize = new Size(Math.Min(UiScale.Px(1180), work.Width - 40), Math.Min(UiScale.Px(860), work.Height - 60));
+        MinimumSize = new Size(Math.Min(UiScale.Px(820), work.Width / 2), Math.Min(UiScale.Px(640), work.Height / 2));
+        _bottom.Height = UiScale.Px(BottomPanelHeight);
+        _choices.Padding = new Padding(UiScale.Px(10), UiScale.Px(14), UiScale.Px(12), UiScale.Px(8));
+        _text.Padding = new Padding(UiScale.Px(22), UiScale.Px(14), UiScale.Px(18), UiScale.Px(10));
         StartPosition = FormStartPosition.CenterScreen;
         KeyPreview = true;
         DoubleBuffered = true;
@@ -105,7 +111,7 @@ public sealed partial class PlayerForm : Form
     public double AveragePaintMs => _paintCount == 0 ? 0 : _paintTotal / _paintCount;
 
     /// <summary>Coloana cu decizii: 38% din latime, intre 340 si 520 de pixeli.</summary>
-    private void FitChoicesWidth() => _choices.Width = Math.Clamp(ClientSize.Width * 38 / 100, 340, 520);
+    private void FitChoicesWidth() => _choices.Width = Math.Clamp(ClientSize.Width * 38 / 100, UiScale.Px(340), UiScale.Px(520));
 
     // ------------------------------------------------------------------ fereastra
 
@@ -135,7 +141,7 @@ public sealed partial class PlayerForm : Form
     private void SetLayout(bool playing)
     {
         _bottom.Visible = playing;
-        _canvas.TopBand = playing ? HudHeight : 0;
+        _canvas.TopBand = playing ? UiScale.Px(HudHeight) : 0;
         _canvas.Cover = !playing;
     }
 

@@ -147,6 +147,7 @@ interfața ── RequestChoose / RequestExamine ──> IGameSession
 | `LASTSTOP_NOUPNP=1` | Gazda nu încearcă să deschidă portul pe router. |
 | `LASTSTOP_MUTE=1` | Sunetul nu ajunge la difuzoare (modurile `--snapshots` și `--mp-test` îl pun singure). |
 | `LASTSTOP_JOIN_CODE`, `LASTSTOP_JOIN_LAN=1` | Doar pentru `--mp-test join`: cu ce cod intră sau dacă alege jocul din rețeaua locală. |
+| `LASTSTOP_UISCALE=1.5` | Simulează scalarea din Windows (150%) pentru panoul de jos, butoane și HUD, ca să vezi jocul ca pe un laptop cu ecran dens. |
 | `LASTSTOP_MP_SPLIT=1` | Pentru `--mp-test` (ambele ferestre): „fiecare alege”; la prima decizie aleg diferit, fiecare își joacă drumul, cine termină primul se uită la celălalt, apoi amândoi văd concluziile. Fără ea, testul folosește votul comun. |
 | Porturi | TCP 27013 (sau următorul liber) pentru joc, UDP 27014 pentru anunțul în rețeaua locală. |
 

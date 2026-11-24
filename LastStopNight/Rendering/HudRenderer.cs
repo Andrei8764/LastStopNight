@@ -240,7 +240,9 @@ public static class HudRenderer
     {
         var size = g.MeasureString(text, font);
         float x = view.X + (view.Width - size.Width) / 2;
-        if (shadow) g.DrawString(text, font, Gfx.Brush(color.A, 0, 0, 0), x + s * 0.8f, y + s * 0.8f);
+        // umbra la 1-2 pixeli: proportionala cu fereastra (s * 0.8) ajungea la 6 px pe ecran complet si parea un text dublat
+        float off = Math.Clamp(s * 0.25f, 1, 2);
+        if (shadow) g.DrawString(text, font, Gfx.Brush(color.A, 0, 0, 0), x + off, y + off);
         g.DrawString(text, font, Gfx.Brush(color), x, y);
     }
 
